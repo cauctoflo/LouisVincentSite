@@ -1,10 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\Setting;
 
 Route::get('/', function () {
+    Setting::create(["key" => "theme", "value" => "default"]);
     return view('welcome');
-});
+})->name('welcome');
 
 Route::middleware([
     'auth:sanctum',
