@@ -64,7 +64,7 @@
         <!-- Log Out Other Devices Confirmation Modal -->
         <x-dialog-modal wire:model.live="confirmingLogout">
             <x-slot name="title">
-                {{ __('Log Out Other Browser Sessions') }}
+                 cecvef veve vteazb vtzrb 'rtb"rz '
             </x-slot>
 
             <x-slot name="content">

@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+{{dd("Theme 1")}}
 <div class="relative min-h-screen overflow-hidden bg-white">
     <!-- Hero Section -->
     <div class="relative overflow-hidden py-6">

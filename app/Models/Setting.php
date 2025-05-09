@@ -11,7 +11,7 @@ class Setting extends Model
         "value"
     ];
 
-    public function getValue($key)
+    public static function getValue($key)
     /**
      * Renvoie la valeur d'une clé de paramètre.
      *
@@ -21,6 +21,6 @@ class Setting extends Model
 
 
     {
-        return $this->where("key", $key)->first()->value ?? null;
+        return Setting::where("key", $key)->first()->value ?? null; 
     }
 }

@@ -2,11 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Models\Setting;
+use App\Http\Controllers\WelcomePageController;
 
-Route::get('/', function () {
-    Setting::create(["key" => "theme", "value" => "default"]);
-    return view('welcome');
-})->name('welcome');
+Route::get('/', [WelcomePageController::class, 'index'])->name('welcome');
 
 Route::middleware([
     'auth:sanctum',
@@ -19,6 +17,31 @@ Route::middleware([
 });
 
 
+
+
+Route::get('/timer', function () {
+    return view('Theme.Default.Assets.timer.index');
+});
+
+Route::get('/abc', function () {
+    return view('Theme.Default.landing.index');
+});
+
+
+
+
+
+
+
+
+
+
+
+
+//
+// ROUTE LIVESHARE
+//
+
 Route::get('/test', function () {
-    return 'https://prod.liveshare.vsengsaas.visualstudio.com/join?9E034DAD63B48EB8B59F24F7634F9046988D';
+    return 'https://prod.liveshare.vsengsaas.visualstudio.com/join?F819405A9EC99B4E5C38AA1526F90B0FC146';
 })->name('test');

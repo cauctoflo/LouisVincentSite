@@ -2,6 +2,191 @@
 @tailwind components;
 @tailwind utilities;
 
-[x-cloak] {
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+
+/* Custom cursor */
+.custom-cursor {
+    @apply fixed w-4 h-4 rounded-full bg-secondary opacity-70 pointer-events-none z-[9999] transform -translate-x-1/3 -translate-y-1/2 transition-transform duration-100 ease-linear;
+}
+
+.cursor-follower {
+    @apply fixed w-8 h-8 border-2 border-white rounded-full pointer-events-none z-[9998] opacity-50 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-out;
+}
+
+/* Hide scrollbar but allow scrolling */
+body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+body::-webkit-scrollbar {
     display: none;
+}
+
+/* Glass effect */
+.glass {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
+}
+
+.glass-dark {
+    @apply bg-primary-dark/50 backdrop-blur-md border-b border-white/10;
+}
+
+/* Advanced Glass Navbar */
+.premium-glass-nav {
+    background: linear-gradient(90deg, rgba(13, 53, 128, 0.75) 0%, rgba(26, 76, 161, 0.65) 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 10px 30px -10px rgba(13, 53, 128, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Hover effects */
+.hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* For shapes */
+.shape {
+    position: absolute;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Custom animations delay */
+.delay-200 { animation-delay: 0.2s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-600 { animation-delay: 0.6s; }
+.delay-800 { animation-delay: 0.8s; }
+.delay-1000 { animation-delay: 1s; }
+.delay-1200 { animation-delay: 1.2s; }
+
+/* Menu toggle animation */
+.menu-toggle span {
+    @apply block h-0.5 w-full bg-white transition-all duration-300 ease-in-out;
+}
+
+.menu-toggle.active span:first-child {
+    @apply transform rotate-45 translate-y-1.5;
+}
+
+.menu-toggle.active span:last-child {
+    @apply transform -rotate-45 -translate-y-1;
+}
+
+.menu-toggle.active span:nth-child(2) {
+    @apply opacity-0;
+}
+
+/* Mobile nav animation */
+.mobile-nav {
+    @apply fixed top-0 right-0 w-4/5 max-w-sm h-full bg-primary-dark/95 backdrop-blur-md z-50 p-20 transform translate-x-full transition-transform duration-500 ease-in-out;
+}
+
+.mobile-nav.open {
+    @apply transform translate-x-0;
+}
+
+/* Gradient Text */
+.gradient-text {
+    background: linear-gradient(90deg, #4d8eff, #2271ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+}
+
+/* Wave separator */
+.wave-separator {
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    z-index: 5;
+}
+
+.wave-separator svg {
+    position: relative;
+    display: block;
+    width: calc(100% + 1.3px);
+    height: 80px;
+}
+
+/* Premium Nav link animation */
+.premium-nav-link {
+    position: relative;
+    display: inline-block;
+    transition: color 0.3s ease;
+    padding: 0.5rem 0.25rem;
+}
+
+.premium-nav-link::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(90deg, rgba(77, 142, 255, 1), rgba(255, 255, 255, 1));
+    transform-origin: bottom right;
+    transition: transform 0.3s ease-out;
+}
+
+.premium-nav-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
+
+.premium-nav-link:hover {
+    color: #ffffff;
+}
+
+/* Shimmer effect */
+.shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+}
+
+/* Video overlay with animated gradient */
+.video-overlay {
+    background: linear-gradient(135deg, 
+        rgba(13, 53, 128, 0.3) 0%, 
+        rgba(26, 76, 161, 0.1) 50%, 
+        rgba(13, 53, 128, 0.3) 100%);
+    background-size: 300% 300%;
+    animation: gradientBackground 20s ease infinite;
+}
+
+@keyframes gradientBackground {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Vignette effect for video */
+.vignette {
+    box-shadow: inset 0 0 200px rgba(0, 0, 0, 0.5);
+}
+
+/* Pulsing button effect */
+.pulse-ring:before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border-radius: 9999px;
+    background-color: white;
+    animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
 }
