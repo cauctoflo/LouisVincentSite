@@ -226,6 +226,13 @@
     }
 }
 
+/* Effet de brillance lorsque les nombres changent */
+.text-glow {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(247, 204, 51, 0.8);
+    color: #f7cc33 !important;
+    transition: all 0.3s ease;
+}
+
 /* Pulsation pour la carte des secondes */
 .pulse-countdown {
     animation: pulse-countdown 1s infinite alternate;
@@ -355,6 +362,44 @@ function debugLog(message) {
     }
 }
 
+// Animation de défilement des nombres
+function animateValue(element, start, end, duration) {
+    // Sauvegarder la valeur cible comme attribut data-value
+    element.setAttribute('data-value', end.toString().padStart(2, '0'));
+    
+    let startTimestamp = null;
+    const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        
+        // Pour les petites valeurs, nous utilisons une animation spéciale
+        if (end < 10) {
+            // Animation par défilement visuel
+            element.innerHTML = end.toString().padStart(2, '0');
+            element.style.animation = 'countUp 0.5s ease-out';
+            setTimeout(() => {
+                element.style.animation = 'none';
+            }, 500);
+        } else {
+            // Pour les grands nombres, nous utilisons une animation incrémentale
+            const value = Math.floor(progress * (end - start) + start);
+            element.innerHTML = value.toString().padStart(2, '0');
+            
+            // Ajouter un effet visuel
+            element.classList.add('text-glow');
+            setTimeout(() => {
+                element.classList.remove('text-glow');
+            }, 100);
+        }
+        
+        if (progress < 1) {
+            window.requestAnimationFrame(step);
+        }
+    };
+    
+    window.requestAnimationFrame(step);
+}
+
 // Initialize the timer immediately and on DOM load
 initCountdown();
 document.addEventListener('DOMContentLoaded', initCountdown);
@@ -392,6 +437,12 @@ function initCountdown() {
             debugLog('Using demo mode: 3 minutes countdown');
         }
         
+        // Variables to track previous values for animation
+        let prevDays = 0;
+        let prevHours = 0;
+        let prevMinutes = 0;
+        let prevSeconds = 0;
+        
         // Update countdown every second
         const countdown = setInterval(function() {
             try {
@@ -407,11 +458,26 @@ function initCountdown() {
                 const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
                 
-                // Update display with leading zeros
-                daysEl.innerText = days.toString().padStart(2, '0');
-                hoursEl.innerText = hours.toString().padStart(2, '0');
-                minutesEl.innerText = minutes.toString().padStart(2, '0');
-                secondsEl.innerText = seconds.toString().padStart(2, '0');
+                // Utiliser l'animation seulement si les valeurs changent
+                if (days !== prevDays) {
+                    animateValue(daysEl, prevDays, days, 500);
+                    prevDays = days;
+                }
+                
+                if (hours !== prevHours) {
+                    animateValue(hoursEl, prevHours, hours, 500);
+                    prevHours = hours;
+                }
+                
+                if (minutes !== prevMinutes) {
+                    animateValue(minutesEl, prevMinutes, minutes, 500);
+                    prevMinutes = minutes;
+                }
+                
+                if (seconds !== prevSeconds) {
+                    animateValue(secondsEl, prevSeconds, seconds, 500);
+                    prevSeconds = seconds;
+                }
                 
                 // Add effects for final countdown
                 if (distance <= 10000 && distance > 0) {  // Last 10 seconds
