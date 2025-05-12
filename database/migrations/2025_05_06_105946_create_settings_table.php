@@ -16,9 +16,18 @@ return new class extends Migration
 
             $table->string("key")->unique();
             $table->string("value");
+            $table->string("description");
 
             $table->timestamps();
         });
+
+        DB::table('settings')->insert([
+            'key' => 'theme',
+            'value' => 'default',
+            'description' => 'Définit le thème de tout le site.',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 
     /**

@@ -29,7 +29,7 @@
             </div>
         </div>
         
-        <!-- Navigation Bar -->
+
         <div class="relative z-10 mx-auto flex max-w-7xl items-center justify-between px-6 pt-6 pb-4 lg:px-8 border-b border-gray-200">
             <div class="flex items-center">
                 <div class="mr-4 h-16 w-16 overflow-hidden rounded-xl bg-blue-700 shadow-md">
@@ -66,7 +66,7 @@
             </div>
         </div>
         
-        <!-- Hero Content -->
+
         <div class="relative z-10 mx-auto mt-8 max-w-7xl px-6 lg:px-8">
             <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
                 <div class="text-center lg:text-left">                    

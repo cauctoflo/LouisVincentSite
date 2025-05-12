@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Setting;
 use App\Http\Controllers\WelcomePageController;
 
-Route::get('/', [WelcomePageController::class, 'index'])->name('welcome');
 
 Route::middleware([
     'auth:sanctum',
@@ -23,9 +22,11 @@ Route::get('/timer', function () {
     return view('Theme.Default.Assets.timer.index');
 });
 
-Route::get('/abc', function () {
+Route::get('/te', function () {
     return view('Theme.Default.landing.index');
 });
+
+
 
 
 
@@ -43,5 +44,9 @@ Route::get('/abc', function () {
 //
 
 Route::get('/test', function () {
-    return 'https://prod.liveshare.vsengsaas.visualstudio.com/join?F819405A9EC99B4E5C38AA1526F90B0FC146';
+    return 'https://prod.liveshare.vsengsaas.visualstudio.com/join?0717518A0A34C63184F25893553E3BAF430C';
 })->name('test');
+
+
+require __DIR__.'/public/routes.php';
+require __DIR__.'/admin/routes.php';

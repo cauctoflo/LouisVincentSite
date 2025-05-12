@@ -49,6 +49,7 @@
                     <div class="flex flex-col">
                         <span class="text-white font-display font-extrabold text-xl tracking-tight leading-none text-shadow-sm">LYCÉE LOUIS VINCENT</span>
                         <span class="text-white/70 text-xs">EXCELLENCE • INNOVATION • TRADITION</span>
+                        <span class="text-white/70 text-xs tracking-tight leading-none">GENERAL ET TECHNOLOGIQUE</span>
                     </div>
                 </a>
 
