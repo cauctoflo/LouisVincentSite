@@ -9,11 +9,11 @@ class ViewDispatchController extends Controller
 {
     
 
-    const PATH = 'Admin';
+    const PATH = 'Admin.';
 
 
     public function Index()
     {
-        // Renvoie la vue contenant le dashboard du site internet
+        return view(self::PATH . 'Dashboard.index');
     }
 }

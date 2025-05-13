@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::create('personnels', function (Blueprint $table) {
             $table->id();
-            // Add your columns here
+            $table->string('nom');
+            $table->boolean('is_admin')->default(false);
+            $table->json('permissions')->nullable();
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }

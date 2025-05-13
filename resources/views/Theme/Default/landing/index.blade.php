@@ -6,28 +6,23 @@
     <div class="custom-cursor hidden"></div>
     <div class="cursor-follower hidden"></div>
 
-    <!-- Arrière-plan vidéo amélioré -->
     <div class="fixed inset-0 z-[-2] overflow-hidden">
-        <!-- Effet de vignette pour ajouter de la profondeur -->
+
         <div class="absolute inset-0 vignette z-[3]"></div>
         
-        <!-- Superposition de dégradé animé qui améliore la vidéo sans l'obscurcir -->
         <div class="absolute inset-0 video-overlay z-[2]"></div>
         
-        <!-- Dégradé maillé léger pour la texture -->
         <div class="absolute inset-0 bg-mesh-gradient opacity-30 z-[1]"></div>
         
-        <!-- Élément vidéo avec des paramètres de qualité améliorés -->
-        {{-- <video class="min-w-full min-h-full object-cover absolute filter brightness-110 contrast-105 saturate-105" autoplay muted loop playsinline>
+        <video class="min-w-full min-h-full object-cover absolute filter brightness-110 contrast-105 saturate-105" autoplay muted loop playsinline>
             <source src="{{ asset('storage/assets/video/videotest.webm') }}" type="video/webm">
             Votre navigateur ne prend pas en charge la lecture de vidéos.
-        </video> --}}
+        </video>
     </div>
 
 
     <div class="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 opacity-0 invisible transition-all duration-500 overlay"></div>
 
-    <!-- Hero Section avec espacement corrigé et meilleure intégration du séparateur -->
     <section class="relative min-h-screen flex items-center px-6 md:px-16 lg:px-24 -mt-32 mb-5" id="accueil">
         <div class="max-w-7xl mx-auto w-full">
             <div class="max-w-3xl pt-24">
@@ -55,7 +50,6 @@
                     </a>
                 </div>
                 
-                <!-- Stats cards -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-12">
                     <div class="glass rounded-2xl p-6 transform -rotate-2 opacity-0 animate-fadeIn delay-1000 transition-all duration-300 hover:rotate-0 hover:scale-105 hover:shadow-xl border border-white/10 group hover:border-white/30 hover:bg-white/10">
                         <span class="text-4xl font-display font-extrabold text-white mb-2 block group-hover:text-secondary-light transition-colors">97.9%</span>
@@ -80,7 +74,6 @@
             </div>
         </div>
         
-        <!-- Scroll indicator -->
         <div class="absolute bottom-20 left-1/2 transform -translate-x-1/2 text-white opacity-0 animate-bounce-custom delay-1200 animate-fadeIn z-10">
             <div class="relative w-10 h-10 flex items-center justify-center">
                 <div class="absolute inset-0 rounded-full border-2 border-white/30 animate-pulse"></div>
@@ -88,7 +81,6 @@
             </div>
         </div>
         
-        <!-- Séparateur redessiné avec meilleure intégration -->
         <div class="absolute bottom-0 left-0 w-full z-10 overflow-hidden mt-10>
             <svg class="w-full h-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" preserveAspectRatio="none">
                 <path fill="#ffffff" fill-opacity="1" d="M0,64L60,69.3C120,75,240,85,360,90.7C480,96,600,96,720,85.3C840,75,960,53,1080,48C1200,43,1320,53,1380,58.7L1440,64L1440,120L1380,120C1320,120,1200,120,1080,120C960,120,840,120,720,120C600,120,480,120,360,120C240,120,120,120,60,120L0,120Z"></path>
@@ -97,19 +89,14 @@
     </section>
     
 
-    <!-- À propos du lycée section -->
     <section class="relative py-24 overflow-hidden" id="lycee">
-        <!-- Fond principal avec dégradé -->
         <div class="absolute inset-0 bg-gradient-to-br from-accent-blue via-white to-secondary/5"></div>
         
-        <!-- Motif de vagues -->
         <div class="absolute inset-0 bg-wave-pattern opacity-60"></div>
         
-        <!-- Cercles décoratifs avec effet de flou -->
         <div class="absolute top-0 left-0 w-96 h-96 bg-primary/10 rounded-full filter blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
         <div class="absolute bottom-0 right-0 w-96 h-96 bg-secondary/10 rounded-full filter blur-3xl translate-x-1/2 translate-y-1/2"></div>
         
-        <!-- Effet de brillance -->
         <div class="absolute top-1/4 right-1/4 w-64 h-64 bg-white/30 rounded-full filter blur-2xl"></div>
         
         <div class="relative max-w-7xl mx-auto px-6 md:px-16 z-10">
@@ -155,7 +142,6 @@
         </div>
     </section>
 
-    <!-- Section Agenda -->
     <section class="relative py-24 bg-gray-50" id="agenda">
         <div class="relative max-w-6xl mx-auto px-6">
 
@@ -194,9 +180,7 @@
                     </div>
                 </div>
 
-                <!-- Calendrier -->
                 <div class="overflow-hidden">
-                    <!-- Jours de la semaine -->
                     <div class="grid grid-cols-7 mb-4">
                         <div class="text-sm text-gray-600 font-medium py-2 text-center">Lundi</div>
                         <div class="text-sm text-gray-600 font-medium py-2 text-center">Mardi</div>
@@ -207,9 +191,8 @@
                         <div class="text-sm text-primary font-medium py-2 text-center">Dimanche</div>
                     </div>
 
-                    <!-- Grille des jours -->
                     <div class="grid grid-cols-7 gap-px bg-gray-200" id="calendar-grid">
-                        <!-- Les jours seront générés dynamiquement par JavaScript -->
+                        
                     </div>
                 </div>
             </div>
@@ -286,8 +269,10 @@
         </div>
     </section>
 
-    <!-- Transition minimaliste entre sections -->
-    <div class="h-24 bg-gradient-to-b from-gray-50 to-blue-50"></div>
+    <!-- Transition ligne en dégradé bleu -->
+    <div class="py-8 flex items-center justify-center">
+        <div class="w-3/4 h-px bg-gradient-to-r from-blue-50 via-blue-500 to-blue-50"></div>
+    </div>
 
     <!-- Section WEBTV - Design moderne en light mode avec teintes bleues -->
     <section class="relative py-16 bg-gradient-to-br from-blue-50 via-white to-sky-100 overflow-hidden" id="webtv">
@@ -690,9 +675,11 @@
         </div>
     </a>
 
-    <!-- Transition minimaliste entre sections -->
-    <div class="h-24 bg-gradient-to-b from-blue-50 to-slate-50"></div>
-
+    <!-- Transition ligne en dégradé bleu -->
+    <div class="flex items-center justify-center">
+        <div class="w-full h-px bg-gradient-to-r from-blue-50 via-blue-500 to-blue-50"></div>
+    </div>
+   
     <!-- Section Internat de l'excellence -->
     <section class="relative py-20 bg-gradient-to-br from-blue-50 via-white to-sky-50 overflow-hidden" id="internat">
         <!-- Éléments décoratifs d'ambiance -->
@@ -960,15 +947,8 @@
         </div>
     </section>
 
-    <!-- Transition minimaliste entre sections -->
-    <div class="h-24 bg-gradient-to-b from-sky-50 to-blue-900/5"></div>
-
     <!-- Footer avec Google Maps - Version allégée -->
-    <footer class="relative bg-gradient-to-br from-blue-900 to-blue-800 text-white overflow-hidden" id="contact">
-        <!-- Éléments décoratifs minimaux -->
-        <div class="absolute inset-0 bg-pattern-grid opacity-5"></div>
-        <div class="absolute top-0 right-0 w-72 h-72 bg-blue-500/20 rounded-full filter blur-[80px]"></div>
-        
+    <footer class="relative bg-gradient-to-br from-blue-900 to-blue-800 text-white overflow-hidden" id="contact">           
         <div class="max-w-7xl mx-auto px-6 sm:px-10 py-12">
             <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
                 <!-- Logo et infos - 2 colonnes -->
@@ -1100,5 +1080,7 @@
             </div>
         </div>
     </footer>
+
+
 
 @endsection

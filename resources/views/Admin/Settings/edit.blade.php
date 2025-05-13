@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
 <div class="container mx-auto px-4 py-8">
@@ -19,7 +19,7 @@
                 </div>
             </div>
         
-            <form action="/admin/settings/{{ $setting->id }}" method="POST" class="space-y-4">
+            <form action="{{ route('personnels.settings.store', ['setting' => $setting]) }}" method="POST" class="space-y-4">
                 @csrf                
                 <div>
                     <label for="value" class="block text-sm font-medium text-gray-700 mb-1">Valeur</label>

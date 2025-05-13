@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @php
     $settings = App\Models\Setting::all();
@@ -22,7 +22,7 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @foreach($settings as $setting)
-            <a href="/admin/settings/{{ $setting->id }}" class="bg-white rounded-xl p-6 border border-slate-100 shadow-md hover:shadow-xl transition-all block">
+            <a href="{{ route('personnels.settings.edit', ['setting' => $setting]) }}" class="bg-white rounded-xl p-6 border border-slate-100 shadow-md hover:shadow-xl transition-all block">
                 <div class="flex items-start gap-4">
                     <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center text-white shadow-md shadow-indigo-300/20">
                         <i class="fas fa-cog text-lg"></i>
@@ -45,16 +45,5 @@
         @endforeach
     </div>
 </div>
-
-<script>
-function editSetting(key, currentValue) {
-    const newValue = prompt(`Modifier la valeur pour ${key}:`, currentValue);
-    if (newValue !== null && newValue !== currentValue) {
-        // Vous pouvez ajouter ici la logique pour mettre à jour la valeur via AJAX
-        console.log(`Updating ${key} to ${newValue}`);
-    }
-}
-</script>
-
 
 @endsection
