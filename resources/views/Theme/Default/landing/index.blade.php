@@ -6,7 +6,7 @@
     <div class="custom-cursor hidden"></div>
     <div class="cursor-follower hidden"></div>
 
-    <div class="fixed inset-0 z-[-2] overflow-hidden">
+    <div class="fixed inset-0 z-[-2] overflow-hidden video-container">
 
         <div class="absolute inset-0 vignette z-[3]"></div>
         
@@ -14,7 +14,7 @@
         
         <div class="absolute inset-0 bg-mesh-gradient opacity-30 z-[1]"></div>
         
-        <video class="min-w-full min-h-full object-cover absolute filter brightness-110 contrast-105 saturate-105" autoplay muted loop playsinline>
+        <video class="min-w-full h-full object-cover absolute filter brightness-110 contrast-105 saturate-105" autoplay muted loop playsinline>
             <source src="{{ asset('storage/assets/video/videotest.webm') }}" type="video/webm">
             Votre navigateur ne prend pas en charge la lecture de vidéos.
         </video>
@@ -22,6 +22,30 @@
 
 
     <div class="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 opacity-0 invisible transition-all duration-500 overlay"></div>
+
+    <style>
+        .video-container {
+            top: var(--navbar-height, 0); /* Utilise une variable CSS pour la hauteur de la navbar */
+            height: calc(100vh - var(--navbar-height, 0));
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Calcule la hauteur de la navbar et la définit comme variable CSS
+            const updateNavbarHeight = () => {
+                const navbar = document.querySelector('header');
+                if (navbar) {
+                    const navbarHeight = navbar.offsetHeight;
+                    document.documentElement.style.setProperty('--navbar-height', navbarHeight + 'px');
+                }
+            };
+            
+            // Mettre à jour lors du chargement et du redimensionnement
+            updateNavbarHeight();
+            window.addEventListener('resize', updateNavbarHeight);
+        });
+    </script>
 
     <section class="relative min-h-screen flex items-center px-6 md:px-16 lg:px-24 -mt-32 mb-5" id="accueil">
         <div class="max-w-7xl mx-auto w-full">
@@ -270,9 +294,7 @@
     </section>
 
     <!-- Transition ligne en dégradé bleu -->
-    <div class="py-8 flex items-center justify-center">
         <div class="w-3/4 h-px bg-gradient-to-r from-blue-50 via-blue-500 to-blue-50"></div>
-    </div>
 
     <!-- Section WEBTV - Design moderne en light mode avec teintes bleues -->
     <section class="relative py-16 bg-gradient-to-br from-blue-50 via-white to-sky-100 overflow-hidden" id="webtv">

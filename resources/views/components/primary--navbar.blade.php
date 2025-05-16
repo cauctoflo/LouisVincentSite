@@ -1,122 +1,509 @@
-  
-    
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+<header class="fixed top-0 left-0 w-full z-50 transition-all duration-500" x-data="{ mobileMenuOpen: false, scrolled: false }">
+    <!-- Top micro-banner avec gradient subtil -->
+    <div class="h-1 bg-gradient-to-r from-blue-500 via-secondary to-primary"></div>
     
-    <header class="fixed top-0 left-0 w-full z-50 transition-all duration-500">
-        
-        <!-- Bande d'information supérieure avec design élégant -->
-        <div class="bg-gradient-to-r from-primary-dark to-primary py-1.5 border-b border-white/10">
-            <div class="max-w-7xl mx-auto px-4 md:px-6 flex flex-wrap justify-between items-center">
-                <div class="flex items-center space-x-4 text-white/90 text-xs">
-                    <a href="tel:0387664822" class="flex items-center space-x-1.5 hover:text-white transition-colors">
-                        <i class="fas fa-phone"></i>
-                        <span>03 87 66 48 22</span>
+    <!-- Contact & Social Bar -->
+    <div class="bg-gradient-to-r from-blue-800 to-blue-700 text-white/90">
+        <div class="container mx-auto px-4 py-1.5 flex flex-wrap justify-between items-center text-xs">
+            <!-- Quick links -->
+            <div class="flex space-x-4 md:space-x-6">
+                <a href="tel:0387664822" class="group flex items-center space-x-1.5">
+                    <span class="w-5 h-5 flex items-center justify-center rounded-full bg-white/10 group-hover:bg-primary transition-all">
+                        <i class="fas fa-phone text-[10px]"></i>
+                    </span>
+                    <span class="group-hover:text-white transition-colors">03 87 66 48 22</span>
+                </a>
+                <a href="mailto:contact@louis-vincent.fr" class="group flex items-center space-x-1.5">
+                    <span class="w-5 h-5 flex items-center justify-center rounded-full bg-white/10 group-hover:bg-primary transition-all">
+                        <i class="fas fa-envelope text-[10px]"></i>
+                    </span>
+                    <span class="group-hover:text-white transition-colors">contact@louis-vincent.fr</span>
+                </a>
+            </div>
+            
+            <!-- Portal links & social -->
+            <div class="flex items-center divide-x divide-white/10">
+                <div class="hidden sm:flex items-center space-x-4 pr-4">
+                    <a href="#" class="hover:text-white transition-colors flex items-center">
+                        <i class="fas fa-user-graduate mr-1.5 text-[10px]"></i>
+                        <span>Espace élèves</span>
                     </a>
-                    <span class="hidden md:inline-block w-px h-3 bg-white/30"></span>
-                    <a href="mailto:contact@louis-vincent.fr" class="flex items-center space-x-1.5 hover:text-white transition-colors">
-                        <i class="fas fa-envelope"></i>
-                        <span>contact@louis-vincent.fr</span>
+                    <a href="#" class="hover:text-white transition-colors flex items-center">
+                        <i class="fas fa-desktop mr-1.5 text-[10px]"></i>
+                        <span>ENT</span>
                     </a>
                 </div>
-                
-                <div class="flex items-center space-x-3">
-                    <a href="#" aria-label="Facebook" class="w-6 h-6 rounded-full flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 transition-all">
-                        <i class="fab fa-facebook-f text-xs"></i>
+                <div class="flex items-center space-x-2 pl-4">
+                    <a href="#" aria-label="Facebook" class="w-5 h-5 rounded-full flex items-center justify-center bg-white/10 hover:bg-blue-600 transition-all">
+                        <i class="fab fa-facebook-f text-[10px]"></i>
                     </a>
-                    <a href="#" aria-label="Twitter" class="w-6 h-6 rounded-full flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 transition-all">
-                        <i class="fab fa-twitter text-xs"></i>
+                    <a href="#" aria-label="Twitter" class="w-5 h-5 rounded-full flex items-center justify-center bg-white/10 hover:bg-blue-400 transition-all">
+                        <i class="fab fa-twitter text-[10px]"></i>
                     </a>
-                    <a href="#" aria-label="Instagram" class="w-6 h-6 rounded-full flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 transition-all">
-                        <i class="fab fa-instagram text-xs"></i>
+                    <a href="#" aria-label="Instagram" class="w-5 h-5 rounded-full flex items-center justify-center bg-white/10 hover:bg-pink-600 transition-all">
+                        <i class="fab fa-instagram text-[10px]"></i>
                     </a>
+                </div>
                 </div>
             </div>
         </div>
         
-        <!-- Navigation principale premium -->
-        <nav class="premium-glass-nav transition-all duration-300 py-3.5 border-b border-white/10">
-            <div class="max-w-7xl mx-auto px-4 md:px-6 flex items-center justify-between">
-                <!-- Logo amélioré avec effet dynamique -->
-                <a href="#" class="group flex items-center space-x-3 relative z-10">
-                    <div class="relative">
-                        <div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center text-primary-dark font-bold text-xl shadow-lg transform transition-all duration-300 group-hover:shadow-primary/30 group-hover:scale-105">
+    <!-- Main Navbar with Background -->
+    <nav class="bg-gradient-to-r from-blue-50/90 via-white/90 to-blue-50/90 backdrop-blur-md shadow-md transition-all duration-300" :class="{'py-4': !scrolled, 'py-2': scrolled}">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <a href="#" class="group flex items-center space-x-4 relative z-10">
+                    <div class="overflow-hidden rounded-lg transition-all duration-300 shadow-md flex-shrink-0">
+                        <div class="w-14 h-14 bg-white flex items-center justify-center text-primary-dark p-1.5 relative z-10 group-hover:scale-105 transition-transform duration-300">
                             <img src="{{ asset('storage/assets/images/logo.png') }}" alt="Logo" class="w-10 h-10 object-contain">
+                            <div class="absolute inset-0 bg-gradient-to-tr from-blue-600/20 via-transparent to-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         </div>
-                        <div class="absolute -inset-1 bg-white rounded-xl opacity-0 group-hover:opacity-20 blur-xl transition-all duration-300"></div>
                     </div>
                     
                     <div class="flex flex-col">
-                        <span class="text-white font-display font-extrabold text-xl tracking-tight leading-none text-shadow-sm">LYCÉE LOUIS VINCENT</span>
-                        <span class="text-white/70 text-xs">EXCELLENCE • INNOVATION • TRADITION</span>
-                        <span class="text-white/70 text-xs tracking-tight leading-none">GENERAL ET TECHNOLOGIQUE</span>
+                        <span class="text-blue-900 font-display font-extrabold text-xl tracking-tight leading-none">LYCÉE LOUIS VINCENT</span>
+                        <div class="flex flex-wrap items-center text-blue-600/80 text-xs tracking-tight">
+                            <span>EXCELLENCE</span>
+                            <span class="mx-1.5">•</span>
+                            <span>INNOVATION</span>
+                            <span class="mx-1.5">•</span>
+                            <span>TRADITION</span>
+                            <span class="ml-3 pl-3 border-l border-blue-200 flex items-center">
+                                <span class="font-medium text-blue-700/75">GÉNÉRAL</span>
+                                <span class="mx-1.5 text-blue-400/60">|</span>
+                                <span class="font-medium text-blue-700/75">TECHNOLOGIQUE</span>
+                            </span>
+                        </div>
                     </div>
                 </a>
 
-                <!-- Navigation desktop premium -->
-                <div class="hidden lg:flex items-center space-x-1">
-                    <a href="#accueil" class="premium-nav-link text-white/90 font-medium px-4">Accueil</a>
-                    <a href="#lycee" class="premium-nav-link text-white/90 font-medium px-4">Le lycée</a>
-                    <a href="#formation" class="premium-nav-link text-white/90 font-medium px-4">Formation</a>
-                    <a href="#vie-lyceenne" class="premium-nav-link text-white/90 font-medium px-4">Vie lycéenne</a>
-                    <a href="#international" class="premium-nav-link text-white/90 font-medium px-4">International</a>
-                    <a href="#actualites" class="premium-nav-link text-white/90 font-medium px-4">Actualités</a>
-                    
-                    <div class="w-px h-6 bg-white/20 mx-1"></div>
-                    
-                    <a href="#contact" class="ml-2 relative group">
-                        <div class="absolute -inset-0.5 bg-gradient-to-r from-secondary to-primary rounded-full blur-sm opacity-0 group-hover:opacity-100 transition duration-300"></div>
-                        <button class="relative bg-white hover:bg-gray-50 text-primary-dark font-bold px-5 py-2 rounded-full transition-all transform group-hover:scale-105 group-hover:shadow-lg">
-                            Contact
-                        </button>
+                <!-- Desktop Navigation -->
+                <div class="hidden xl:flex items-center space-x-5">
+                    <a href="#accueil" class="nav-link group">
+                        <span class="nav-text">Accueil</span>
+                        <span class="nav-dot"></span>
                     </a>
+                    
+                    <a href="#lycee" class="nav-link group">
+                        <span class="nav-text">Le lycée</span>
+                        <span class="nav-dot"></span>
+                    </a>
+
+                    
+                    <div class="relative group/menu">
+                        <a href="#formation" class="nav-link group">
+                            <span class="nav-text">Formation</span>
+                            <i class="fas fa-chevron-down text-[10px] ml-1.5 text-blue-400 group-hover:text-blue-700 transition-colors"></i>
+                            <span class="nav-dot"></span>
+                        </a>
+                        <div class="absolute left-0 top-full pt-2 w-[500px] invisible group-hover/menu:visible opacity-0 group-hover/menu:opacity-100 transition-all duration-200 transform origin-top scale-95 group-hover/menu:scale-100 z-50">
+                            <div class="bg-white rounded-md shadow-xl overflow-hidden">
+                                <div class="h-1 bg-gradient-to-r from-blue-500 to-primary"></div>
+                                <div class="p-5">
+                                    <!-- En-tête -->
+                                    <h2 class="text-xl font-bold text-blue-800 mb-4 text-center">Nos formations</h2>
+                                    
+                                    <!-- Contenu avec nouvelle disposition -->
+                                    <div class="grid grid-cols-2 grid-rows-2 gap-5">
+                                        <!-- Voie Générale (prend toute la hauteur à gauche) -->
+                                        <div class="bg-blue-50/50 rounded-lg p-3 row-span-2">
+                                            <h3 class="font-bold text-blue-700 text-base mb-3 pb-2 border-b border-blue-200">VOIE GÉNÉRALE</h3>
+                                            <div class="space-y-2">
+                                                <a href="#histoire-geo" class="flex items-center p-1.5 bg-gradient-to-r from-blue-50/70 to-blue-100/50 rounded hover:from-blue-100/70 hover:to-blue-200/50 transition-all">
+                                                    <span class="w-2 h-2 rounded-full bg-blue-400 mr-2 flex-shrink-0"></span>
+                                                    <span class="text-sm text-blue-600">Histoire-géographie, géopolitique et sciences politiques</span>
+                                                </a>
+                                                <a href="#anglais" class="flex items-center p-1.5 bg-gradient-to-r from-blue-50/70 to-blue-100/50 rounded hover:from-blue-100/70 hover:to-blue-200/50 transition-all">
+                                                    <span class="w-2 h-2 rounded-full bg-blue-400 mr-2 flex-shrink-0"></span>
+                                                    <span class="text-sm text-blue-600">Anglais monde contemporain</span>
+                                                </a>
+                                                <a href="#mathematiques" class="flex items-center p-1.5 bg-gradient-to-r from-blue-50/70 to-blue-100/50 rounded hover:from-blue-100/70 hover:to-blue-200/50 transition-all">
+                                                    <span class="w-2 h-2 rounded-full bg-blue-400 mr-2 flex-shrink-0"></span>
+                                                    <span class="text-sm text-blue-600">Mathématiques</span>
+                                                </a>
+                                                <a href="#numerique" class="flex items-center p-1.5 bg-gradient-to-r from-blue-50/70 to-blue-100/50 rounded hover:from-blue-100/70 hover:to-blue-200/50 transition-all">
+                                                    <span class="w-2 h-2 rounded-full bg-blue-400 mr-2 flex-shrink-0"></span>
+                                                    <span class="text-sm text-blue-600">Numérique et sciences informatiques</span>
+                                                </a>
+                                                <a href="#physique-chimie" class="flex items-center p-1.5 bg-gradient-to-r from-blue-50/70 to-blue-100/50 rounded hover:from-blue-100/70 hover:to-blue-200/50 transition-all">
+                                                    <span class="w-2 h-2 rounded-full bg-blue-400 mr-2 flex-shrink-0"></span>
+                                                    <span class="text-sm text-blue-600">Physique-Chimie</span>
+                                                </a>
+                                                <a href="#svt" class="flex items-center p-1.5 bg-gradient-to-r from-blue-50/70 to-blue-100/50 rounded hover:from-blue-100/70 hover:to-blue-200/50 transition-all">
+                                                    <span class="w-2 h-2 rounded-full bg-blue-400 mr-2 flex-shrink-0"></span>
+                                                    <span class="text-sm text-blue-600">Sciences de la vie et de la Terre</span>
+                                                </a>
+                                                <a href="#ingenieur" class="flex items-center p-1.5 bg-gradient-to-r from-blue-50/70 to-blue-100/50 rounded hover:from-blue-100/70 hover:to-blue-200/50 transition-all">
+                                                    <span class="w-2 h-2 rounded-full bg-blue-400 mr-2 flex-shrink-0"></span>
+                                                    <span class="text-sm text-blue-600">Sciences de l'Ingénieur</span>
+                                                </a>
+                                                <a href="#eco-social" class="flex items-center p-1.5 bg-gradient-to-r from-blue-50/70 to-blue-100/50 rounded hover:from-blue-100/70 hover:to-blue-200/50 transition-all">
+                                                    <span class="w-2 h-2 rounded-full bg-blue-400 mr-2 flex-shrink-0"></span>
+                                                    <span class="text-sm text-blue-600">Sciences économiques et sociales</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Voie Technologique (en haut à droite) -->
+                                        <div class="bg-blue-50/50 rounded-lg p-3">
+                                            <h3 class="font-bold text-blue-700 text-base mb-3 pb-2 border-b border-blue-200">VOIE TECHNOLOGIQUE</h3>
+                                            <div class="space-y-2">
+                                                <a href="#sti2d" class="flex items-center p-1.5 bg-gradient-to-r from-blue-50/70 to-blue-100/50 rounded hover:from-blue-100/70 hover:to-blue-200/50 transition-all">
+                                                    <span class="w-2 h-2 rounded-full bg-blue-400 mr-2 flex-shrink-0"></span>
+                                                    <span class="text-sm text-blue-600">Sciences et Technologies de l'Industrie et du Développement Durable</span>
+                                                </a>
+                                                <a href="#stl" class="flex items-center p-1.5 bg-gradient-to-r from-blue-50/70 to-blue-100/50 rounded hover:from-blue-100/70 hover:to-blue-200/50 transition-all">
+                                                    <span class="w-2 h-2 rounded-full bg-blue-400 mr-2 flex-shrink-0"></span>
+                                                    <span class="text-sm text-blue-600">Sciences et Technologies de Laboratoire</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Post-Bac CPGE (en bas à droite) -->
+                                        <div class="bg-blue-50/50 rounded-lg p-3">
+                                            <h3 class="font-bold text-blue-700 text-base mb-3 pb-2 border-b border-blue-200">POST-BAC | CPGE</h3>
+                                            <div class="space-y-2">
+                                                <a href="#tsi" class="flex items-center p-1.5 bg-gradient-to-r from-blue-50/70 to-blue-100/50 rounded hover:from-blue-100/70 hover:to-blue-200/50 transition-all">
+                                                    <span class="w-2 h-2 rounded-full bg-blue-400 mr-2 flex-shrink-0"></span>
+                                                    <span class="text-sm text-blue-600">Technologie et Sciences Industrielles</span>
+                                                </a>
+                                                <a href="#tsi-info" class="flex items-center p-1.5 bg-gradient-to-r from-blue-50/70 to-blue-100/50 rounded hover:from-blue-100/70 hover:to-blue-200/50 transition-all">
+                                                    <span class="w-2 h-2 rounded-full bg-blue-400 mr-2 flex-shrink-0"></span>
+                                                    <span class="text-sm text-blue-600">Classes préparatoires</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="#vie-lyceenne" class="nav-link group">
+                        <span class="nav-text">Vie lycéenne</span>
+                        <span class="nav-dot"></span>
+                    </a>
+                    
+                    <a href="#international" class="nav-link group">
+                        <span class="nav-text">International</span>
+                        <span class="nav-dot"></span>
+                    </a>
+                    
+                    <a href="#actualites" class="nav-link group">
+                        <span class="nav-text">Actualités</span>
+                        <span class="nav-dot"></span>
+                    </a>
+                    
+                    <div class="ml-3 pl-3 border-l border-blue-200">
+                        <a href="#contact" class="relative group overflow-hidden">
+                            <span class="relative block px-6 py-2.5 bg-gradient-to-r from-blue-600 to-primary text-white font-semibold rounded-md z-10 transform group-hover:scale-105 transition duration-300">
+                                Contact
+                            </span>
+                            <span class="absolute inset-0 bg-gradient-to-r from-blue-700 to-primary-dark rounded-md opacity-0 group-hover:opacity-100 transition duration-300"></span>
+                        </a>
+                    </div>
                 </div>
 
-                <!-- Bouton de menu mobile élégant -->
-                <div class="block lg:hidden menu-toggle z-50 cursor-pointer p-2 bg-white/5 rounded-lg hover:bg-white/10 transition-colors">
-                    <span class="w-6"></span>
-                    <span class="my-1.5 w-6"></span>
-                    <span class="w-6"></span>
+                <!-- Mobile Menu Button -->
+                <button @click="mobileMenuOpen = !mobileMenuOpen" class="xl:hidden relative z-50 flex items-center p-2 group" :class="{'text-blue-700': !mobileMenuOpen, 'text-primary': mobileMenuOpen}">
+                    <div class="relative flex overflow-hidden items-center justify-center rounded-full w-[50px] h-[50px] transform transition-all bg-blue-50 ring-0 ring-blue-200 group-hover:ring-2 group-focus:ring-4 ring-opacity-30 duration-200 shadow-sm">
+                        <div class="flex flex-col justify-between w-[20px] h-[20px] transform transition-all duration-300 origin-center overflow-hidden">
+                            <div class="bg-blue-700 h-[2px] w-7 transform transition-all duration-300 origin-left" :class="{'translate-y-6 -rotate-45': mobileMenuOpen}"></div>
+                            <div class="bg-blue-700 h-[2px] w-7 rounded transform transition-all duration-300" :class="{'opacity-0': mobileMenuOpen}"></div>
+                            <div class="bg-blue-700 h-[2px] w-7 transform transition-all duration-300 origin-left" :class="{'translate-y-6 rotate-45': mobileMenuOpen}"></div>
+                        </div>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero background element (subtle pattern) -->
+    <div class="absolute inset-0 w-full h-64 bg-gradient-to-b from-blue-100 to-transparent opacity-20 pointer-events-none -z-10 overflow-hidden">
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMyMjIiIGZpbGwtb3BhY2l0eT0iLjA1Ij48cGF0aCBkPSJNMzYgMzBoLTZWMGg2djMwem0tNiAwaC02VjBoNnYzMHpNMzAgMzBoLTZWMGg2djMweiIvPjwvZz48L2c+PC9zdmc+')]"></div>
+    </div>
+    
+    <!-- Mobile Menu Overlay -->
+    <div class="xl:hidden fixed inset-0 z-40 bg-black/80 backdrop-blur-sm transition-opacity duration-300" x-show="mobileMenuOpen" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" x-cloak></div>
+    
+    <!-- Mobile Menu Panel -->
+    <div class="xl:hidden fixed inset-y-0 right-0 z-40 w-full max-w-sm bg-gradient-to-b from-blue-50 via-blue-100/90 to-white shadow-xl transition transform duration-300" x-show="mobileMenuOpen" x-transition:enter="ease-out duration-300" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="ease-in duration-300" x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full" x-cloak>
+        <div class="flex flex-col h-full p-6 overflow-y-auto">
+            <!-- Mobile menu header -->
+            <div class="mb-8 flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 rounded-md bg-primary flex items-center justify-center">
+                        <i class="fas fa-school text-white text-lg"></i>
+                    </div>
+                    <div class="text-lg font-bold text-blue-800">Menu principal</div>
                 </div>
-            </div>
-        </nav>
-    </header>
-
-    <!-- Navigation mobile améliorée -->
-    <div class="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 opacity-0 invisible transition-all duration-500 overlay"></div>
-    <nav class="mobile-nav">
-        <div class="flex flex-col h-full">
-            <button class="absolute top-6 right-6 close-menu text-white/80 hover:text-white w-10 h-10 flex items-center justify-center rounded-full bg-white/10 backdrop-blur">
-                <i class="fas fa-times"></i>
-            </button>
-            
-            <div class="space-y-6 mt-12">
-                <ul class="flex flex-col space-y-6 transform translate-y-8 opacity-0 transition-all duration-300 text-lg font-medium">
-                    <li><a href="#accueil" class="text-white/80 hover:text-white transition-colors flex items-center"><i class="fas fa-home mr-3 w-6 opacity-60"></i>Accueil</a></li>
-                    <li><a href="#lycee" class="text-white/80 hover:text-white transition-colors flex items-center"><i class="fas fa-building mr-3 w-6 opacity-60"></i>Le lycée</a></li>
-                    <li><a href="#formation" class="text-white/80 hover:text-white transition-colors flex items-center"><i class="fas fa-graduation-cap mr-3 w-6 opacity-60"></i>Formation</a></li>
-                    <li><a href="#vie-lyceenne" class="text-white/80 hover:text-white transition-colors flex items-center"><i class="fas fa-users mr-3 w-6 opacity-60"></i>Vie lycéenne</a></li>
-                    <li><a href="#international" class="text-white/80 hover:text-white transition-colors flex items-center"><i class="fas fa-globe-europe mr-3 w-6 opacity-60"></i>International</a></li>
-                    <li><a href="#actualites" class="text-white/80 hover:text-white transition-colors flex items-center"><i class="fas fa-newspaper mr-3 w-6 opacity-60"></i>Actualités</a></li>
-                </ul>
+                <button @click="mobileMenuOpen = false" class="p-2 text-blue-800 hover:text-primary">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
             </div>
             
-            <div class="mt-auto mb-10 transform translate-y-8 opacity-0 transition-all duration-300">
-                <a href="#contact" class="block w-full py-3 px-6 bg-white text-primary-dark rounded-full font-semibold text-center shadow-lg transition-all relative overflow-hidden group hover:shadow-xl hover:-translate-y-1">
-                    <span class="relative z-10">Nous contacter</span>
-                    <div class="absolute inset-0 shimmer opacity-0 group-hover:opacity-100"></div>
+            <!-- Mobile menu items -->
+            <div class="space-y-6 text-lg font-medium text-blue-800">
+                <a href="#accueil" @click="mobileMenuOpen = false" class="mobile-link">
+                    <i class="fas fa-home w-8 opacity-60"></i>
+                    <span>Accueil</span>
                 </a>
                 
-                <div class="flex flex-col space-y-4 mt-8 text-white/80">
-                    <a href="tel:0387664822" class="flex items-center hover:text-white transition-colors">
-                        <i class="fas fa-phone mr-3"></i>
+                <div x-data="{open: false}" class="space-y-3">
+                    <button @click="open = !open" class="mobile-link w-full flex justify-between">
+                        <div class="flex items-center">
+                            <i class="fas fa-building w-8 opacity-60"></i>
+                            <span>Le lycée</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-sm transition-transform" :class="{'rotate-180': open}"></i>
+                    </button>
+                    <div x-show="open" x-transition class="pl-8 space-y-2 text-base text-blue-700/80">
+                        <a href="#presentation" @click="mobileMenuOpen = false" class="block py-2 hover:text-blue-900 transition-colors">Présentation</a>
+                        <a href="#equipe" @click="mobileMenuOpen = false" class="block py-2 hover:text-blue-900 transition-colors">Équipe pédagogique</a>
+                        <a href="#infrastructure" @click="mobileMenuOpen = false" class="block py-2 hover:text-blue-900 transition-colors">Infrastructure</a>
+                    </div>
+                </div>
+                
+                <div x-data="{open: false}" class="space-y-3">
+                    <button @click="open = !open" class="mobile-link w-full flex justify-between">
+                        <div class="flex items-center">
+                            <i class="fas fa-graduation-cap w-8 opacity-60"></i>
+                            <span>Formation</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-sm transition-transform" :class="{'rotate-180': open}"></i>
+                    </button>
+                    <div x-show="open" x-transition class="pl-8 space-y-5">
+                        <!-- Voie Générale -->
+                        <div x-data="{openGeneral: false}" class="space-y-2">
+                            <button @click="openGeneral = !openGeneral" class="text-blue-800 font-semibold flex justify-between w-full">
+                                <span>VOIE GÉNÉRALE</span>
+                                <i class="fas fa-chevron-down text-xs text-blue-500 transition-transform" :class="{'rotate-180': openGeneral}"></i>
+                            </button>
+                            <div x-show="openGeneral" x-transition class="pl-4 pt-2 pb-1 space-y-2 text-sm text-blue-700/80">
+                                <a href="#histoire-geo" @click="mobileMenuOpen = false" class="flex items-center p-2 bg-gradient-to-r from-blue-50/50 to-blue-100/30 rounded mb-1 hover:from-blue-100/50 hover:to-blue-200/30 transition-all">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2 flex-shrink-0"></span>
+                                    <span>Histoire-géographie, géopolitique et sciences politiques</span>
+                                </a>
+                                <a href="#anglais" @click="mobileMenuOpen = false" class="flex items-center p-2 bg-gradient-to-r from-blue-50/50 to-blue-100/30 rounded mb-1 hover:from-blue-100/50 hover:to-blue-200/30 transition-all">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2 flex-shrink-0"></span>
+                                    <span>Anglais monde contemporain</span>
+                                </a>
+                                <a href="#mathematiques" @click="mobileMenuOpen = false" class="flex items-center p-2 bg-gradient-to-r from-blue-50/50 to-blue-100/30 rounded mb-1 hover:from-blue-100/50 hover:to-blue-200/30 transition-all">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2 flex-shrink-0"></span>
+                                    <span>Mathématiques</span>
+                                </a>
+                                <a href="#numerique" @click="mobileMenuOpen = false" class="flex items-center p-2 bg-gradient-to-r from-blue-50/50 to-blue-100/30 rounded mb-1 hover:from-blue-100/50 hover:to-blue-200/30 transition-all">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2 flex-shrink-0"></span>
+                                    <span>Numérique et sciences informatiques</span>
+                                </a>
+                                <a href="#physique-chimie" @click="mobileMenuOpen = false" class="flex items-center p-2 bg-gradient-to-r from-blue-50/50 to-blue-100/30 rounded mb-1 hover:from-blue-100/50 hover:to-blue-200/30 transition-all">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2 flex-shrink-0"></span>
+                                    <span>Physique-Chimie</span>
+                                </a>
+                                <a href="#svt" @click="mobileMenuOpen = false" class="flex items-center p-2 bg-gradient-to-r from-blue-50/50 to-blue-100/30 rounded mb-1 hover:from-blue-100/50 hover:to-blue-200/30 transition-all">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2 flex-shrink-0"></span>
+                                    <span>Sciences de la vie et de la Terre</span>
+                                </a>
+                                <a href="#ingenieur" @click="mobileMenuOpen = false" class="flex items-center p-2 bg-gradient-to-r from-blue-50/50 to-blue-100/30 rounded mb-1 hover:from-blue-100/50 hover:to-blue-200/30 transition-all">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2 flex-shrink-0"></span>
+                                    <span>Sciences de l'Ingénieur</span>
+                                </a>
+                                <a href="#eco-social" @click="mobileMenuOpen = false" class="flex items-center p-2 bg-gradient-to-r from-blue-50/50 to-blue-100/30 rounded hover:from-blue-100/50 hover:to-blue-200/30 transition-all">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2 flex-shrink-0"></span>
+                                    <span>Sciences économiques et sociales</span>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Voie Technologique -->
+                        <div x-data="{openTech: false}" class="space-y-2">
+                            <button @click="openTech = !openTech" class="text-blue-800 font-semibold flex justify-between w-full">
+                                <span>VOIE TECHNOLOGIQUE</span>
+                                <i class="fas fa-chevron-down text-xs text-blue-500 transition-transform" :class="{'rotate-180': openTech}"></i>
+                            </button>
+                            <div x-show="openTech" x-transition class="pl-4 pt-2 pb-1 space-y-3 text-sm text-blue-700/80">
+                                <!-- STI2D -->
+                                <div class="space-y-2">
+                                    <h4 class="text-xs uppercase text-blue-600 font-medium">STI2D</h4>
+                                    <a href="#sti2d" @click="mobileMenuOpen = false" class="flex items-center p-2 bg-gradient-to-r from-blue-50/50 to-blue-100/30 rounded hover:from-blue-100/50 hover:to-blue-200/30 transition-all">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2 flex-shrink-0"></span>
+                                        <span>Sciences et Technologies de l'Industrie et du Développement Durable</span>
+                                    </a>
+                                </div>
+                                
+                                <!-- STL -->
+                                <div class="space-y-2">
+                                    <h4 class="text-xs uppercase text-blue-600 font-medium">STL</h4>
+                                    <a href="#stl" @click="mobileMenuOpen = false" class="flex items-center p-2 bg-gradient-to-r from-blue-50/50 to-blue-100/30 rounded hover:from-blue-100/50 hover:to-blue-200/30 transition-all">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2 flex-shrink-0"></span>
+                                        <span>Sciences et Technologies de Laboratoire</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Post-Bac CPGE -->
+                        <div x-data="{openCPGE: false}" class="space-y-2">
+                            <button @click="openCPGE = !openCPGE" class="text-blue-800 font-semibold flex justify-between w-full">
+                                <span>POST-BAC | CPGE</span>
+                                <i class="fas fa-chevron-down text-xs text-blue-500 transition-transform" :class="{'rotate-180': openCPGE}"></i>
+                            </button>
+                            <div x-show="openCPGE" x-transition class="pl-4 pt-2 pb-1 space-y-3 text-sm text-blue-700/80">
+                                <!-- TSI -->
+                                <div class="space-y-2">
+                                    <h4 class="text-xs uppercase text-blue-600 font-medium">TSI</h4>
+                                    <a href="#tsi" @click="mobileMenuOpen = false" class="flex items-center p-2 bg-gradient-to-r from-blue-50/50 to-blue-100/30 rounded hover:from-blue-100/50 hover:to-blue-200/30 transition-all">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2 flex-shrink-0"></span>
+                                        <span>Technologie et Sciences Industrielles</span>
+                                    </a>
+                                </div>
+                                
+                                <!-- Classes préparatoires -->
+                                <div class="space-y-2">
+                                    <h4 class="text-xs uppercase text-blue-600 font-medium">Classes préparatoires</h4>
+                                    <a href="#tsi-info" @click="mobileMenuOpen = false" class="flex items-center p-2 bg-gradient-to-r from-blue-50/50 to-blue-100/30 rounded hover:from-blue-100/50 hover:to-blue-200/30 transition-all">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2 flex-shrink-0"></span>
+                                        <span>Classes préparatoires</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <a href="#vie-lyceenne" @click="mobileMenuOpen = false" class="mobile-link">
+                    <i class="fas fa-users w-8 opacity-60"></i>
+                    <span>Vie lycéenne</span>
+                </a>
+                
+                <a href="#international" @click="mobileMenuOpen = false" class="mobile-link">
+                    <i class="fas fa-globe-europe w-8 opacity-60"></i>
+                    <span>International</span>
+                </a>
+                
+                <a href="#actualites" @click="mobileMenuOpen = false" class="mobile-link">
+                    <i class="fas fa-newspaper w-8 opacity-60"></i>
+                    <span>Actualités</span>
+                </a>
+            </div>
+            
+            <!-- Mobile Quick Access -->
+            <div class="mt-8 pt-8 border-t border-blue-200/50">
+                <h3 class="text-sm font-semibold text-blue-500 uppercase tracking-wider mb-4">Accès rapides</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <a href="#" class="quick-access-btn">
+                        <i class="fas fa-user-graduate mr-2"></i>
+                        Espace élèves
+                    </a>
+                    <a href="#" class="quick-access-btn">
+                        <i class="fas fa-clipboard-list mr-2"></i>
+                        Pronote
+                    </a>
+                    <a href="#" class="quick-access-btn">
+                        <i class="fas fa-desktop mr-2"></i>
+                        ENT
+                    </a>
+                    <a href="#" class="quick-access-btn">
+                        <i class="fas fa-map-marker-alt mr-2"></i>
+                        Plan d'accès
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Mobile Contact Button -->
+            <div class="mt-auto pt-6">
+                <a href="#contact" @click="mobileMenuOpen = false" class="flex items-center justify-center text-center w-full py-3 px-6 bg-gradient-to-r from-blue-600 to-primary hover:from-blue-700 hover:to-primary-dark text-white rounded-md font-semibold shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                    <i class="fas fa-envelope mr-2"></i>
+                    Nous contacter
+                </a>
+                
+                <div class="flex justify-between items-center mt-6 text-blue-700 text-sm">
+                    <a href="tel:0387664822" class="flex items-center hover:text-blue-900 transition-colors">
+                        <i class="fas fa-phone mr-2"></i>
                         03 87 66 48 22
                     </a>
-                    <a href="mailto:contact@louis-vincent.fr" class="flex items-center hover:text-white transition-colors">
-                        <i class="fas fa-envelope mr-3"></i>
+                    <span class="w-px h-4 bg-blue-200"></span>
+                    <a href="mailto:contact@louis-vincent.fr" class="flex items-center hover:text-blue-900 transition-colors">
+                        <i class="fas fa-envelope mr-2"></i>
                         contact@louis-vincent.fr
                     </a>
                 </div>
             </div>
         </div>
-    </nav>
+    </div>
+</header>
+
+<style>
+/* Main Navigation Styles */
+.nav-link {
+    @apply relative flex items-center px-5 py-3 text-blue-700/80 font-medium transition-colors;
+}
+
+.nav-text {
+    @apply group-hover:text-blue-800 transition-colors;
+}
+
+.nav-dot {
+    @apply absolute -bottom-1 left-1/2 w-1.5 h-1.5 rounded-full bg-primary transform -translate-x-1/2 scale-0 group-hover:scale-100 transition-transform duration-300;
+}
+
+.submenu-link {
+    @apply block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors;
+}
+
+.dropdown-link {
+    @apply block py-1.5 px-2 text-sm text-blue-600 hover:text-blue-800 hover:bg-white/70 rounded transition-colors;
+}
+
+.mobile-link {
+    @apply flex items-center py-2 text-blue-700/80 hover:text-blue-900 transition-colors;
+}
+
+.quick-access-btn {
+    @apply flex items-center justify-center text-sm py-2 px-3 rounded-md bg-blue-100/80 text-blue-700 hover:bg-blue-200 hover:text-blue-900 transition-all;
+}
+
+/* On Scroll Animation */
+header {
+    transition: transform 0.3s ease-in-out;
+}
+
+header.scrolled.nav-hidden {
+    transform: translateY(-100%);
+}
+
+/* Utility for Alpine.js */
+[x-cloak] { 
+    display: none !important; 
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Detect scroll position for header styling
+    const header = document.querySelector('header');
+    const handleScroll = () => {
+        if (window.scrollY > 50) {
+            header.__x.$data.scrolled = true;
+            if (window.scrollY > 150 && window.scrollY > lastScrollY) {
+                header.classList.add('nav-hidden');
+            } else {
+                header.classList.remove('nav-hidden');
+            }
+        } else {
+            header.__x.$data.scrolled = false;
+            header.classList.remove('nav-hidden');
+        }
+        lastScrollY = window.scrollY;
+    };
+    
+    let lastScrollY = 0;
+    window.addEventListener('scroll', handleScroll);
+    
+    // Initialize scroll position on page load
+    handleScroll();
+});
+</script>
