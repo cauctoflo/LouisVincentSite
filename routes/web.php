@@ -3,8 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Models\Setting;
 use App\Http\Controllers\WelcomePageController;
-
-
+use App\Modules\WebTv\Controllers\WebTvController;
+use App\Http\Controllers\Admin\View\Sidebar\JsonReadController;
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -16,15 +16,6 @@ Route::middleware([
 });
 
 
-
-
-Route::get('/timer', function () {
-    return view('Theme.Default.Assets.timer.index');
-});
-
-Route::get('/te', function () {
-    return view('Theme.Default.landing.index');
-});
 
 
 
@@ -43,8 +34,8 @@ Route::get('/te', function () {
 // ROUTE LIVESHARE
 //
 
-Route::get('/test', function () {
-    return 'https://prod.liveshare.vsengsaas.visualstudio.com/join?0717518A0A34C63184F25893553E3BAF430C';
+Route::get('/liveshare', function () {
+    return 'https://prod.liveshare.vsengsaas.visualstudio.com/join?1ADE156BD7DE8E7E0132A46F4209CCE1CC25';
 })->name('test');
 
 

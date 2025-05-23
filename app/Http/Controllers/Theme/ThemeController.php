@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\File;
 
 class ThemeController extends Controller
 {
-    public function getTheme()
+    public function getAllThemes()
     {
         $themes = [];
         $themePath = resource_path('views/Theme');
@@ -20,7 +20,14 @@ class ThemeController extends Controller
             foreach ($directories as $directory) {
                 $themes[] = basename($directory);
             }
-        }        
+        }
+
+        return $themes;
+    }
+
+    public function getTheme()
+    {
+        $themes = $this->getAllThemes();
         $currentTheme = Setting::getValue('theme');
 
         if (in_array($currentTheme, $themes)) {

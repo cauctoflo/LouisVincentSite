@@ -24,11 +24,15 @@
 
 
             <main class="mt-32">
+                
                 @hasSection('content')
-                    @yield('content')
-                @else
+                @yield('content')
+            @else
+                @isset($slot)
                     {{ $slot }}
-                @endif
+                @endisset
+            @endif
+
             </main>
         </div>
 

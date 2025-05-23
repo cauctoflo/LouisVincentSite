@@ -5,7 +5,6 @@
 @endphp
 
 @section('content')
-
 <div class="container mx-auto px-4 py-8">
     <div class="mb-8">
         <h1 class="text-3xl font-display font-bold text-gray-900">Paramètres du site</h1>
@@ -16,6 +15,14 @@
             <div class="flex items-center gap-2">
                 <i class="fas fa-check-circle"></i>
                 <p>Le paramètre a bien été modifié</p>
+            </div>
+        </div>
+    @endif
+    @if(session('not_found'))
+        <div class="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-circle-exclamation"></i>
+                <p>{{ session("not_found") }}</p>
             </div>
         </div>
     @endif

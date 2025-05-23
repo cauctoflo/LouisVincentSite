@@ -10,19 +10,22 @@
         
         <nav class="flex-1 flex flex-col mt-6">
             <button type="button" id="dashboard-btn" class="my-1 mx-auto w-10 h-10 rounded-xl flex items-center justify-center text-gray-600 hover:bg-blue-50 hover:text-blue-600 {{ request()->routeIs('dashboard') ? 'bg-blue-50 text-blue-600' : '' }} sidebar-toggle" data-section="dashboard">
-                <i class="fas fa-th-large"></i>
+                <i class="fa-solid fa-table-columns"></i>
             </button>
-            <button type="button" id="sales-btn" class="my-1 mx-auto w-10 h-10 rounded-xl flex items-center justify-center text-gray-600 hover:bg-blue-50 hover:text-blue-600 sidebar-toggle" data-section="sales">
-                <i class="fas fa-shopping-cart"></i>
+            <button type="button" id="administration-btn" class="my-1 mx-auto w-10 h-10 rounded-xl flex items-center justify-center text-gray-600 hover:bg-blue-50 hover:text-blue-600 sidebar-toggle" data-section="administration">
+                <i class="fas fa-user-tie"></i>
             </button>
-            <button type="button" id="inventory-btn" class="my-1 mx-auto w-10 h-10 rounded-xl flex items-center justify-center text-gray-600 hover:bg-blue-50 hover:text-blue-600 sidebar-toggle" data-section="inventory">
-                <i class="fas fa-box"></i>
-            </button>
-            <button type="button" id="users-btn" class="my-1 mx-auto w-10 h-10 rounded-xl flex items-center justify-center text-gray-600 hover:bg-blue-50 hover:text-blue-600 sidebar-toggle" data-section="users">
+            <button type="button" id="personnels-btn" class="my-1 mx-auto w-10 h-10 rounded-xl flex items-center justify-center text-gray-600 hover:bg-blue-50 hover:text-blue-600 sidebar-toggle" data-section="personnels">
                 <i class="fas fa-users"></i>
             </button>
-            <button type="button" id="tags-btn" class="my-1 mx-auto w-10 h-10 rounded-xl flex items-center justify-center text-gray-600 hover:bg-blue-50 hover:text-blue-600 sidebar-toggle" data-section="tags">
-                <i class="fas fa-tag"></i>
+            <button type="button" id="logs-btn" class="my-1 mx-auto w-10 h-10 rounded-xl flex items-center justify-center text-gray-600 hover:bg-blue-50 hover:text-blue-600 sidebar-toggle" data-section="logs">
+                <i class="fas fa-history"></i>
+            </button>
+            <button type="button" id="internat-btn" class="my-1 mx-auto w-10 h-10 rounded-xl flex items-center justify-center text-gray-600 hover:bg-blue-50 hover:text-blue-600 sidebar-toggle" data-section="internat">
+                <i class="fas fa-home"></i>
+            </button>
+            <button type="button" id="content-btn" class="my-1 mx-auto w-10 h-10 rounded-xl flex items-center justify-center text-gray-600 hover:bg-blue-50 hover:text-blue-600 sidebar-toggle" data-section="content">
+                <i class="fas fa-newspaper"></i>
             </button>
         </nav>
         
@@ -46,24 +49,29 @@
         
         <!-- Dashboard Section -->
         <div id="dashboard-section" class="section-content px-6 py-5">
-            <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">DASHBOARD</span>
+            <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">TABLEAU DE BORD</span>
             
             <nav class="mt-4 space-y-1.5">
                 <a href="{{ route('dashboard') }}" class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('dashboard') ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50' }}">
                     <i class="far fa-chart-bar mr-3 text-{{ request()->routeIs('dashboard') ? 'blue-500' : 'gray-400 group-hover:text-gray-500' }}"></i>
-                    Dashboard
+                    Vue d'ensemble
                 </a>
                 
                 <a href="#" class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
-                    <i class="far fa-chart-line mr-3 text-gray-400 group-hover:text-gray-500"></i>
-                    Statistiques
+                    <i class="fas fa-calendar-alt mr-3 text-gray-400 group-hover:text-gray-500"></i>
+                    Calendrier
+                </a>
+                
+                <a href="#" class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
+                    <i class="fas fa-bell mr-3 text-gray-400 group-hover:text-gray-500"></i>
+                    Notifications
                 </a>
             </nav>
         </div>
         
-        <!-- Sales Section (renamed to Paramètres Généraux) -->
-        <div id="sales-section" class="section-content px-6 py-5 hidden">
-            <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Paramètres Généraux</span>
+        <!-- Administration Section -->
+        <div id="administration-section" class="section-content px-6 py-5 hidden">
+            <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">ADMINISTRATION</span>
             
             <nav class="mt-4 space-y-1.5">
                 <div class="submenu-container">
@@ -89,31 +97,93 @@
                         </a>
                     </div>
                 </div>
-                
+
                 <div class="submenu-container">
-                    <button type="button" class="submenu-toggle group flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50" data-submenu="users-access">
+                    <button type="button" class="submenu-toggle group flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50" data-submenu="modules-admin">
                         <div class="flex items-center">
-                            <i class="fas fa-users-cog mr-3 text-gray-400 group-hover:text-gray-500"></i>
-                            Utilisateurs & Accès
+                            <i class="fas fa-puzzle-piece mr-3 text-gray-400 group-hover:text-gray-500"></i>
+                            Modules
                         </div>
                         <i class="fas fa-chevron-down text-xs text-gray-400 transform transition-transform duration-200 chevron-icon"></i>
                     </button>
-                    <div id="users-access-submenu" class="submenu ml-6 mt-1 space-y-1 hidden">
-                        <a href="#" class="group flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-800">
-                            <i class="fas fa-user-plus text-xs mr-2 text-gray-400"></i>
-                            Gestion des Utilisateurs
+                    <div id="modules-admin-submenu" class="submenu ml-6 mt-1 space-y-1 hidden">
+                        <a href="{{ route('personnels.modules.index') }}" class="group flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-800">
+                            <i class="fas fa-list text-xs mr-2 text-gray-400"></i>
+                            Liste des modules
                         </a>
-                        <a href="#" class="group flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-800">
-                            <i class="fas fa-key text-xs mr-2 text-gray-400"></i>
-                            Rôles & Permissions
-                        </a>
+
                     </div>
                 </div>
+                
+                <a href="{{ route('personnels.settings.index') }}" class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
+                    <i class="fas fa-cog mr-3 text-gray-400 group-hover:text-gray-500"></i>
+                    Paramètres
+                </a>
+            </nav>
+        </div>
+
+        <!-- Personnels Section -->
+        <div id="personnels-section" class="section-content px-6 py-5 hidden">
+            <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">PERSONNELS</span>
+            
+            <nav class="mt-4 space-y-1.5">
+                <a href="{{ route('personnels.personnels.index') }}" class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('personnels.personnels.index') ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50' }}">
+                    <i class="fas fa-users mr-3 text-{{ request()->routeIs('personnels.personnels.index') ? 'blue-500' : 'gray-400 group-hover:text-gray-500' }}"></i>
+                    Liste des utilisateurs
+                </a>
+                <a href="{{ route('personnels.personnels.create') }}" class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('personnels.personnels.create') ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50' }}">
+                    <i class="fas fa-user-plus mr-3 text-{{ request()->routeIs('personnels.personnels.create') ? 'blue-500' : 'gray-400 group-hover:text-gray-500' }}"></i>
+                    Ajouter un utilisateur
+                </a>
+                
+                <div class="submenu-container">
+                    <button type="button" class="submenu-toggle group flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50" data-submenu="roles-permissions">
+                        <div class="flex items-center">
+                            <i class="fas fa-user-shield mr-3 text-gray-400 group-hover:text-gray-500"></i>
+                            Rôles et permissions
+                        </div>
+                        <i class="fas fa-chevron-down text-xs text-gray-400 transform transition-transform duration-200 chevron-icon"></i>
+                    </button>
+                    <div id="roles-permissions-submenu" class="submenu ml-6 mt-1 space-y-1 hidden">
+                        <a href="{{ route('personnels.roles.index') }}" class="group flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-800 {{ request()->routeIs('personnels.roles.index') ? 'text-blue-600' : '' }}">
+                            <i class="fas fa-id-badge text-xs mr-2 text-gray-400"></i>
+                            Gestion des rôles
+                        </a>
+                        <a href="{{ route('personnels.permissions.index') }}" class="group flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-800 {{ request()->routeIs('personnels.permissions.index') ? 'text-blue-600' : '' }}">
+                            <i class="fas fa-key text-xs mr-2 text-gray-400"></i>
+                            Gestion des permissions
+                        </a>
+
+                    </div>
+                </div>
+                
+
+                </a>
+            </nav>
+        </div>
+
+        <!-- Internat Section -->
+        <div id="internat-section" class="section-content px-6 py-5 hidden">
+            <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">INTERNAT</span>
+            
+            <nav class="mt-4 space-y-1.5">
+                <a href="#" class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
+                    <i class="fas fa-home mr-3 text-gray-400 group-hover:text-gray-500"></i>
+                    Gestion de l'internat
+                </a>
+                <a href="#" class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
+                    <i class="fas fa-bed mr-3 text-gray-400 group-hover:text-gray-500"></i>
+                    Chambres
+                </a>
+                <a href="#" class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
+                    <i class="fas fa-user-graduate mr-3 text-gray-400 group-hover:text-gray-500"></i>
+                    Élèves internes
+                </a>
             </nav>
         </div>
         
-        <!-- Inventory Section -->
-        <div id="inventory-section" class="section-content px-6 py-5 hidden">
+        <!-- Content Section -->
+        <div id="content-section" class="section-content px-6 py-5 hidden">
             <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">CONTENU</span>
             
             <nav class="mt-4 space-y-1.5">
@@ -156,34 +226,67 @@
                         </a>
                     </div>
                 </div>
-            </nav>
-        </div>
-        
-        <!-- Users Section -->
-        <div id="users-section" class="section-content px-6 py-5 hidden">
-            <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">UTILISATEURS</span>
-            
-            <nav class="mt-4 space-y-1.5">
+                
                 <a href="#" class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
-                    <i class="far fa-users mr-3 text-gray-400 group-hover:text-gray-500"></i>
-                    Utilisateurs
+                    <i class="fas fa-newspaper mr-3 text-gray-400 group-hover:text-gray-500"></i>
+                    Actualités
                 </a>
+                
                 <a href="#" class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
-                    <i class="far fa-user-shield mr-3 text-gray-400 group-hover:text-gray-500"></i>
-                    Roles
+                    <i class="fas fa-calendar-alt mr-3 text-gray-400 group-hover:text-gray-500"></i>
+                    Événements
                 </a>
             </nav>
         </div>
         
-        <!-- Tags Section -->
-        <div id="tags-section" class="section-content px-6 py-5 hidden">
-            <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">TAGS</span>
+        <!-- Logs Section -->
+        <div id="logs-section" class="section-content px-6 py-5 hidden">
+            <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">JOURNAUX D'ACTIVITÉ</span>
             
             <nav class="mt-4 space-y-1.5">
-                <a href="#" class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
-                    <i class="far fa-tag mr-3 text-gray-400 group-hover:text-gray-500"></i>
-                    Gérer les tags
+                <a href="{{ route('personnels.Log.index') }}" class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('personnels.Log.index') ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50' }}">
+                    <i class="fas fa-list mr-3 text-{{ request()->routeIs('personnels.Log.index') ? 'blue-500' : 'gray-400 group-hover:text-gray-500' }}"></i>
+                    Tous les logs
                 </a>
+
+                <div class="submenu-container">
+                    <button type="button" class="submenu-toggle group flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50" data-submenu="logs-categories">
+                        <div class="flex items-center">
+                            <i class="fas fa-filter mr-3 text-gray-400 group-hover:text-gray-500"></i>
+                            Catégories
+                        </div>
+                        <i class="fas fa-chevron-down text-xs text-gray-400 transform transition-transform duration-200 chevron-icon"></i>
+                    </button>
+                    <div id="logs-categories-submenu" class="submenu ml-6 mt-1 space-y-1 hidden">
+                        <a href="{{ route('personnels.Log.index', ['action' => 'login']) }}" class="group flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-800">
+                            <i class="fas fa-sign-in-alt text-xs mr-2 text-gray-400"></i>
+                            Connexions
+                        </a>
+                        <a href="{{ route('personnels.Log.index', ['action' => 'role_change']) }}" class="group flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-800">
+                            <i class="fas fa-user-tag text-xs mr-2 text-gray-400"></i>
+                            Changements de rôles
+                        </a>
+                        <a href="{{ route('personnels.Log.index', ['action' => 'create']) }}" class="group flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-800">
+                            <i class="fas fa-plus-circle text-xs mr-2 text-gray-400"></i>
+                            Créations
+                        </a>
+                        <a href="{{ route('personnels.Log.index', ['action' => 'update']) }}" class="group flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-800">
+                            <i class="fas fa-edit text-xs mr-2 text-gray-400"></i>
+                            Modifications
+                        </a>
+                        <a href="{{ route('personnels.Log.index', ['action' => 'delete']) }}" class="group flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-800">
+                            <i class="fas fa-trash text-xs mr-2 text-gray-400"></i>
+                            Suppressions
+                        </a>
+                    </div>
+                </div>
+
+                @if(auth()->check() && auth()->user()->hasPermission('personnels.Log.clear'))
+                <button type="button" onclick="confirmClearLogs()" class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg text-red-600 hover:bg-red-50">
+                    <i class="fas fa-trash-alt mr-3 text-red-500"></i>
+                    Vider les logs
+                </button>
+                @endif
             </nav>
         </div>
         
@@ -192,14 +295,24 @@
             <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">PARAMÈTRES</span>
             
             <nav class="mt-4 space-y-1.5">
-                <a href="#" class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
-                    <i class="far fa-cog mr-3 text-gray-400 group-hover:text-gray-500"></i>
+                <a href="{{ route('personnels.settings.index') }}" class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
+                    <i class="fas fa-cog mr-3 text-gray-400 group-hover:text-gray-500"></i>
                     Paramètres généraux
                 </a>
                 
                 <a href="#" class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
-                    <i class="far fa-paint-brush mr-3 text-gray-400 group-hover:text-gray-500"></i>
+                    <i class="fas fa-paint-brush mr-3 text-gray-400 group-hover:text-gray-500"></i>
                     Apparence
+                </a>
+                
+                <a href="#" class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
+                    <i class="fas fa-shield-alt mr-3 text-gray-400 group-hover:text-gray-500"></i>
+                    Sécurité
+                </a>
+                
+                <a href="#" class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
+                    <i class="fas fa-history mr-3 text-gray-400 group-hover:text-gray-500"></i>
+                    Logs système
                 </a>
             </nav>
         </div>
@@ -229,12 +342,12 @@
 
     <!-- Main content area -->
     <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <!-- Main content will be rendered here -->
+        
         {{ $slot ?? '' }}
     </div>
 </div>
 
-<!-- JavaScript for sidebar interactions -->
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Get elements
@@ -310,9 +423,22 @@
                 }
             });
         });
-        
-        // Pre-open some submenus if needed
-        // For example, if we want "Configuration Générale" open by default:
-        // document.querySelector('[data-submenu="config-generale"]').click();
     });
+
+    function confirmClearLogs() {
+        if (confirm('Êtes-vous sûr de vouloir vider tous les logs ? Cette action est irréversible.')) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '{{ route('personnels.Log.clear') }}';
+            
+            const csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = '_token';
+            csrfToken.value = '{{ csrf_token() }}';
+            form.appendChild(csrfToken);
+            
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
 </script>

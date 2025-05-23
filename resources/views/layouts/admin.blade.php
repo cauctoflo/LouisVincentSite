@@ -19,24 +19,20 @@
         @livewireStyles
     </head>
     <body class="font-sans text-gray-800 bg-gray-50">
-
-            @include('components.admin-sidebar')
-            <!-- Main content area -->
-                @include('components.admin-navbar')
-                
-                <!-- Main content -->
-                <main class="flex-1 overflow-y-auto py-6 px-6">
-                    @hasSection('content')
-                        @yield('content')
-                    @else
-                        {{ $slot }}
-                    @endif
-                </main>
-            </div>
-        </div>
+        <x-admin-sidebar>
+            @hasSection('content')
+                @yield('content')
+            @else
+                @isset($slot)
+                    {{ $slot }}
+                @endisset
+            @endif
+        </x-admin-sidebar>
 
         @stack('modals')
 
         @livewireScripts
+        
+        @yield('scripts')
     </body>
 </html> 

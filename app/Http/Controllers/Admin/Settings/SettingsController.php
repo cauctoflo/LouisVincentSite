@@ -8,20 +8,34 @@ use App\Http\Controllers\Controller;
 
 class SettingsController extends Controller
 {
+
+    const VIEW_PATH = "admin.settings.";
+
     public function index()
     {
         return view("admin.settings.index");
     }
 
-    public function edit(Setting $setting)
+    public function edit(int $id)
     {
-        return view("admin.settings.edit", ["setting" => $setting]);
+        $setting = Setting::find($id);
+        if ($setting) {
+            $name = $setting->key;
+            if (str_contains($name, ".")) {
+                $name = explode(".", $name)[0];
+            }
+            $view_path = $this::VIEW_PATH . $name .".edit";
+            return view($view_path, ["setting" => $setting]);
+        }
+        else {
+            return redirect()->route("personnels.settings.index")->with(["not_found" => "Erreur : le paramètre cherché n'a pas été trouvé."]);
+        }
     }
 
-    public function store(Setting $setting)
+    public function store(Request $request, Setting $setting)
     {
-        $setting->value = $_POST["value"];
+        $setting->value = $request->input("value");
         $setting->save();
-        return redirect()->route("admin.settings.index")->with("success", "Le paramètre a bien été modifié");
+        return redirect()->route("personnels.settings.index")->with("success", "Le paramètre a bien été modifié");
     }
 }

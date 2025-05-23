@@ -1,6 +1,9 @@
 @extends('layouts.admin')
 
+
 @section('content')
+
+
     <!-- Time period selector -->
     <div class="flex justify-end mb-6">
         <div class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-medium text-gray-600 shadow-sm border border-gray-200">
@@ -218,4 +221,5 @@
             </div>
         </div>
     </div>
+
 @endsection 
