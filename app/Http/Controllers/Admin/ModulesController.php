@@ -57,6 +57,8 @@ class ModulesController extends Controller
                 return redirect()->route('WebTv.personnels.settings');
             case 'Log':
                 return redirect()->route('WebTv.personnels.settings');
+            case 'Internat':
+                return redirect()->route('WebTv.personnels.settings');
             default:
                 return redirect()->route('personnels.modules.index')
                     ->with('error', "Le module $module n'a pas de page de paramètres.");

@@ -1,6 +1,28 @@
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+
+@php
+use App\Modules\WebTv\Controllers\WebTvController;
+
+$wtc = new WebTvController();
+$liveId = $wtc->getLive();
+@endphp
+
 <header class="fixed top-0 left-0 w-full z-50 transition-all duration-500" x-data="{ mobileMenuOpen: false, scrolled: false }">
+    @if (isset($liveId))
+<div class="w-full bg-red-600 text-white text-center py-3 top-0 left-0 z-50 flex items-center justify-center gap-3 shadow-lg">
+    <span class="inline-block">
+        <svg class="w-5 h-5 text-white animate-ping inline-block mr-1" fill="currentColor" viewBox="0 0 20 20">
+            <circle cx="10" cy="10" r="8" />
+        </svg>
+    </span>
+    <span class="font-semibold uppercase tracking-wide">La chaîne YouTube est en direct !</span>
+    <a href="https://www.youtube.com/watch?v={{ $liveId }}" target="_blank" rel="noopener" class="ml-4 inline-flex items-center px-4 py-1.5 rounded-full bg-white text-red-600 font-bold hover:bg-red-100 transition">
+        <i class="fa-brands fa-youtube mr-2"></i> Regarder le live
+    </a>
+</div>
+
+@endif
     <!-- Top micro-banner avec gradient subtil -->
     <div class="h-1 bg-gradient-to-r from-blue-500 via-secondary to-primary"></div>
     

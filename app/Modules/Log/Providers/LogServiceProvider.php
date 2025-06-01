@@ -56,18 +56,8 @@ class LogServiceProvider extends ServiceProvider
     protected function registerRoutes(): void
     {
         Route::middleware('web')
-            ->prefix('personnels/log')
-            ->name('personnels.Log.')
             ->group(function () {
                 $this->loadRoutesFrom(__DIR__.'/../Routes/web.php');
-            });
-
-        // Routes API
-        Route::middleware('api')
-            ->prefix('api/logs')
-            ->name('api.logs.')
-            ->group(function () {
-                $this->loadRoutesFrom(__DIR__.'/../Routes/api.php');
             });
     }
 

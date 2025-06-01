@@ -64,3 +64,89 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+# Log Module Documentation
+
+## Overview
+
+The Log module provides comprehensive logging capabilities for tracking user activities, system events, and debugging information in the application. It includes features for viewing, filtering, exporting, and managing logs through an intuitive user interface.
+
+## Features
+
+- **User Activity Tracking**: Record user actions such as creation, updates, deletions, logins, and logouts
+- **Model Change Logging**: Track changes to any model in the system
+- **Configurable Logging**: Customize what actions and models are tracked
+- **Log File Management**: View and manage system log files
+- **Export Capabilities**: Export logs to Excel format
+- **Filtering**: Filter logs by various criteria including user, action type, date range, and more
+
+## Installation
+
+1. The module is already integrated into the application.
+2. Ensure that the database migration has been run to create the logs table:
+   ```
+   php artisan migrate
+   ```
+3. Publish the configuration file (optional):
+   ```
+   php artisan vendor:publish --tag=log-config
+   ```
+
+## Usage
+
+### Tracking Model Changes
+
+To enable logging for a model, add the `Loggable` trait:
+
+```php
+use App\Modules\Log\Traits\Loggable;
+
+class User extends Authenticatable
+{
+    use Loggable;
+    
+    // Rest of your model
+}
+```
+
+### Custom Logging
+
+You can log custom actions for any model:
+
+```php
+$user->logCustomAction('password_reset', [
+    'reset_by' => Auth::id(),
+    'ip_address' => Request::ip()
+]);
+```
+
+### Accessing the Logs
+
+The logs can be accessed at `/personnels/log` by users with appropriate permissions.
+
+### Configuration
+
+Log settings can be configured through the web interface at `/personnels/log/settings` or by editing the `config/log.php` file.
+
+## Routes
+
+The module provides the following routes:
+
+- **GET /personnels/log**: View all logs
+- **GET /personnels/log/settings**: Access log configuration
+- **GET /personnels/log/{log}**: View log details
+- **GET /personnels/log/user/{user}**: View logs for a specific user
+- **POST /personnels/log/clear**: Clear logs
+- **DELETE /personnels/log/{log}**: Delete a specific log
+- **GET /personnels/log/export**: Export logs to Excel
+
+## Configuration Options
+
+The following options can be configured:
+
+- **User Actions Tracking**: Enable/disable tracking of user actions
+- **Actions to Log**: Specify which types of actions should be logged
+- **Tracked Models**: List of models to track changes for
+- **Excluded Columns**: Columns to exclude from change tracking
+- **Log Files**: Configure retention period and cleanup options
+- **Log Levels**: Select which severity levels to log

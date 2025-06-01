@@ -35,7 +35,7 @@
                         <i class="fas fa-cog text-lg"></i>
                     </div>
                     <div class="flex-1">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ $setting->key }}</h3>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ $setting->title }}</h3>
                         <p class="text-sm text-gray-600 mb-3">{{ $setting->description }}</p>
                         <div class="flex items-center gap-2">
                             <span class="px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-sm font-medium">

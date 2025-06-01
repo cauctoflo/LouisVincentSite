@@ -170,17 +170,57 @@ class LogsExport implements FromCollection, WithHeadings, WithMapping, ShouldAut
         }
         
         $content = file_get_contents($filePath);
-        $pattern = '/\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\] (\w+)\.(\w+): (.*?)(?=\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\]|$)/s';
+        
+        // Format standard des logs Laravel
+        $pattern = '/\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\] (\w+)\.(\w+): (.*?)(?=\n\[|\Z)/s';
         preg_match_all($pattern, $content, $matches, PREG_SET_ORDER);
         
         $this->logEntries = [];
-        foreach ($matches as $match) {
-            $this->logEntries[] = [
-                'datetime' => $match[1],
-                'level' => $match[2],
-                'channel' => $match[3],
-                'message' => trim($match[4])
-            ];
+        
+        if (!empty($matches)) {
+            foreach ($matches as $match) {
+                $this->logEntries[] = [
+                    'datetime' => $match[1],
+                    'channel' => $match[2],
+                    'level' => $match[3],
+                    'message' => trim($match[4])
+                ];
+            }
+        } else {
+            // Format alternatif (pour les versions plus récentes de Laravel)
+            $lines = explode("\n", $content);
+            foreach ($lines as $line) {
+                if (empty(trim($line))) continue;
+                
+                // Essayer de repérer les éléments habituels d'une ligne de log
+                if (preg_match('/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\] (.+)/', $line, $lineMatch)) {
+                    $logTime = $lineMatch[1];
+                    $restOfLine = $lineMatch[2];
+                    
+                    // Déterminer le niveau de log à partir de la ligne
+                    $level = 'info';
+                    $channel = 'app';
+                    
+                    if (strpos($restOfLine, 'ERROR') !== false) {
+                        $level = 'error';
+                    } elseif (strpos($restOfLine, 'WARNING') !== false) {
+                        $level = 'warning';
+                    } elseif (strpos($restOfLine, 'CRITICAL') !== false) {
+                        $level = 'critical';
+                    } elseif (strpos($restOfLine, 'DEBUG') !== false) {
+                        $level = 'debug';
+                    } elseif (strpos($restOfLine, 'NOTICE') !== false) {
+                        $level = 'notice';
+                    }
+                    
+                    $this->logEntries[] = [
+                        'datetime' => $logTime,
+                        'channel' => $channel,
+                        'level' => $level,
+                        'message' => $restOfLine
+                    ];
+                }
+            }
         }
     }
 } 

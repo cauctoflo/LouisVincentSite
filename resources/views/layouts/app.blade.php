@@ -18,8 +18,6 @@
         @livewireStyles
     </head>
     <body class="font-sans text-gray-800 overflow-x-hidden">
-
-
         <x-primary--navbar />
 
 

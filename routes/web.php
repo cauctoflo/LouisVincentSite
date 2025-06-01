@@ -5,15 +5,7 @@ use App\Models\Setting;
 use App\Http\Controllers\WelcomePageController;
 use App\Modules\WebTv\Controllers\WebTvController;
 use App\Http\Controllers\Admin\View\Sidebar\JsonReadController;
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-});
+
 
 
 
@@ -35,7 +27,7 @@ Route::middleware([
 //
 
 Route::get('/liveshare', function () {
-    return 'https://prod.liveshare.vsengsaas.visualstudio.com/join?1ADE156BD7DE8E7E0132A46F4209CCE1CC25';
+    return 'https://prod.liveshare.vsengsaas.visualstudio.com/join?72C6EF39ABEC5422120D8C2FADB876B87B55';
 })->name('test');
 
 

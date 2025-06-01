@@ -86,11 +86,33 @@ class WebTvController extends Controller
         $maxVideos = $this->config['max_videos'] ?? 10;
         $videos = array_slice($videos, 0, $maxVideos);
 
+        // Déterminer si la chaîne est en live maintenant et récupérer l'id de la vidéo en live
+        $isChannelLiveNow = false;
+        $liveVideoId = null;
+        foreach ($videos as $video) {
+            try {
+                $videoStats = $this->fetchVideoStats($video['videoId']);
+                if (
+                    (is_array($videoStats) && !empty($videoStats['isLiveNow']) && $videoStats['isLiveNow']) ||
+                    (is_object($videoStats) && !empty($videoStats->isLiveNow) && $videoStats->isLiveNow)
+                ) {
+                    $isChannelLiveNow = true;
+                    $liveVideoId = $video['videoId'];
+                    break;
+                }
+            } catch (\Exception $e) {
+                // On ignore les erreurs individuelles et on continue
+                continue;
+            }
+        }
+
         return response()->json([
             'channel_id' => $channelId,
             'channel_title' => $this->config['title'] ?? 'WebTV',
             'service' => $this->config['streaming_service'] ?? 'youtube',
             'videos' => $videos,
+            'isChannelLiveNow' => $isChannelLiveNow,
+            'liveVideoId' => $liveVideoId,
         ]);
     }
 
@@ -121,66 +143,81 @@ class WebTvController extends Controller
     /**
      * Récupère les statistiques d'une vidéo
      */
-    public function getVideoStats(Request $request)
-    {
+    public function getVideoStats(Request $request = null, string $videoId = null)
+{
+    if ($videoId === null) {
         $videoId = $request->get('videoId');
-
-        if (!$videoId) {
-            return response()->json(['error' => 'Paramètre videoId manquant.'], 422);
-        }
-
-        // Vérifier si les données sont en cache
-        $cacheKey = 'webtv_video_stats_' . $videoId;
-        $cacheDuration = $this->config['cache_duration'] ?? 60; // minutes
-        
-        if ($cacheDuration > 0) {
-            $cachedStats = Cache::get($cacheKey);
-            if ($cachedStats) {
-                return response()->json($cachedStats);
-            }
-        }
-
-        $videoUrl = "https://www.youtube.com/watch?v={$videoId}";
-
-        $html = @file_get_contents($videoUrl);
-        if (!$html) {
-            return response()->json(['error' => 'Impossible de charger la page YouTube.'], 500);
-        }
-
-        // Extraire le JSON embarqué
-        if (preg_match('/var ytInitialPlayerResponse = ({.*?});/s', $html, $matches)) {
-            $json = $matches[1];
-            $data = json_decode($json, true);
-
-            if (!$data) {
-                return response()->json(['error' => 'Erreur de parsing JSON.'], 500);
-            }
-
-            $videoDetails = $data['videoDetails'] ?? [];
-            $microformat = $data['microformat']['playerMicroformatRenderer'] ?? [];
-
-            $result = [
-                'title' => $videoDetails['title'] ?? '',
-                'author' => $videoDetails['author'] ?? '',
-                'viewCount' => $videoDetails['viewCount'] ?? 0,
-                'duration' => gmdate("H:i:s", $videoDetails['lengthSeconds'] ?? 0),
-                'shortDescription' => $videoDetails['shortDescription'] ?? '',
-                'uploadDate' => $microformat['uploadDate'] ?? '',
-                'publishDate' => $microformat['publishDate'] ?? '',
-                'isLive' => $videoDetails['isLiveContent'] ?? false,
-                'thumbnail' => isset($videoDetails['thumbnail']['thumbnails']) ? end($videoDetails['thumbnail']['thumbnails'])['url'] : "https://i.ytimg.com/vi/{$videoId}/hqdefault.jpg",
-            ];
-
-            // Mettre en cache les résultats si la durée du cache est > 0
-            if ($cacheDuration > 0) {
-                Cache::put($cacheKey, $result, $cacheDuration * 60);
-            }
-
-            return response()->json($result);
-        }
-
-        return response()->json(['error' => 'Données YouTube non trouvées.'], 500);
     }
+
+    if (!$videoId) {
+        return response()->json(['error' => 'Paramètre videoId manquant.'], 422);
+    }
+
+    $cacheKey = 'webtv_video_stats_' . $videoId;
+    $cacheDuration = $this->config['cache_duration'] ?? 60;
+
+    if ($cacheDuration > 0) {
+        $cachedStats = Cache::get($cacheKey);
+        if ($cachedStats) {
+            // Ajout de l'attribut isChannelLiveNow à la réponse mise en cache si absent
+            if (!array_key_exists('isChannelLiveNow', $cachedStats)) {
+                $cachedStats['isChannelLiveNow'] = $this->isChannelLiveNow();
+            }
+            return response()->json($cachedStats);
+        }
+    }
+
+    $videoUrl = "https://www.youtube.com/watch?v={$videoId}";
+    $html = @file_get_contents($videoUrl);
+    if (!$html) {
+        return response()->json(['error' => 'Impossible de charger la page YouTube.'], 500);
+    }
+
+    if (preg_match('/var ytInitialPlayerResponse = ({.*?});/s', $html, $matches)) {
+        $json = $matches[1];
+        $data = json_decode($json, true);
+
+        if (!$data) {
+            return response()->json(['error' => 'Erreur de parsing JSON.'], 500);
+        }
+
+        $videoDetails = $data['videoDetails'] ?? [];
+        $microformat = $data['microformat']['playerMicroformatRenderer'] ?? [];
+        $playabilityStatus = $data['playabilityStatus'] ?? [];
+
+        $isLiveContent = $videoDetails['isLiveContent'] ?? false;
+        $hasLiveStream = isset($playabilityStatus['liveStreamability']);
+        $status = $playabilityStatus['status'] ?? null;
+
+        $isLiveNow = $isLiveContent && $hasLiveStream && $status === 'OK';
+        $isUpcoming = $isLiveContent && $status === 'LIVE_STREAM_OFFLINE';
+
+        $result = [
+            'title' => $videoDetails['title'] ?? '',
+            'author' => $videoDetails['author'] ?? '',
+            'viewCount' => $videoDetails['viewCount'] ?? 0,
+            'duration' => gmdate("H:i:s", $videoDetails['lengthSeconds'] ?? 0),
+            'shortDescription' => $videoDetails['shortDescription'] ?? '',
+            'uploadDate' => $microformat['uploadDate'] ?? '',
+            'publishDate' => $microformat['publishDate'] ?? '',
+            'isLiveContent' => $isLiveContent,
+            'isLiveNow' => $isLiveNow,
+            'isUpcoming' => $isUpcoming,
+            'thumbnail' => isset($videoDetails['thumbnail']['thumbnails']) 
+                ? end($videoDetails['thumbnail']['thumbnails'])['url'] 
+                : "https://i.ytimg.com/vi/{$videoId}/hqdefault.jpg",
+        ];
+
+        if ($cacheDuration > 0) {
+            Cache::put($cacheKey, $result, $cacheDuration * 60);
+        }
+
+        return response()->json($result);
+    }
+
+    return response()->json(['error' => 'Données YouTube non trouvées.'], 500);
+}
+
 
     /**
      * Récupère un aperçu de la vidéo
@@ -224,4 +261,83 @@ class WebTvController extends Controller
 
         return response()->json($preview);
     }
+
+
+    private function fetchVideoStats(string $videoId)
+    {
+        $cacheKey = 'webtv_video_stats_' . $videoId;
+        $cacheDuration = $this->config['cache_duration'] ?? 60;
+
+        if ($cacheDuration > 0 && $cached = Cache::get($cacheKey)) {
+            return $cached;
+        }
+
+        $videoUrl = "https://www.youtube.com/watch?v={$videoId}";
+        $html = @file_get_contents($videoUrl);
+        if (!$html) {
+            throw new \Exception('Impossible de charger la page YouTube.');
+        }
+
+        if (!preg_match('/var ytInitialPlayerResponse = ({.*?});/s', $html, $matches)) {
+            throw new \Exception('Données YouTube non trouvées.');
+        }
+
+        $data = json_decode($matches[1], true);
+        if (!$data) {
+            throw new \Exception('Erreur de parsing JSON.');
+        }
+
+        $videoDetails = $data['videoDetails'] ?? [];
+        $microformat = $data['microformat']['playerMicroformatRenderer'] ?? [];
+        $playabilityStatus = $data['playabilityStatus'] ?? [];
+
+        $isLiveContent = $videoDetails['isLiveContent'] ?? false;
+        $hasLiveStream = isset($playabilityStatus['liveStreamability']);
+        $status = $playabilityStatus['status'] ?? null;
+
+        $isLiveNow = $isLiveContent && $hasLiveStream && $status === 'OK';
+        $isUpcoming = $isLiveContent && $status === 'LIVE_STREAM_OFFLINE';
+
+        $result = [
+            'title' => $videoDetails['title'] ?? '',
+            'author' => $videoDetails['author'] ?? '',
+            'viewCount' => $videoDetails['viewCount'] ?? 0,
+            'duration' => gmdate("H:i:s", $videoDetails['lengthSeconds'] ?? 0),
+            'shortDescription' => $videoDetails['shortDescription'] ?? '',
+            'uploadDate' => $microformat['uploadDate'] ?? '',
+            'publishDate' => $microformat['publishDate'] ?? '',
+            'isLiveContent' => $isLiveContent,
+            'isLiveNow' => $isLiveNow,
+            'isUpcoming' => $isUpcoming,
+            'thumbnail' => isset($videoDetails['thumbnail']['thumbnails']) 
+                ? end($videoDetails['thumbnail']['thumbnails'])['url'] 
+                : "https://i.ytimg.com/vi/{$videoId}/hqdefault.jpg",
+        ];
+
+        if ($cacheDuration > 0) {
+            Cache::put($cacheKey, $result, $cacheDuration * 60);
+        }
+
+        return $result;
+    }
+
+
+    public function getLive()
+    {
+        if ($this->getChannel()->getData()->isChannelLiveNow) {
+            return $this->getChannel()->getData()->liveVideoId;
+        }
+
+        return null;
+    }
+    
+    public function getAllViews()
+    {
+        $sum = 0;
+        foreach ($this->getChannel()->getData()->videos as $video) {
+            $sum += $this->fetchVideoStats($video->videoId)["viewCount"];
+        }
+        return $sum;
+    }
+
 }

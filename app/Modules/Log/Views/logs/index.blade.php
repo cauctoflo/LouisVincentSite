@@ -7,11 +7,28 @@
             <h1 class="text-2xl font-display font-bold text-gray-900">Journal d'activité système</h1>
             <p class="text-gray-500 mt-1">Consultez et gérez les logs de toutes les activités du système</p>
         </div>
-        @if(auth()->check() && auth()->user()->hasPermission('personnels.Log.export'))
-        <a href="{{ route('personnels.Log.export') }}" class="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg font-medium hover:bg-primary-dark transition-all">
-            <i class="fas fa-download mr-2"></i> Exporter
-        </a>
-        @endif
+        <div class="flex flex-col sm:flex-row gap-2">
+            @if(auth()->check() && auth()->user()->hasPermission('personnels.Log.export'))
+            <a href="{{ route('personnels.Log.export') }}" class="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg font-medium hover:bg-primary-dark transition-all">
+                <i class="fas fa-download mr-2"></i> Exporter
+            </a>
+            @endif
+            @if(auth()->check() && auth()->user()->hasPermission('personnels.Log.settings'))
+            <a href="{{ route('personnels.Log.settings') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-all">
+                <i class="fas fa-cog mr-2"></i> Paramètres
+            </a>
+            @endif
+        </div>
+    </div>
+
+    <!-- Explication du système -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-6">
+        <h2 class="text-lg font-medium text-gray-900 mb-2">Système de logs</h2>
+        <p class="text-gray-600">Ce module gère deux types de logs :</p>
+        <ul class="list-disc ml-6 mt-2 text-gray-600">
+            <li><span class="font-medium">Logs d'activité utilisateur</span> : Affichés dans le tableau ci-dessous, ils sont stockés dans la base de données et concernent les actions des utilisateurs.</li>
+            <li><span class="font-medium">Fichiers de logs système</span> : Accessibles via <a href="{{ route('personnels.Log.settings') }}" class="text-blue-600 hover:underline">les paramètres</a>, ils contiennent des informations techniques sur le fonctionnement de l'application.</li>
+        </ul>
     </div>
 
     <!-- Filtres -->

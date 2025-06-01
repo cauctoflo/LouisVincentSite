@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Modules\Internat\Controllers\InternatController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -9,8 +11,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('internat')->group(function () {
-    Route::get('/', function () {
-        return 'test';
-    });
+Route::prefix('internat')->name('personnels.Internat.')->group(function () {
+    Route::get('/settings', [InternatController::class, 'settings'])->name('settings');
 });

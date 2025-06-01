@@ -178,10 +178,16 @@ class LogController extends Controller
             return response()->json(['error' => 'Fichier de log introuvable'], 404);
         }
         
-        $content = file_get_contents($filePath);
-        $logEntries = $this->parseLogContent($content);
-        
-        return response()->json($logEntries);
+        try {
+            $content = file_get_contents($filePath);
+            $logEntries = $this->parseLogContent($content);
+            
+            return response()->json($logEntries);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erreur lors de la lecture du fichier: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -245,17 +251,56 @@ class LogController extends Controller
      */
     private function parseLogContent($content)
     {
-        $pattern = '/\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\] (\w+)\.(\w+): (.*?)(?=\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\]|$)/s';
+        // Format standard des logs Laravel
+        $pattern = '/\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\] (\w+)\.(\w+): (.*?)(?=\n\[|\Z)/s';
         preg_match_all($pattern, $content, $matches, PREG_SET_ORDER);
         
         $logEntries = [];
-        foreach ($matches as $match) {
-            $logEntries[] = [
-                'datetime' => $match[1],
-                'level' => $match[2],
-                'channel' => $match[3],
-                'message' => trim($match[4])
-            ];
+        
+        if (!empty($matches)) {
+            foreach ($matches as $match) {
+                $logEntries[] = [
+                    'date' => $match[1],
+                    'channel' => $match[2],
+                    'level' => $match[3],
+                    'message' => trim($match[4])
+                ];
+            }
+        } else {
+            // Format alternatif (pour les versions plus récentes de Laravel)
+            $lines = explode("\n", $content);
+            foreach ($lines as $line) {
+                if (empty(trim($line))) continue;
+                
+                // Essayer de repérer les éléments habituels d'une ligne de log
+                if (preg_match('/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\] (.+)/', $line, $lineMatch)) {
+                    $logTime = $lineMatch[1];
+                    $restOfLine = $lineMatch[2];
+                    
+                    // Déterminer le niveau de log à partir de la ligne
+                    $level = 'info';
+                    $channel = 'app';
+                    
+                    if (strpos($restOfLine, 'ERROR') !== false) {
+                        $level = 'error';
+                    } elseif (strpos($restOfLine, 'WARNING') !== false) {
+                        $level = 'warning';
+                    } elseif (strpos($restOfLine, 'CRITICAL') !== false) {
+                        $level = 'critical';
+                    } elseif (strpos($restOfLine, 'DEBUG') !== false) {
+                        $level = 'debug';
+                    } elseif (strpos($restOfLine, 'NOTICE') !== false) {
+                        $level = 'notice';
+                    }
+                    
+                    $logEntries[] = [
+                        'date' => $logTime,
+                        'channel' => $channel,
+                        'level' => $level,
+                        'message' => $restOfLine
+                    ];
+                }
+            }
         }
         
         return $logEntries;
@@ -272,8 +317,123 @@ class LogController extends Controller
         $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
         $pow = min($pow, count($units) - 1);
         
-        $bytes /= pow(1024, $pow);
+        $bytes /= (1 << (10 * $pow));
         
         return round($bytes, $precision) . ' ' . $units[$pow];
+    }
+
+    /**
+     * Récupère la configuration actuelle
+     */
+    public function getConfig()
+    {
+        $configPath = storage_path('app/modules/log/config.json');
+        if (File::exists($configPath)) {
+            return response()->json(json_decode(File::get($configPath), true));
+        }
+
+        // Renvoyer la configuration par défaut depuis le fichier de configuration
+        return response()->json(config('log'));
+    }
+
+    /**
+     * Sauvegarde la configuration
+     */
+    public function saveConfig(Request $request)
+    {
+        try {
+            $config = $request->all();
+            
+            // Valider les données essentielles
+            if (!isset($config['user_actions_enabled'])) {
+                $config['user_actions_enabled'] = false;
+            }
+            
+            if (!isset($config['actions_to_log'])) {
+                $config['actions_to_log'] = [];
+            }
+            
+            if (!isset($config['excluded_columns'])) {
+                $config['excluded_columns'] = [];
+            }
+            
+            if (!isset($config['log_files'])) {
+                $config['log_files'] = [
+                    'max_age_days' => 30,
+                    'max_size_mb' => 100,
+                    'auto_clean' => false
+                ];
+            }
+            
+            if (!isset($config['levels'])) {
+                $config['levels'] = [];
+            }
+            
+            // Créer le répertoire de stockage s'il n'existe pas
+            $dir = storage_path('app/modules/log');
+            if (!File::exists($dir)) {
+                File::makeDirectory($dir, 0755, true);
+            }
+            
+            // Sauvegarder la configuration
+            File::put(
+                storage_path('app/modules/log/config.json'),
+                json_encode($config, JSON_PRETTY_PRINT)
+            );
+
+            // Mettre à jour le fichier de configuration si nécessaire
+            $this->updateConfigFile($config);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Configuration sauvegardée avec succès.'
+            ]);
+        } catch (\Exception $e) {
+            LogFacade::error('Erreur lors de la sauvegarde de la configuration des logs: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'error' => 'Erreur lors de la sauvegarde: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Met à jour le fichier de configuration basé sur les paramètres utilisateur
+     */
+    private function updateConfigFile(array $config)
+    {
+        // Cette méthode pourrait être utilisée pour mettre à jour le fichier de configuration
+        // du système selon les paramètres utilisateur (par exemple, mettre à jour config/log.php)
+        // Mais cela nécessiterait des permissions d'écriture sur le fichier de config
+        
+        // Pour l'instant, on se contente de stocker dans le JSON
+        return true;
+    }
+
+    /**
+     * Récupère les logs récents de la base de données
+     */
+    public function getDbLogs(Request $request)
+    {
+        try {
+            // Récupérer les logs avec les relations user et actor
+            $logs = Log::with(['user', 'actor'])
+                ->orderBy('created_at', 'desc')
+                ->limit(10)
+                ->get();
+            
+            return response()->json([
+                'success' => true,
+                'logs' => $logs
+            ]);
+        } catch (\Exception $e) {
+            LogFacade::error('Erreur lors de la récupération des logs de la base de données: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la récupération des logs: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

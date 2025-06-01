@@ -1,5 +1,12 @@
 @extends('layouts.app')
 
+@php
+use App\Modules\WebTv\Controllers\WebTvController;
+
+$wtc = new WebTvController();
+$liveId = $wtc->getLive();
+@endphp
+
 
 @section('content')
 
@@ -315,11 +322,13 @@
             <!-- En-tête de section -->
             <div class="flex flex-col lg:flex-row lg:items-end justify-between mb-12 lg:mb-20 gap-8">
                 <div>
-                    <!-- Titre avec badge -->
-                    <div class="inline-flex items-center mb-4 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full">
-                        <span class="w-2 h-2 bg-white rounded-full animate-pulse mr-2"></span>
-                        <span class="text-white text-xs font-medium tracking-wide uppercase">En direct</span>
-                    </div>
+                    @if (isset($liveId))
+                        <!-- Titre avec badge -->
+                        <div class="inline-flex items-center mb-4 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full">
+                            <span class="w-2 h-2 bg-white rounded-full animate-pulse mr-2"></span>
+                            <span class="text-white text-xs font-medium tracking-wide uppercase">En direct</span>
+                        </div>
+                    @endif
                     
                     <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-blue-900 leading-tight mb-6">
                         Web<span class="text-blue-600">TV</span>
@@ -1093,7 +1102,7 @@
             <!-- Copyright et mentions légales simplifiés -->
             <div class="flex flex-col sm:flex-row justify-between items-center text-xs">
                 <div class="text-blue-200/70 mb-3 sm:mb-0">
-                    © 2024 Lycée Louis Vincent - Tous droits réservés
+                    © @php echo(date("Y")); @endphp Lycée Louis Vincent - Tous droits réservés
                 </div>
                 <div class="flex gap-4">
                     <a href="#" class="text-blue-200/80 hover:text-white transition-colors">Mentions légales</a>

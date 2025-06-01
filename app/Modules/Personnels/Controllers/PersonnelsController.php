@@ -95,10 +95,12 @@ class PersonnelsController extends Controller
     public function show(User $personnel)
     {
         // Récupérer les logs de l'utilisateur via la relation logs()
+
         $logs = $personnel->logs()
                         ->orderBy('created_at', 'desc')
                         ->limit(10)
                         ->get();
+        // dd($logs);
                         
         return view('Personnels::personnels.show', compact('personnel', 'logs'));
     }
@@ -112,11 +114,14 @@ class PersonnelsController extends Controller
         $permissions = app(PermissionController::class)->getAvailablePermissions();
         $userRoleIds = $personnel->roles->pluck('id')->toArray();
         
+        
         // Récupérer les logs récents de l'utilisateur via la relation logs()
         $logs = $personnel->logs()
                         ->orderBy('created_at', 'desc')
                         ->limit(5)
                         ->get();
+        
+        // dd($roles, $personnel, $permissions, $userRoleIds);
         
         return view('Personnels::personnels.edit', compact('personnel', 'roles', 'permissions', 'userRoleIds', 'logs'));
     }
@@ -160,7 +165,7 @@ class PersonnelsController extends Controller
         
         if ($request->filled('password')) {
             $personnel->password = Hash::make($request->password);
-            $newValues['password'] = '[CHANGÉ]'; // Ne pas stocker le mot de passe en clair
+            $newValues['password'] = '[CHANGÉ]'; 
         }
         
         $personnel->save();

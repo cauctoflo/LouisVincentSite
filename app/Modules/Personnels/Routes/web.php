@@ -20,6 +20,9 @@ Route::prefix('personnels')->name('personnels.')->group(function () {
         Route::get('/create', [PersonnelsController::class, 'create'])->name('create');
         Route::post('/', [PersonnelsController::class, 'store'])->name('store');
         Route::get('/{personnel}', [PersonnelsController::class, 'show'])->name('show');
+
+        
+
         Route::get('/{personnel}/edit', [PersonnelsController::class, 'edit'])->name('edit');
         Route::put('/{personnel}', [PersonnelsController::class, 'update'])->name('update');
         Route::delete('/{personnel}', [PersonnelsController::class, 'destroy'])->name('destroy');

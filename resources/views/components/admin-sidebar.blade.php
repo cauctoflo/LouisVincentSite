@@ -1,9 +1,9 @@
 <!-- Main sidebar layout -->
-<div class="flex h-screen overflow-hidden bg-gray-50">
+<div class="flex h-full overflow-hidden bg-gray-50">
     <!-- Narrow icon sidebar -->
     <div class="w-16 bg-white border-r border-gray-100 flex-shrink-0 flex flex-col">
         <div class="h-16 flex items-center justify-center border-b border-gray-100">
-            <a href="{{ route('dashboard') }}" class="text-blue-600">
+            <a href="{{ route('personnels.index') }}" class="text-blue-600">
                 <i class="fas fa-school text-xl"></i>
             </a>
         </div>
@@ -52,8 +52,8 @@
             <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">TABLEAU DE BORD</span>
             
             <nav class="mt-4 space-y-1.5">
-                <a href="{{ route('dashboard') }}" class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('dashboard') ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50' }}">
-                    <i class="far fa-chart-bar mr-3 text-{{ request()->routeIs('dashboard') ? 'blue-500' : 'gray-400 group-hover:text-gray-500' }}"></i>
+                <a href="{{ route('personnels.index') }}" class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('dashboard') ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50' }}">
+                    <i class="far fa-chart-bar mr-3 text-{{ request()->routeIs('personnels.index') ? 'blue-500' : 'gray-400 group-hover:text-gray-500' }}"></i>
                     Vue d'ensemble
                 </a>
                 
