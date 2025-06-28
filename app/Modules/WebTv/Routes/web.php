@@ -21,4 +21,4 @@ Route::prefix('personnels/webtv')->middleware(['web', 'auth'])->group(function (
     Route::post('/settings', [WebTvAdminController::class, 'saveSettings'])->name('personnels.WebTv.settings.save');
 });
 
-Route::get("view", [WebTvController::class, 'getAllViews']);
+Route::get("view", [WebTvController::class, 'getChannel']);

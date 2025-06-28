@@ -27,7 +27,7 @@ use App\Http\Controllers\Admin\View\Sidebar\JsonReadController;
 //
 
 Route::get('/liveshare', function () {
-    return 'https://prod.liveshare.vsengsaas.visualstudio.com/join?72C6EF39ABEC5422120D8C2FADB876B87B55';
+    return 'https://prod.liveshare.vsengsaas.visualstudio.com/join?8F3B61891510448E9CE4D1CAB42B6DB0A44E';
 })->name('test');
 
 

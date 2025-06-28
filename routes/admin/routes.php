@@ -15,6 +15,7 @@ Route::prefix('/personnels')->name('personnels.')->middleware([
         Route::get("/", [SettingsController::class, 'index'])->name("index");
         Route::get("/{setting}", [SettingsController::class, 'edit'])->name("edit");
         Route::post("/{setting}", [SettingsController::class, 'store'])->name("store");
+
     });
 
     Route::prefix('/modules')->name('modules.')->middleware([
@@ -22,6 +23,10 @@ Route::prefix('/personnels')->name('personnels.')->middleware([
         config('jetstream.auth_session'),
         'verified',
     ])->group(function () {
+
+        Route::get('/{module}/active', [ModulesController::class, 'active'])->name('active');
+        Route::get('/{module}/inactive', [ModulesController::class, 'inactive'])->name('inactive');
+
         Route::get('/', [ModulesController::class, 'index'])->name('index');
     });
 

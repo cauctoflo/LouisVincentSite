@@ -1,5 +1,5 @@
 <!-- Main sidebar layout -->
-<div class="flex h-full overflow-hidden bg-gray-50">
+<div class="flex h-full min-h-screen overflow-hidden bg-gray-50">
     <!-- Narrow icon sidebar -->
     <div class="w-16 bg-white border-r border-gray-100 flex-shrink-0 flex flex-col">
         <div class="h-16 flex items-center justify-center border-b border-gray-100">
@@ -20,6 +20,9 @@
             </button>
             <button type="button" id="logs-btn" class="my-1 mx-auto w-10 h-10 rounded-xl flex items-center justify-center text-gray-600 hover:bg-blue-50 hover:text-blue-600 sidebar-toggle" data-section="logs">
                 <i class="fas fa-history"></i>
+            </button>            
+            <button type="button" id="image-btn" class="my-1 mx-auto w-10 h-10 rounded-xl flex items-center justify-center text-gray-600 hover:bg-blue-50 hover:text-blue-600 sidebar-toggle" data-section="logs">
+                <i class="fa-solid fa-images"></i>
             </button>
             <button type="button" id="internat-btn" class="my-1 mx-auto w-10 h-10 rounded-xl flex items-center justify-center text-gray-600 hover:bg-blue-50 hover:text-blue-600 sidebar-toggle" data-section="internat">
                 <i class="fas fa-home"></i>

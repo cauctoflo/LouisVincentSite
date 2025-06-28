@@ -48,6 +48,7 @@ class WebTvController extends Controller
 
     /**
      * Récupère les dernières vidéos de la chaîne YouTube
+     * et le nombre d'abonnés (scrap sans API)
      */
     public function getChannel()
     {
@@ -105,6 +106,13 @@ class WebTvController extends Controller
                 continue;
             }
         }
+        
+            
+        $json = @file_get_contents("https://yt.lemnoslife.com/noKey/channels?part=statistics&id={$channelId}");
+        $data = json_decode($json, true);
+        $subscriberCount = $data['items'][0]['statistics']['subscriberCount'] ?? null;
+
+        // dd($subscriberCount);
 
         return response()->json([
             'channel_id' => $channelId,
@@ -113,6 +121,7 @@ class WebTvController extends Controller
             'videos' => $videos,
             'isChannelLiveNow' => $isChannelLiveNow,
             'liveVideoId' => $liveVideoId,
+            'subscribers' => $subscriberCount
         ]);
     }
 
@@ -335,9 +344,12 @@ class WebTvController extends Controller
     {
         $sum = 0;
         foreach ($this->getChannel()->getData()->videos as $video) {
-            $sum += $this->fetchVideoStats($video->videoId)["viewCount"];
+            // dd($this->fetchVideoStats($video->videoId));
         }
-        return $sum;
     }
 
+    public function getChannelSubscribers()
+    {
+        
+    }
 }

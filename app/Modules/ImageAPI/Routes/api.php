@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Modules\ImageAPI\Controllers\ImageAPIController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -10,5 +12,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('imageapi')->group(function () {
-    // Define your API routes here
+    
+
 });

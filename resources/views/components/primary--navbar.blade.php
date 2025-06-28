@@ -10,19 +10,28 @@ $liveId = $wtc->getLive();
 
 <header class="fixed top-0 left-0 w-full z-50 transition-all duration-500" x-data="{ mobileMenuOpen: false, scrolled: false }">
     @if (isset($liveId))
-<div class="w-full bg-red-600 text-white text-center py-3 top-0 left-0 z-50 flex items-center justify-center gap-3 shadow-lg">
-    <span class="inline-block">
-        <svg class="w-5 h-5 text-white animate-ping inline-block mr-1" fill="currentColor" viewBox="0 0 20 20">
-            <circle cx="10" cy="10" r="8" />
-        </svg>
-    </span>
-    <span class="font-semibold uppercase tracking-wide">La chaîne YouTube est en direct !</span>
-    <a href="https://www.youtube.com/watch?v={{ $liveId }}" target="_blank" rel="noopener" class="ml-4 inline-flex items-center px-4 py-1.5 rounded-full bg-white text-red-600 font-bold hover:bg-red-100 transition">
-        <i class="fa-brands fa-youtube mr-2"></i> Regarder le live
-    </a>
-</div>
-
-@endif
+        <div class="w-full bg-red-600 text-white text-center py-1.5 top-0 left-0 z-50 flex items-center justify-center">
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center">
+                    <span class="flex h-2 w-2 relative mr-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-60"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                    </span>
+                    <span class="text-sm font-medium">Direct</span>
+                </div>
+                <div class="h-4 w-px bg-red-400"></div>
+                <div class="flex items-center text-sm">
+                    <i class="fa-brands fa-youtube text-lg mr-2"></i>
+                    Suivez notre live sur YouTube
+                </div>
+                <a href="https://www.youtube.com/watch?v={{ $liveId }}" target="_blank" rel="noopener" 
+                   class="inline-flex items-center px-3 py-0.5 bg-white/10 hover:bg-white/20 rounded-full transition-colors duration-150 border border-white/20">
+                    <span class="text-sm">Regarder</span>
+                    <i class="fas fa-chevron-right ml-1.5 text-xs"></i>
+                </a>
+            </div>
+        </div>
+    @endif
     <!-- Top micro-banner avec gradient subtil -->
     <div class="h-1 bg-gradient-to-r from-blue-500 via-secondary to-primary"></div>
     
@@ -103,23 +112,22 @@ $liveId = $wtc->getLive();
                 </a>
 
                 <!-- Desktop Navigation -->
-                <div class="hidden xl:flex items-center space-x-5">
-                    <a href="#accueil" class="nav-link group">
-                        <span class="nav-text">Accueil</span>
-                        <span class="nav-dot"></span>
+                <div class="hidden xl:flex items-center space-x-3">
+                    <a href="#accueil" class="relative flex items-center px-3 py-3 text-blue-700/80 hover:text-blue-600 transition-colors duration-200 group">
+                        <span>Accueil</span>
+                        <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 origin-left transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></span>
                     </a>
                     
-                    <a href="#lycee" class="nav-link group">
-                        <span class="nav-text">Le lycée</span>
-                        <span class="nav-dot"></span>
+                    <a href="#lycee" class="relative flex items-center px-3 py-3 text-blue-700/80 hover:text-blue-600 transition-colors duration-200 group">
+                        <span>Le lycée</span>
+                        <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 origin-left transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></span>
                     </a>
 
-                    
                     <div class="relative group/menu">
-                        <a href="#formation" class="nav-link group">
-                            <span class="nav-text">Formation</span>
+                        <a href="#formation" class="relative flex items-center px-3 py-3 text-blue-700/80 hover:text-blue-600 transition-colors duration-200 group">
+                            <span>Formation</span>
                             <i class="fas fa-chevron-down text-[10px] ml-1.5 text-blue-400"></i>
-                            <span class="nav-dot"></span>
+                            <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 origin-left transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></span>
                         </a>
                         <div class="absolute left-0 top-full pt-2 w-[500px] invisible group-hover/menu:visible opacity-0 group-hover/menu:opacity-100 z-50">
                             <div class="bg-white rounded-md shadow-xl overflow-hidden">
@@ -204,22 +212,22 @@ $liveId = $wtc->getLive();
                         </div>
                     </div>
                     
-                    <a href="#vie-lyceenne" class="nav-link group">
-                        <span class="nav-text">Vie lycéenne</span>
-                        <span class="nav-dot"></span>
+                    <a href="#vie-lyceenne" class="relative flex items-center px-3 py-3 text-blue-700/80 hover:text-blue-600 transition-colors duration-200 group">
+                        <span>Vie lycéenne</span>
+                        <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 origin-left transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></span>
                     </a>
                     
-                    <a href="#international" class="nav-link group">
-                        <span class="nav-text">International</span>
-                        <span class="nav-dot"></span>
+                    <a href="#international" class="relative flex items-center px-3 py-3 text-blue-700/80 hover:text-blue-600 transition-colors duration-200 group">
+                        <span>International</span>
+                        <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 origin-left transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></span>
                     </a>
                     
-                    <a href="#actualites" class="nav-link group">
-                        <span class="nav-text">Actualités</span>
-                        <span class="nav-dot"></span>
+                    <a href="#actualites" class="relative flex items-center px-3 py-3 text-blue-700/80 hover:text-blue-600 transition-colors duration-200 group">
+                        <span>Actualités</span>
+                        <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 origin-left transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></span>
                     </a>
                     
-                    <div class="ml-3 pl-3 border-l border-blue-200">
+                    <div class="ml-2 pl-2 border-l border-blue-200">
                         <a href="#contact" class="relative overflow-hidden">
                             <span class="relative block px-6 py-2.5 bg-gradient-to-r from-blue-600 to-primary text-white font-semibold rounded-md z-10">
                                 Contact
@@ -460,20 +468,26 @@ $liveId = $wtc->getLive();
 <style>
 /* Main Navigation Styles */
 .nav-link {
-    @apply relative flex items-center px-5 py-3 text-blue-700/80 font-medium;
+    @apply relative flex items-center px-5 py-3 text-blue-700/80 font-medium transition-colors duration-200;
 }
 
-/* Style de base pour les liens de navigation sans animation */
-.hidden.xl\:flex a.nav-link.group {
-    @apply relative isolation;
+.nav-link::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-full h-[2px] bg-blue-600 transform scale-x-0 transition-transform duration-300 origin-left;
 }
 
-/* Style pour le texte des liens */
+.nav-link:hover::after {
+    @apply scale-x-100;
+}
+
+.nav-link:hover {
+    @apply text-blue-600;
+}
+
 .nav-text {
     @apply relative;
 }
 
-/* Suppression complète de l'indicateur */
 .nav-dot {
     @apply hidden;
 }

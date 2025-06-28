@@ -2,11 +2,27 @@
 
 @php
 use App\Modules\WebTv\Controllers\WebTvController;
+use App\Modules\Internat\Controllers\InternatController;
 
 $wtc = new WebTvController();
 $liveId = $wtc->getLive();
-@endphp
 
+$internatController = new InternatController();
+$internatConfig = $internatController->getConfig();
+
+$config = app(App\Modules\Internat\Controllers\InternatController::class)->getConfig();
+
+// Fonction pour extraire l'ID YouTube d'une URL
+function getYoutubeId($url) {
+    $pattern = '/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i';
+    preg_match($pattern, $url ?? '', $matches);
+    return $matches[1] ?? null;
+}
+
+// Récupérer l'ID de la vidéo
+$videoId = getYoutubeId($config['video']['url'] ?? '');
+$thumbnailUrl = $videoId ? "https://img.youtube.com/vi/{$videoId}/maxresdefault.jpg" : "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80";
+@endphp
 
 @section('content')
 
@@ -55,68 +71,54 @@ $liveId = $wtc->getLive();
         });
     </script>
 
-    <section class="relative min-h-screen flex items-center px-6 md:px-16 lg:px-24 -mt-32 mb-5" id="accueil">
-        <div class="max-w-7xl mx-auto w-full">
+    <section class="relative min-h-screen flex items-center px-6 md:px-16 lg:px-24 -mt-24 before:content-[''] before:absolute before:inset-0 before:bg-black/60 before:z-0" id="accueil">
+        <div class="relative z-10 max-w-7xl mx-auto w-full">
             <div class="max-w-3xl pt-24">
-                <div class="inline-block px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm font-semibold mb-6 opacity-0 animate-fadeIn delay-200">
+                <div class="inline-block px-3 py-1 rounded-full bg-white/15 backdrop-blur-md border border-white/30 text-white text-sm font-semibold mb-6 mt-6 opacity-0 animate-fadeIn delay-200 shadow-lg">
                     <span class="mr-2 text-secondary-light">•</span> Établissement d'excellence depuis 1892
                 </div>
                 
-                <h1 class="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-extrabold text-white leading-tight mb-6 opacity-0 animate-fadeUp delay-400">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-extrabold text-white leading-tight mb-2 opacity-0 animate-fadeUp delay-400 drop-shadow-lg">
                     Construisez votre avenir au 
                     <span class="relative inline-block">
                         <span class="relative z-10 text-secondary-light">Lycée Louis Vincent</span>
-                        <span class="absolute -bottom-3 left-0 right-0 h-1 bg-secondary-light opacity-30"></span>
+                        <span class="absolute -bottom-3 left-0 right-0 h-1 bg-secondary-light opacity-50"></span>
                     </span>
                 </h1>
                 
-                <p class="text-white/90 text-lg md:text-xl max-w-2xl mb-10 opacity-0 animate-fadeUp delay-600">
+                <p class="text-white text-lg md:text-xl max-w-2xl mb-10 mt-10 opacity-0 animate-fadeUp delay-600 drop-shadow-md">
                     Un établissement qui allie tradition et innovation pour former les talents de demain dans un environnement stimulant et inspirant.
                 </p>
                 
                 <div class="flex flex-col sm:flex-row gap-5 mb-16 opacity-0 animate-fadeUp delay-800">
-   
-                    
-                    <a href="#visite" class="relative px-8 py-4 bg-transparent text-white border-2 border-white/50 rounded-full font-display font-bold text-center transition-all group hover:border-white hover:bg-white/5">
-                        <span class="relative z-10 group-hover:text-secondary-light transition-colors">Visite virtuelle</span>
+                    <a href="#visite" class="relative overflow-hidden px-8 py-4 bg-white/10 backdrop-blur-sm text-white border-2 border-white/50 rounded-full font-display font-bold text-center transition-all duration-300 group hover:border-secondary-light hover:bg-secondary-light/10">
+                        <span class="relative z-10 transition-colors duration-300 group-hover:text-secondary-light">Visite virtuelle</span>
+                        <div class="absolute inset-0 -translate-x-full group-hover:translate-x-0 bg-gradient-to-r from-secondary-light/10 to-transparent transition-transform duration-300 ease-out"></div>
                     </a>
                 </div>
                 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-12">
-                    <div class="glass rounded-2xl p-6 transform -rotate-2 opacity-0 animate-fadeIn delay-1000 transition-all duration-300 hover:rotate-0 hover:scale-105 hover:shadow-xl border border-white/10 group hover:border-white/30 hover:bg-white/10">
-                        <span class="text-4xl font-display font-extrabold text-white mb-2 block group-hover:text-secondary-light transition-colors">97.9%</span>
-                        <span class="text-white/80 text-sm">Réussite au baccalauréat</span>
+                    <div class="glass rounded-2xl p-6 transform -rotate-2 opacity-0 animate-fadeIn delay-1000 transition-all duration-300 hover:rotate-0 hover:scale-105 hover:shadow-xl border border-white/20 bg-white/10 backdrop-blur-md group hover:border-white/40 hover:bg-white/20">
+                        <span class="text-4xl font-display font-extrabold text-white mb-2 block group-hover:text-secondary-light transition-colors drop-shadow-md">97.9%</span>
+                        <span class="text-white text-sm">Réussite au baccalauréat</span>
                     </div>
                     
-                    <div class="glass rounded-2xl p-6 transform rotate-1 opacity-0 animate-fadeIn delay-1100 transition-all duration-300 hover:rotate-0 hover:scale-105 hover:shadow-xl border border-white/10 group hover:border-white/30 hover:bg-white/10">
-                        <span class="text-4xl font-display font-extrabold text-white mb-2 block group-hover:text-secondary-light transition-colors">72%</span>
-                        <span class="text-white/80 text-sm">Taux de mention</span>
+                    <div class="glass rounded-2xl p-6 transform rotate-1 opacity-0 animate-fadeIn delay-1100 transition-all duration-300 hover:rotate-0 hover:scale-105 hover:shadow-xl border border-white/20 bg-white/10 backdrop-blur-md group hover:border-white/40 hover:bg-white/20">
+                        <span class="text-4xl font-display font-extrabold text-white mb-2 block group-hover:text-secondary-light transition-colors drop-shadow-md">72%</span>
+                        <span class="text-white text-sm">Taux de mention</span>
                     </div>
                     
-                    <div class="glass rounded-2xl p-6 transform -rotate-1 opacity-0 animate-fadeIn delay-1200 transition-all duration-300 hover:rotate-0 hover:scale-105 hover:shadow-xl border border-white/10 group hover:border-white/30 hover:bg-white/10">
-                        <span class="text-4xl font-display font-extrabold text-white mb-2 block group-hover:text-secondary-light transition-colors">430</span>
-                        <span class="text-white/80 text-sm">Élèves en terminale</span>
+                    <div class="glass rounded-2xl p-6 transform -rotate-1 opacity-0 animate-fadeIn delay-1200 transition-all duration-300 hover:rotate-0 hover:scale-105 hover:shadow-xl border border-white/20 bg-white/10 backdrop-blur-md group hover:border-white/40 hover:bg-white/20">
+                        <span class="text-4xl font-display font-extrabold text-white mb-2 block group-hover:text-secondary-light transition-colors drop-shadow-md">430</span>
+                        <span class="text-white text-sm">Élèves en terminale</span>
                     </div>
                     
-                    <div class="glass rounded-2xl p-6 transform rotate-2 opacity-0 animate-fadeIn delay-1300 transition-all duration-300 hover:rotate-0 hover:scale-105 hover:shadow-xl border border-white/10 group hover:border-white/30 hover:bg-white/10">
-                        <span class="text-4xl font-display font-extrabold text-white mb-2 block group-hover:text-secondary-light transition-colors">1892</span>
-                        <span class="text-white/80 text-sm">Année de fondation</span>
+                    <div class="glass rounded-2xl p-6 transform rotate-2 opacity-0 animate-fadeIn delay-1300 transition-all duration-300 hover:rotate-0 hover:scale-105 hover:shadow-xl border border-white/20 bg-white/10 backdrop-blur-md group hover:border-white/40 hover:bg-white/20">
+                        <span class="text-4xl font-display font-extrabold text-white mb-2 block group-hover:text-secondary-light transition-colors drop-shadow-md">1892</span>
+                        <span class="text-white text-sm">Année de fondation</span>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="absolute bottom-20 left-1/2 transform -translate-x-1/2 text-white opacity-0 animate-bounce-custom delay-1200 animate-fadeIn z-10">
-            <div class="relative w-10 h-10 flex items-center justify-center">
-                <div class="absolute inset-0 rounded-full border-2 border-white/30 animate-pulse"></div>
-                <i class="fas fa-chevron-down"></i>
-            </div>
-        </div>
-        
-        <div class="absolute bottom-0 left-0 w-full z-10 overflow-hidden mt-10>
-            <svg class="w-full h-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" preserveAspectRatio="none">
-                <path fill="#ffffff" fill-opacity="1" d="M0,64L60,69.3C120,75,240,85,360,90.7C480,96,600,96,720,85.3C840,75,960,53,1080,48C1200,43,1320,53,1380,58.7L1440,64L1440,120L1380,120C1320,120,1200,120,1080,120C960,120,840,120,720,120C600,120,480,120,360,120C240,120,120,120,60,120L0,120Z"></path>
-            </svg>
         </div>
     </section>
     
@@ -527,7 +529,7 @@ $liveId = $wtc->getLive();
                     <!-- Vidéo 1 -->
                     <div class="group">
                         <div class="aspect-video rounded-xl overflow-hidden relative mb-3 shadow-md">
-                            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" 
+                            <img src="https://images.unsplash.com/photo-1498050108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" 
                                 alt="Vidéo sur l'orientation" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                             <div class="absolute inset-0 bg-gradient-to-t from-blue-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                             <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -707,28 +709,21 @@ $liveId = $wtc->getLive();
         </div>
     </a>
 
-    <!-- Transition ligne en dégradé bleu -->
     <div class="flex items-center justify-center">
         <div class="w-full h-px bg-gradient-to-r from-blue-50 via-blue-500 to-blue-50"></div>
     </div>
    
-    <!-- Section Internat de l'excellence -->
     <section class="relative py-20 bg-gradient-to-br from-blue-50 via-white to-sky-50 overflow-hidden" id="internat">
-        <!-- Éléments décoratifs d'ambiance -->
         <div class="absolute inset-0 opacity-5 bg-pattern-grid"></div>
         <div class="absolute -top-40 -left-40 w-80 h-80 bg-blue-300/20 rounded-full filter blur-[100px]"></div>
         <div class="absolute -bottom-40 -right-40 w-80 h-80 bg-sky-300/20 rounded-full filter blur-[100px]"></div>
         
-        <!-- Ligne décorative courbe -->
         <div class="absolute left-0 right-0 top-40 h-px bg-gradient-to-r from-transparent via-blue-200 to-transparent"></div>
         <div class="absolute right-10 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-blue-200 to-transparent"></div>
 
-        <!-- Conteneur principal -->
         <div class="relative max-w-7xl mx-auto px-6 sm:px-10">
-            <!-- En-tête de section avec disposition horizontale -->
             <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-16">
                 <div class="md:max-w-2xl">
-                    <!-- Badge décoratif -->
                     <div class="inline-flex items-center mb-4 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-sky-600 rounded-full">
                         <span class="text-white text-xs font-medium tracking-wide uppercase">Cadre de vie</span>
                     </div>
@@ -738,242 +733,214 @@ $liveId = $wtc->getLive();
                     </h2>
                     
                     <p class="text-blue-800/70 text-lg">
-                        Un espace de vie et d'études privilégié offrant aux élèves un environnement propice 
-                        à la réussite scolaire et à l'épanouissement personnel.
+                        {{ $config['description'] ?? 'Un espace de vie et d\'études privilégié offrant aux élèves un environnement propice à la réussite scolaire et à l\'épanouissement personnel.' }}
                     </p>
-                </div>
-                
-                <!-- Call-to-action déplacé à droite -->
-                <div class="md:self-end">
-                    <a href="#internat-info" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-sky-600 text-white rounded-lg font-medium hover:shadow-lg hover:shadow-blue-300/30 transition-all whitespace-nowrap">
-                        Demander des informations
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-                        </svg>
-                    </a>
                 </div>
             </div>
 
             <!-- Disposition centrale avec vidéo au milieu et statistiques autour -->
             <div class="relative mb-24">
                 <!-- Cercle décoratif central -->
-                <div class="absolute inset-0 rounded-full bg-blue-50/50 transform scale-105 blur-sm"></div>
+                <div class="absolute -z-50 inset-0 rounded-full bg-blue-50/50 transform scale-105 blur-sm"></div>
                 
                 <!-- Conteneur flex pour disposition en croix -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center z-50">
                     <!-- Colonne gauche avec statistiques 1 et 3 -->
-                    <div class="space-y-8 order-2 lg:order-1">
+                    <div class="space-y-8 order-1">
                         <!-- Statistique 1 -->
-                        <div class="bg-white rounded-xl p-6 border border-blue-100 shadow-sm hover:shadow-md transition-all">
+                        <div class="bg-white overflow-hidden hover:border-1 border-blue-200 rounded-xl p-6 border border-blue-100 shadow-sm hover:shadow-md transition-all duration-300 relative group ">
                             <div class="flex items-center gap-4">
-                                <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 flex-shrink-0">
-                                    <i class="fas fa-home text-2xl"></i>
+                                <div class="w-16 h-16 rounded-full bg-blue-600 text-white flex items-center justify-center text- group-hover:bg-blue-500 transition-all duration-300 flex-shrink-0">
+                                    <i class="{{ $config['informations'][0]['icon'] ?? 'fas fa-home' }} text-2xl"></i>
                                 </div>
                                 <div>
-                                    <div class="text-3xl font-bold text-blue-600 mb-1">150</div>
-                                    <div class="text-blue-700/70">places disponibles</div>
+                                    <div class="text-3xl font-bold text-blue-600 mb-1">{{ $config['informations'][0]['key_number'] ?? '150' }}</div>
+                                    <div class="text-blue-700/70">{{ $config['informations'][0]['phrase'] ?? 'places disponibles' }}</div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <!-- Statistique 3 -->
-                        <div class="bg-white rounded-xl p-6 border border-blue-100 shadow-sm hover:shadow-md transition-all">
-                            <div class="flex items-center gap-4">
-                                <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 flex-shrink-0">
-                                    <i class="fas fa-chalkboard-teacher text-2xl"></i>
-                                </div>
-                                <div>
-                                    <div class="text-3xl font-bold text-blue-600 mb-1">3h</div>
-                                    <div class="text-blue-700/70">d'études encadrées par jour</div>
-                                </div>
+                            <div class="absolute top-1/2 -translate-y-1/2 -rotate-90 -right-44 w-64 h-48 bg-gradient-to-r from-blue-200/80 to-blue-200/60 rounded-t-full transform translate-x-full group-hover:translate-x-0 transition-transform duration-500">
+                                <div class="absolute inset-0 rounded-full bg-gradient-to-r from-blue-100/70 via-blue-200/50 to-transparent blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                                <div class="absolute inset-0 rounded-full bg-gradient-to-r from-blue-100/50 via-blue-200/30 to-transparent blur-[120px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
                             </div>
                         </div>
-                        
-                        <!-- Point fort 1 visible sur mobile -->
-                        <div class="lg:hidden group bg-white rounded-xl p-5 border border-blue-100 shadow-sm hover:shadow-md transition-all">
-                            <div class="flex items-start gap-4">
-                                <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-sky-600 flex items-center justify-center text-white shadow-md shadow-blue-300/20">
-                                    <i class="fas fa-bed text-lg"></i>
+
+                        <!-- Statistique 2 -->
+                        <div class="bg-white overflow-hidden hover:border-1 border-blue-200 rounded-xl p-6 border border-blue-100 shadow-sm hover:shadow-md transition-all duration-300 relative group ">
+                            <div class="flex items-center gap-4">
+                                <div class="w-16 h-16 rounded-full bg-blue-600 text-white flex items-center justify-center text- group-hover:bg-blue-500 transition-all duration-300 flex-shrink-0">
+                                    <i class="{{ $config['informations'][1]['icon'] ?? 'fas fa-clock' }} text-2xl"></i>
                                 </div>
                                 <div>
-                                    <h4 class="text-blue-800 font-medium text-lg mb-1">Chambres confortables</h4>
-                                    <p class="text-blue-700/70">Espaces individuels et collectifs modernes pour un confort optimal.</p>
+                                    <div class="text-3xl font-bold text-blue-600 mb-1">{{ $config['informations'][1]['key_number'] ?? '3h' }}</div>
+                                    <div class="text-blue-700/70">{{ $config['informations'][1]['phrase'] ?? 'd\'études encadrées par jour' }}</div>
                                 </div>
+                            </div>
+                            <div class="absolute top-1/2 -translate-y-1/2 -rotate-90 -right-44 w-64 h-48 bg-gradient-to-r from-blue-200/80 to-blue-200/60 rounded-t-full transform translate-x-full group-hover:translate-x-0 transition-transform duration-500">
+                                <div class="absolute inset-0 rounded-full bg-gradient-to-r from-blue-100/70 via-blue-200/50 to-transparent blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                                <div class="absolute inset-0 rounded-full bg-gradient-to-r from-blue-100/50 via-blue-200/30 to-transparent blur-[120px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
                             </div>
                         </div>
                     </div>
                     
                     <!-- Colonne centrale avec vidéo -->
-                    <div class="order-1 lg:order-2">
+                    <div class="order-1 lg:order-2 space-y-6 ">
+                        <!-- Bloc vidéo -->
                         <div class="relative rounded-2xl overflow-hidden shadow-xl max-w-xl mx-auto">
-                            <!-- Cadre vidéo avec effet de superposition élégant -->
-                            <div class="aspect-video overflow-hidden relative">
-                                <!-- Placez ici la vidéo ou l'image temporaire -->
-                                <img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80" 
-                                    alt="Internat du Lycée Louis Vincent" class="w-full h-full object-cover">
-                                
-                                <!-- Superposition avec dégradé subtil -->
-                                <div class="absolute inset-0 bg-gradient-to-t from-blue-900/60 via-transparent to-blue-900/10"></div>
-                                
-                                <!-- Bouton de lecture -->
-                                <button class="absolute inset-0 w-full h-full flex items-center justify-center group">
-                                    <div class="relative w-20 h-20 flex items-center justify-center">
-                                        <!-- Cercle extérieur animé -->
-                                        <div class="absolute inset-0 rounded-full bg-blue-500/30 blur-md transform scale-0 group-hover:scale-150 transition-transform duration-700 opacity-0 group-hover:opacity-100"></div>
-                                        <!-- Cercle principal -->
-                                        <div class="absolute inset-0 rounded-full border-2 border-white/70 transform group-hover:scale-125 transition-transform"></div>
-                                        <!-- Bouton central -->
-                                        <div class="relative w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-sky-600 flex items-center justify-center shadow-lg shadow-blue-500/30 transform group-hover:scale-90 transition-transform">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-white ml-1" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
-                                            </svg>
+                            <div class="aspect-video overflow-hidden relative bg-white">
+                                @if($videoId)
+                                    <iframe 
+                                        src="https://www.youtube.com/embed/{{ $videoId }}?rel=0&modestbranding=1&showinfo=0" 
+                                        title="{{ $config['video']['title'] ?? 'Vidéo de présentation' }}"
+                                        class="w-full h-full absolute inset-0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                        allowfullscreen>
+                                    </iframe>
+                                @else
+                                    <div class="relative w-full h-full">
+                                        <img src="{{ $thumbnailUrl }}" 
+                                             alt="Internat du Lycée Louis Vincent" 
+                                             class="w-full h-full object-cover">
+                                        <div class="absolute inset-0 bg-gradient-to-t from-blue-900/60 via-transparent to-blue-900/10">
+                                            <div class="absolute inset-0 flex items-center justify-center">
+                                                <div class="text-white text-center">
+                                                    <i class="fas fa-video-slash text-4xl mb-4"></i>
+                                                    <p class="text-lg">Aucune vidéo disponible</p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </button>
-                                
-                                <!-- Titre de la vidéo -->
-                                <div class="absolute bottom-0 left-0 right-0 p-6 z-10">
-                                    <h3 class="text-white text-xl font-bold mb-2">Découvrez notre internat</h3>
-                                    <p class="text-white/90 text-sm">Visite guidée des installations et témoignages d'élèves</p>
-                                </div>
+                                @endif
                             </div>
                         </div>
+
+                        @if($videoId)
+                        <!-- Bloc description -->
+                        <div class="bg-white rounded-xl shadow-sm max-w-xl mx-auto overflow-hidden">
+                            <div class="px-6 text-center py-4 border-b border-gray-100">
+                                <h3 class="text-blue-900 font-semibold text-lg">
+                                    {{ $config['video']['title'] ?? 'Découvrez notre internat' }}
+                                </h3>
+                                <p class="text-gray-600 text-sm leading-relaxed">
+                                    {{ $config['video']['description'] ?? 'Visite guidée des installations et témoignages d\'élèves' }}
+                                </p>
+                            </div>
+                        </div>
+                        @endif
                     </div>
                     
-                    <!-- Colonne droite avec statistiques 2 et 4 -->
+
+                        
+                    <!-- Colonne droite avec statistiques 3 et 4 -->
                     <div class="space-y-8 order-3">
-                        <!-- Statistique 2 -->
-                        <div class="bg-white rounded-xl p-6 border border-blue-100 shadow-sm hover:shadow-md transition-all">
-                            <div class="flex items-center gap-4">
-                                <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 flex-shrink-0">
-                                    <i class="fas fa-utensils text-2xl"></i>
-                                </div>
-                                <div>
-                                    <div class="text-3xl font-bold text-blue-600 mb-1">100%</div>
-                                    <div class="text-blue-700/70">repas équilibrés</div>
-                                </div>
+                        <!-- Statistique 3 -->
+                        <div class="bg-white overflow-hidden hover:border-1 border-blue-200 rounded-xl p-6 border border-blue-100 shadow-sm hover:shadow-md transition-all duration-300 relative group flex justify-between items-center">
+                            <div class="ml-auto text-right pl-10">
+                                <div class="text-3xl font-bold text-blue-600 mb-1">{{ $config['informations'][2]['key_number'] ?? '100%' }}</div>
+                                <div class="text-blue-700/70">{{ $config['informations'][2]['phrase'] ?? 'repas équilibrés' }}</div>
+                            </div>
+                            <div class="w-16 h-16 rounded-full bg-blue-600 text-white flex items-center justify-center text- group-hover:bg-blue-500 transition-all duration-300 flex-shrink-0 ml-4">
+                                <i class="{{ $config['informations'][2]['icon'] ?? 'fas fa-utensils' }} text-2xl"></i>
+                            </div>
+                            <div class="absolute top-1/2 -translate-y-1/2 rotate-90 -left-44 w-64 h-48 bg-gradient-to-r from-blue-200/80 to-blue-200/60 rounded-t-full transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500">
+                                <div class="absolute inset-0 rounded-full bg-gradient-to-r from-blue-100/70 via-blue-200/50 to-transparent blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                                <div class="absolute inset-0 rounded-full bg-gradient-to-r from-blue-100/50 via-blue-200/30 to-transparent blur-[120px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
                             </div>
                         </div>
                         
                         <!-- Statistique 4 -->
-                        <div class="bg-white rounded-xl p-6 border border-blue-100 shadow-sm hover:shadow-md transition-all">
-                            <div class="flex items-center gap-4">
-                                <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 flex-shrink-0">
-                                    <i class="fas fa-medal text-2xl"></i>
-                                </div>
-                                <div>
-                                    <div class="text-3xl font-bold text-blue-600 mb-1">94%</div>
-                                    <div class="text-blue-700/70">de réussite au bac</div>
-                                </div>
+                        <div class="bg-white overflow-hidden hover:border-1 border-blue-200 rounded-xl p-6 border border-blue-100 shadow-sm hover:shadow-md transition-all duration-300 relative group flex justify-between items-center">
+                            <div class="ml-auto text-right pl-10">
+                                <div class="text-3xl font-bold text-blue-600 mb-1">{{ $config['informations'][3]['key_number'] ?? '94%' }}</div>
+                                <div class="text-blue-700/70">{{ $config['informations'][3]['phrase'] ?? 'de réussite au bac' }}</div>
                             </div>
-                        </div>
-                        
-                        <!-- Point fort 2 visible sur mobile -->
-                        <div class="lg:hidden group bg-white rounded-xl p-5 border border-blue-100 shadow-sm hover:shadow-md transition-all">
-                            <div class="flex items-start gap-4">
-                                <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-sky-600 flex items-center justify-center text-white shadow-md shadow-blue-300/20">
-                                    <i class="fas fa-book-open text-lg"></i>
-                                </div>
-                                <div>
-                                    <h4 class="text-blue-800 font-medium text-lg mb-1">Études encadrées</h4>
-                                    <p class="text-blue-700/70">Accompagnement pédagogique quotidien pour la réussite de tous.</p>
-                                </div>
+                            <div class="w-16 h-16 rounded-full bg-blue-600 text-white flex items-center justify-center text- group-hover:bg-blue-500 transition-all duration-300 flex-shrink-0 ml-4">
+                                <i class="{{ $config['informations'][3]['icon'] ?? 'fas fa-graduation-cap' }} text-2xl"></i>
+                            </div>
+                            <div class="absolute top-1/2 -translate-y-1/2 rotate-90 -left-44 w-64 h-48 bg-gradient-to-r from-blue-200/80 to-blue-200/60 rounded-t-full transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500">
+                                <div class="absolute inset-0 rounded-full bg-gradient-to-r from-blue-100/70 via-blue-200/50 to-transparent blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                                <div class="absolute inset-0 rounded-full bg-gradient-to-r from-blue-100/50 via-blue-200/30 to-transparent blur-[120px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Atouts de l'internat - visible sur desktop -->
-            <div class="hidden lg:grid grid-cols-3 gap-6 mt-16">
-                <!-- Atout 1 -->
-                <div class="group bg-white rounded-xl p-6 border border-blue-100 shadow-sm hover:shadow-md transition-all">
-                    <div class="flex items-start gap-4">
-                        <div class="flex-shrink-0 w-14 h-14 rounded-lg bg-gradient-to-br from-blue-500 to-sky-600 flex items-center justify-center text-white shadow-md shadow-blue-300/20">
-                            <i class="fas fa-bed text-xl"></i>
-                        </div>
-                        <div>
-                            <h4 class="text-blue-800 font-semibold text-lg mb-2">Chambres confortables</h4>
-                            <p class="text-blue-700/70">Espaces individuels et collectifs modernes pour un confort optimal et une ambiance propice aux études.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Atout 2 -->
-                <div class="group bg-white rounded-xl p-6 border border-blue-100 shadow-sm hover:shadow-md transition-all">
-                    <div class="flex items-start gap-4">
-                        <div class="flex-shrink-0 w-14 h-14 rounded-lg bg-gradient-to-br from-blue-500 to-sky-600 flex items-center justify-center text-white shadow-md shadow-blue-300/20">
-                            <i class="fas fa-book-open text-xl"></i>
-                        </div>
-                        <div>
-                            <h4 class="text-blue-800 font-semibold text-lg mb-2">Études encadrées</h4>
-                            <p class="text-blue-700/70">Accompagnement pédagogique quotidien par des enseignants qualifiés pour la réussite de tous les élèves.</p>
+            <!-- Points forts de l'internat -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-{{ count($config['points_forts'] ?? [1]) > 3 ? '4' : '3' }} gap-6 mt-16">
+                @forelse($config['points_forts'] ?? [] as $point_fort)
+                    <div class="group bg-white rounded-xl p-6 border border-blue-100 shadow-sm hover:shadow-md transition-all">
+                        <div class="flex items-start gap-4">
+                            <div class="flex-shrink-0 w-14 h-14 rounded-lg bg-gradient-to-br from-blue-500 to-sky-600 flex items-center justify-center text-white shadow-md shadow-blue-300/20">
+                                <i class="{{ $point_fort['icon'] }} text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-blue-800 font-semibold text-lg mb-2">{{ $point_fort['titre'] }}</h4>
+                                <p class="text-blue-700/70">{{ $point_fort['description'] }}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Atout 3 -->
-                <div class="group bg-white rounded-xl p-6 border border-blue-100 shadow-sm hover:shadow-md transition-all">
-                    <div class="flex items-start gap-4">
-                        <div class="flex-shrink-0 w-14 h-14 rounded-lg bg-gradient-to-br from-blue-500 to-sky-600 flex items-center justify-center text-white shadow-md shadow-blue-300/20">
-                            <i class="fas fa-users text-xl"></i>
-                        </div>
-                        <div>
-                            <h4 class="text-blue-800 font-semibold text-lg mb-2">Vie communautaire</h4>
-                            <p class="text-blue-700/70">Activités culturelles et sportives pour développer l'esprit d'équipe et créer des liens durables.</p>
+                @empty
+                    <!-- Points forts par défaut si aucun n'est configuré -->
+                    <div class="group bg-white rounded-xl p-6 border border-blue-100 shadow-sm hover:shadow-md transition-all">
+                        <div class="flex items-start gap-4">
+                            <div class="flex-shrink-0 w-14 h-14 rounded-lg bg-gradient-to-br from-blue-500 to-sky-600 flex items-center justify-center text-white shadow-md shadow-blue-300/20">
+                                <i class="fas fa-bed text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-blue-800 font-semibold text-lg mb-2">Chambres confortables</h4>
+                                <p class="text-blue-700/70">Espaces individuels et collectifs modernes pour un confort optimal.</p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endforelse
             </div>
             
             <!-- Témoignages d'élèves -->
             <div class="mt-16">
                 <h3 class="text-center text-2xl font-bold text-blue-900 mb-10">Ce qu'en disent nos élèves</h3>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Témoignage 1 -->
-                    <div class="bg-gradient-to-br from-blue-50 to-white rounded-xl p-6 shadow-sm border border-blue-100 relative">
-                        <!-- Icône de citation -->
-                        <div class="absolute top-4 right-4 text-blue-200 opacity-50">
-                            <i class="fas fa-quote-right text-5xl"></i>
-                        </div>
-                        
-                        <div class="relative">
-                            <p class="text-blue-800/90 italic mb-6">"L'internat m'a permis de trouver un équilibre parfait entre études et vie sociale. L'encadrement bienveillant et les conditions de travail optimales m'ont aidé à progresser considérablement dans mes résultats scolaires."</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 {{ count($config['temoignages'] ?? []) > 2 ? 'lg:grid-cols-3' : '' }} gap-8">
+                    @forelse($config['temoignages'] ?? [] as $temoignage)
+                        <div class="bg-gradient-to-br from-blue-50 to-white rounded-xl p-6 shadow-sm border border-blue-100 relative transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-blue-200 group">
+                            <!-- Icône de citation -->
+                            <div class="absolute top-4 right-4 text-blue-200 opacity-50 transition-transform duration-300 group-hover:scale-110 group-hover:opacity-70">
+                                <i class="fas fa-quote-right text-5xl"></i>
+                            </div>
                             
-                            <div class="flex items-center">
-                                <div class="w-12 h-12 rounded-full bg-blue-200 flex items-center justify-center text-blue-600 mr-4">
-                                    <span class="font-bold">ML</span>
-                                </div>
-                                <div>
-                                    <div class="font-semibold text-blue-900">Marie L.</div>
-                                    <div class="text-blue-700/70 text-sm">Élève en Terminale</div>
+                            <div class="relative">
+                                <p class="text-blue-800/90 italic mb-6 transition-colors duration-300 group-hover:text-blue-900">"{{ $temoignage['texte'] }}"</p>
+                                
+                                <div class="flex items-center">
+                                    <div class="w-12 h-12 rounded-full bg-blue-200 flex items-center justify-center text-blue-600 mr-4 transition-colors duration-300 group-hover:bg-blue-300 group-hover:text-blue-700">
+                                        <span class="font-bold">{{ substr($temoignage['nom'], 0, 2) }}</span>
+                                    </div>
+                                    <div>
+                                        <div class="font-semibold text-blue-900">{{ $temoignage['nom'] }}</div>
+                                        <div class="text-blue-700/70 text-sm">{{ $temoignage['statut'] }}</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <!-- Témoignage 2 -->
-                    <div class="bg-gradient-to-br from-blue-50 to-white rounded-xl p-6 shadow-sm border border-blue-100 relative">
-                        <!-- Icône de citation -->
-                        <div class="absolute top-4 right-4 text-blue-200 opacity-50">
-                            <i class="fas fa-quote-right text-5xl"></i>
-                        </div>
-                        
-                        <div class="relative">
-                            <p class="text-blue-800/90 italic mb-6">"Intégrer l'internat a été une décision déterminante pour mon parcours. J'y ai trouvé un cadre structurant, des amitiés solides et un accompagnement personnalisé qui m'ont permis de me dépasser."</p>
-                            
-                            <div class="flex items-center">
-                                <div class="w-12 h-12 rounded-full bg-blue-200 flex items-center justify-center text-blue-600 mr-4">
-                                    <span class="font-bold">TK</span>
-                                </div>
-                                <div>
-                                    <div class="font-semibold text-blue-900">Thomas K.</div>
-                                    <div class="text-blue-700/70 text-sm">Ancien élève, aujourd'hui en prépa</div>
+                    @empty
+                        <!-- Témoignages par défaut si aucun n'est configuré -->
+                        <div class="bg-gradient-to-br from-blue-50 to-white rounded-xl p-6 shadow-sm border border-blue-100 relative transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-blue-200 group">
+                            <div class="absolute top-4 right-4 text-blue-200 opacity-50 transition-transform duration-300 group-hover:scale-110 group-hover:opacity-70">
+                                <i class="fas fa-quote-right text-5xl"></i>
+                            </div>
+                            <div class="relative">
+                                <p class="text-blue-800/90 italic mb-6 transition-colors duration-300 group-hover:text-blue-900">"L'internat m'a permis de trouver un équilibre parfait entre études et vie sociale. L'encadrement bienveillant et les conditions de travail optimales m'ont aidé à progresser considérablement."</p>
+                                <div class="flex items-center">
+                                    <div class="w-12 h-12 rounded-full bg-blue-200 flex items-center justify-center text-blue-600 mr-4 transition-colors duration-300 group-hover:bg-blue-300 group-hover:text-blue-700">
+                                        <span class="font-bold">ML</span>
+                                    </div>
+                                    <div>
+                                        <div class="font-semibold text-blue-900">Marie L.</div>
+                                        <div class="text-blue-700/70 text-sm">Élève en Terminale</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @endforelse
                 </div>
             </div>
         </div>
@@ -1113,6 +1080,28 @@ $liveId = $wtc->getLive();
         </div>
     </footer>
 
+    <script>
+        function playVideo(element) {
+            const container = element.closest('.aspect-video');
+            const videoUrl = element.dataset.videoUrl;
+            const iframeContainer = container.querySelector('.video-iframe-container');
+            const preview = container.querySelector('.video-preview');
 
+            // Créer l'URL de l'embed
+            const embedUrl = videoUrl.replace('watch?v=', 'embed/');
+            
+            // Créer l'iframe
+            const iframe = document.createElement('iframe');
+            iframe.src = `${embedUrl}?autoplay=1`;
+            iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+            iframe.allowFullscreen = true;
+            iframe.className = "w-full h-full absolute inset-0";
+            
+            // Cacher la prévisualisation et afficher l'iframe
+            preview.classList.add('hidden');
+            iframeContainer.classList.remove('hidden');
+            iframeContainer.appendChild(iframe);
+        }
+    </script>
 
 @endsection
