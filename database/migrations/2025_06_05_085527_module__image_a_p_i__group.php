@@ -15,11 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string("name");
             $table->string("description")->nullable();
+            $table->foreignId('group_id')->nullable()->constrained('Module_ImageAPI_Groups')->onDelete('set null');
             $table->integer("sort")->default(0);
             $table->string("icon")->nullable();
             $table->string("color")->nullable();
             $table->boolean("is_active")->default(true);
-            $table->float("max_size")->default(5.0); // Maximum size in MB
+            $table->float("max_size")->default(5.0); 
+            $table->string("permission")->default('public'); // public, private, protected
             $table->string("allowed_types")->default('jpg,jpeg,png,gif');
 
             $table->timestamps();

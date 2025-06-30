@@ -45,6 +45,7 @@ class ImageAPIController extends Controller
             'tag' => 'nullable|string|max:255',
             'alt_text' => 'nullable|string|max:255',
             'status' => 'nullable|string',
+            'group_id' => 'nullable|integer|exists:module_imageapi_groups,id',
         ]);
 
         $token = $this->generateToken();
@@ -68,12 +69,24 @@ class ImageAPIController extends Controller
         $imageApi->tags = json_encode([$request->input('tag', '')]);
         $imageApi->alt_text = $request->input('alt_text', '');
         $imageApi->status = $request->input('status', 'active');
+        $imageApi->group_id = $request->input('group_id') ?: null;
         $imageApi->save();
 
         $this->LogIfDebug('Image metadata saved to database with token: ' . $token);
         
+        // Prepare success message
+        $message = 'Image ajoutée avec succès!';
+        if ($request->input('group_id')) {
+            $folder = \App\Models\ImageAPIGroups::find($request->input('group_id'));
+            if ($folder) {
+                $message .= ' Elle a été placée dans le dossier "' . $folder->name . '".';
+            }
+        } else {
+            $message .= ' Elle a été placée à la racine.';
+        }
+        
         // Return a success response with redirect
-        return redirect()->route('personnels.ImageAPI.index')->with('message', 'Image ajoutée avec succès!');
+        return redirect()->route('personnels.ImageAPI.index')->with('message', $message);
     }
 
 
@@ -208,8 +221,163 @@ class ImageAPIController extends Controller
             $this->LogIfDebug('Image with token ' . $token . ' not found.');
             return redirect()->route('personnels.ImageAPI.index')->with('message', 'Image introuvable');
         }
+        if ($imageApi->status !== "public") {
+            $request = request();
+            $referer = $request->headers->get('referer');
+            $isLocalRequest = $referer && (
+                str_contains($referer, config('app.url')) || 
+                str_contains($referer, 'localhost') || 
+                str_contains($referer, '127.0.0.1')
+            );
+            
+            // If the image is non-public and the request isn't from our own server/site
+            if (!$isLocalRequest) {
+                $this->LogIfDebug('Image with token ' . $token . ' is not public and request is not from our site.');
+                return response()->json([
+                    'error' => 'Unauthorized access to this image.'
+                ], 403);
+            }
+        }
         $this->LogIfDebug('Image with token ' . $token . ' found, returning image path.');
         return response()->file(storage_path('app/public/' . $imageApi->path));
+    }
+    public function createFolder() {
+        $this->LogIfDebug('Creating folder');
+        // Check if the folder name is valid
+        $request = request();
+        $request->validate([
+            'name' => 'required|string|max:255'
+        ]);
+
+        // Create the new folder/group
+        $folder = new \App\Models\ImageAPIGroups();
+        $folder->name = $request->input('name');
+        $folder->description = $request->input('description');
+        $folder->group_id = $request->input('parent_id'); 
+        $folder->sort = $request->input('sort', 0);
+        $folder->icon = $request->input('icon');
+        $folder->color = $request->input('color');
+        $folder->is_active = $request->input('is_active', 1);
+        $folder->max_size = $request->input('max_size', 100);
+        $folder->allowed_types = $request->input('allowed_types', 'jpg,jpeg,png,gif,webp');
+        $folder->save();
+
+        $this->LogIfDebug('Folder created with ID: ' . $folder->id);
+        return redirect()->route('personnels.ImageAPI.index')->with('message', 'Dossier créé avec succès!');
+    }
+
+    /**
+     * Update an existing folder/group.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function updateFolder(Request $request)
+    {
+        $this->LogIfDebug('Update folder request data: ' . json_encode($request->all()));
+
+        $request->validate([
+            'folder_id' => 'required|integer',
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255',
+            'group_id' => 'nullable|integer',
+            'sort' => 'nullable|integer|min:0',
+            'icon' => 'nullable|string|max:255',
+            'color' => 'nullable|string|max:255',
+            'is_active' => 'nullable|boolean',
+            'max_size' => 'nullable|numeric|min:0.1|max:1000',
+            'allowed_types' => 'nullable|string|max:255',
+        ]);
+
+        $folder = \App\Models\ImageAPIGroups::find($request->folder_id);
+
+        if (!$folder) {
+            $this->LogIfDebug('Folder with ID ' . $request->folder_id . ' not found.');
+            return redirect()->route('personnels.ImageAPI.index')->with('error', 'Dossier introuvable');
+        }
+
+        // Update folder data
+        $folder->name = $request->input('name');
+        $folder->description = $request->input('description');
+        $folder->group_id = $request->input('group_id'); // Parent folder
+        $folder->sort = $request->input('sort', 0);
+        $folder->icon = $request->input('icon');
+        $folder->color = $request->input('color');
+        $folder->is_active = $request->has('is_active') ? 1 : 0;
+        $folder->max_size = $request->input('max_size', 100);
+        $folder->allowed_types = $request->input('allowed_types', 'jpg,jpeg,png,gif,webp');
+        
+        $folder->save();
+
+        $this->LogIfDebug('Folder updated successfully with ID: ' . $folder->id);
+        
+        return redirect()->route('personnels.ImageAPI.index')->with('success', 'Dossier modifié avec succès!');
+    }
+
+    /**
+     * Delete a folder/group.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroyFolder(Request $request)
+    {
+        $this->LogIfDebug('Delete folder request data: ' . json_encode($request->all()));
+
+        $request->validate([
+            'folder_id' => 'required|integer',
+        ]);
+
+        $folderId = $request->input('folder_id');
+        $folder = \App\Models\ImageAPIGroups::find($folderId);
+
+        if (!$folder) {
+            $this->LogIfDebug('Folder with ID ' . $folderId . ' not found.');
+            return redirect()->route('personnels.ImageAPI.index')->with('error', 'Dossier introuvable');
+        }
+
+        // Check if folder has child folders
+        $childFolders = \App\Models\ImageAPIGroups::where('group_id', $folderId)->count();
+        if ($childFolders > 0) {
+            $this->LogIfDebug('Cannot delete folder with ID ' . $folderId . ' because it has child folders.');
+            return redirect()->route('personnels.ImageAPI.index')->with('error', 'Impossible de supprimer ce dossier car il contient des sous-dossiers. Veuillez d\'abord supprimer ou déplacer les sous-dossiers.');
+        }
+
+        // Move all images in this folder to root (group_id = null)
+        $imagesCount = ImageApi::where('group_id', $folderId)->count();
+        if ($imagesCount > 0) {
+            ImageApi::where('group_id', $folderId)->update(['group_id' => null]);
+            $this->LogIfDebug('Moved ' . $imagesCount . ' images from folder ID ' . $folderId . ' to root.');
+        }
+
+        $folderName = $folder->name;
+        $folder->delete();
+
+        $this->LogIfDebug('Folder "' . $folderName . '" deleted successfully with ID: ' . $folderId);
+        
+        $message = 'Dossier "' . $folderName . '" supprimé avec succès!';
+        if ($imagesCount > 0) {
+            $message .= ' ' . $imagesCount . ' image(s) ont été déplacée(s) vers la racine du drive.';
+        }
+        
+        return redirect()->route('personnels.ImageAPI.index')->with('success', $message);
+    }
+
+    /**
+     * Get the count of images in a specific folder.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getFolderImagesCount($id) {
+        try {
+            $count = ImageApi::where('group_id', $id)->count();
+            
+            return response()->json(['count' => $count]);
+        } catch (\Exception $e) {
+            $this->LogIfDebug('Error getting folder images count: ' . $e->getMessage());
+            return response()->json(['count' => 0, 'error' => 'Erreur lors du comptage des images'], 500);
+        }
     }
 
 }

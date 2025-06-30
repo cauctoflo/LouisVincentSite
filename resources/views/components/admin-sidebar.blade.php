@@ -21,7 +21,7 @@
             <button type="button" id="logs-btn" class="my-1 mx-auto w-10 h-10 rounded-xl flex items-center justify-center text-gray-600 hover:bg-blue-50 hover:text-blue-600 sidebar-toggle" data-section="logs">
                 <i class="fas fa-history"></i>
             </button>            
-            <button type="button" id="image-btn" class="my-1 mx-auto w-10 h-10 rounded-xl flex items-center justify-center text-gray-600 hover:bg-blue-50 hover:text-blue-600 sidebar-toggle" data-section="logs">
+            <button type="button" id="image-btn" class="my-1 mx-auto w-10 h-10 rounded-xl flex items-center justify-center text-gray-600 hover:bg-blue-50 hover:text-blue-600 sidebar-toggle" data-section="drive">
                 <i class="fa-solid fa-images"></i>
             </button>
             <button type="button" id="internat-btn" class="my-1 mx-auto w-10 h-10 rounded-xl flex items-center justify-center text-gray-600 hover:bg-blue-50 hover:text-blue-600 sidebar-toggle" data-section="internat">
@@ -290,6 +290,24 @@
                     Vider les logs
                 </button>
                 @endif
+            </nav>
+        </div>
+
+        <div id="drive-section" class="section-content px-6 py-5 hidden">
+            <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Louis Vincent - Clouds</span>
+            
+            <nav class="mt-4 space-y-1.5">
+                <a href="{{ route('personnels.ImageAPI.index') }}" class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('personnels.ImageAPI.index') ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50' }}">
+                    <i class="fas fa-list mr-3 text-{{ request()->routeIs('personnels.ImageAPI.index') ? 'blue-500' : 'gray-400 group-hover:text-gray-500' }}"></i>
+                    Accéder au stockage
+                </a>
+
+                <a href="{{ route('personnels.ImageAPI.index') }}" class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('personnels.ImageAPI.index') ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50' }}">
+                    <i class="fas fa-cog mr-3 text-{{ request()->routeIs('personnels.ImageAPI.index') ? 'blue-500' : 'gray-400 group-hover:text-gray-500' }}"></i>
+                    Paramètres du stockage
+                </a>
+
+                
             </nav>
         </div>
         

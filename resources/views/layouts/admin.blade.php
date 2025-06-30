@@ -18,7 +18,7 @@
         <!-- Styles -->
         @livewireStyles
     </head>
-    <body class="font-sans text-gray-800 bg-gray-50">
+    <body class="font-sans text-gray-800 bg-gray-50" style="min-height: calc(100vh + 100px);">
         <x-admin-sidebar>
             @hasSection('content')
                 @yield('content')
