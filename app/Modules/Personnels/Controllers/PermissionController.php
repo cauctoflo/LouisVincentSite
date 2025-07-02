@@ -67,6 +67,36 @@ class PermissionController extends Controller
         'logs.export' => 'Exporter les journaux d\'activité',
         'logs.delete' => 'Supprimer les journaux d\'activité',
         
+        // Permissions pour le module Pages
+        'sections.view' => 'Voir les sections',
+        'sections.create' => 'Créer des sections',
+        'sections.edit' => 'Modifier des sections',
+        'sections.delete' => 'Supprimer des sections',
+        'sections.manage' => 'Gérer toutes les sections',
+        
+        'folders.view' => 'Voir les dossiers',
+        'folders.create' => 'Créer des dossiers',
+        'folders.edit' => 'Modifier des dossiers',
+        'folders.delete' => 'Supprimer des dossiers',
+        'folders.manage' => 'Gérer tous les dossiers',
+        
+        'pages.view' => 'Voir les pages',
+        'pages.create' => 'Créer des pages',
+        'pages.edit' => 'Modifier des pages',
+        'pages.delete' => 'Supprimer des pages',
+        'pages.publish' => 'Publier des pages',
+        'pages.manage' => 'Gérer toutes les pages',
+        'pages.view_drafts' => 'Voir les brouillons',
+        
+        // Permissions avec underscores pour les directives Blade
+        'pages_view' => 'Voir les pages',
+        'pages_create' => 'Créer des pages',
+        'pages_edit' => 'Modifier des pages',
+        'pages_delete' => 'Supprimer des pages',
+        'pages_publish' => 'Publier des pages',
+        'pages_manage' => 'Gérer toutes les pages',
+        'pages_view_drafts' => 'Voir les brouillons',
+        
         // Ajoutez d'autres permissions selon vos besoins
     ];
     
@@ -171,4 +201,4 @@ class PermissionController extends Controller
     {
         return $this->availablePermissions;
     }
-} 
+}

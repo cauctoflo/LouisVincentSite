@@ -168,6 +168,9 @@ return [
 
         // Module Service Providers...
         App\Modules\Log\Providers\LogServiceProvider::class,
+        
+        // Permission Service Provider
+        App\Modules\Personnels\Providers\PermissionServiceProvider::class,
     ],
 
     /*
