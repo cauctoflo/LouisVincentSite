@@ -40,7 +40,7 @@ class PageService
                 'order_index' => $data['order_index'] ?? 0,
                 'meta_title' => $data['meta_title'] ?? null,
                 'meta_description' => $data['meta_description'] ?? null,
-                'tags' => $data['tags'] ?? null,
+                'tags' => $this->processTagsInput($data['tags'] ?? null),
             ]);
 
             // Créer une révision initiale
@@ -87,7 +87,7 @@ class PageService
                 'order_index' => $data['order_index'] ?? $page->order_index,
                 'meta_title' => $data['meta_title'] ?? $page->meta_title,
                 'meta_description' => $data['meta_description'] ?? $page->meta_description,
-                'tags' => $data['tags'] ?? $page->tags,
+                'tags' => $this->processTagsInput($data['tags'] ?? $page->tags),
             ]);
 
             // Créer une révision si le contenu a changé
@@ -314,6 +314,36 @@ class PageService
         return $query->with(['section', 'folder', 'creator'])
                      ->orderBy('title')
                      ->get();
+    }
+
+    /**
+     * Traite les tags depuis le formulaire et les convertit en tableau
+     * 
+     * @param mixed $tags
+     * @return array|null
+     */
+    protected function processTagsInput($tags)
+    {
+        // Si null, retourner null
+        if ($tags === null) {
+            return null;
+        }
+        
+        // Si déjà un tableau, retourner tel quel
+        if (is_array($tags)) {
+            return array_map('trim', array_filter($tags));
+        }
+        
+        // Si c'est une chaîne, la diviser en tableau
+        if (is_string($tags)) {
+            if (empty(trim($tags))) {
+                return null;
+            }
+            // Diviser par virgule et supprimer les espaces
+            return array_map('trim', array_filter(explode(',', $tags)));
+        }
+        
+        return null;
     }
 
     /**

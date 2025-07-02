@@ -3,6 +3,10 @@
 @section('title', 'Modifier la section: ' . $section->name)
 
 @section('content')
+
+<!-- Place ça dans ta page edit.blade.php -->
+
+
 <div class="main-content flex-1 bg-gray-50 p-6 overflow-y-auto">
     <div class="flex justify-between items-center mb-6">
         <div>

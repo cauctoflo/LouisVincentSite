@@ -78,6 +78,7 @@ class PageController extends Controller
             abort(403, 'Accès non autorisé');
         }
 
+
         $sections = Section::active()->orderBy('name')->get();
         $folders = [];
         
@@ -106,16 +107,17 @@ class PageController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255',
-            'content' => 'nullable',
+            'content' => 'nullable|string', // Accepte le JSON sous forme de chaîne
             'excerpt' => 'nullable|string|max:500',
             'section_id' => 'required|exists:sections,id',
             'folder_id' => 'nullable|exists:folders,id',
-            'is_published' => 'boolean',
+            'is_published' => 'nullable|in:0,1', // Accepte "0" ou "1" comme chaîne
             'order_index' => 'nullable|integer|min:0',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:300',
-            'tags' => 'nullable|array',
+            'tags' => 'nullable|string', // Accepte une chaîne au lieu d'un tableau
         ]);
+
 
         // Vérifier que le dossier appartient à la section
         if ($request->filled('folder_id')) {
@@ -190,13 +192,13 @@ class PageController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255',
-            'content' => 'nullable',
+            'content' => 'nullable|string', // Accepte le JSON sous forme de chaîne
             'excerpt' => 'nullable|string|max:500',
             'folder_id' => 'nullable|exists:folders,id',
             'order_index' => 'nullable|integer|min:0',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:300',
-            'tags' => 'nullable|array',
+            'tags' => 'nullable|string', // Accepte une chaîne au lieu d'un tableau
         ]);
 
         // Vérifier que le dossier appartient à la section

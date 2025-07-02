@@ -17,6 +17,11 @@
 </style>
 @endsection
 
+@section('scripts')
+<!-- Scripts pour l'éditeur -->
+@vite(['resources/js/editor-form.js', 'resources/js/tags-handler.js'])
+@endsection
+
 @section('content')
 <div class="main-content flex-1 bg-gray-50 p-6 overflow-y-auto">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
