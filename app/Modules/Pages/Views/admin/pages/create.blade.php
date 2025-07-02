@@ -83,7 +83,8 @@
                     
                     <div class="p-6">
                         <!-- Éditeur Editor.js simplifié -->
-                        <div id="editorjs" class="mb-4"></div>
+                        <div id="editorjs" class="p-4 border border-gray-300"></div>
+
                         
                         <!-- Champ caché pour stocker le contenu JSON -->
                         <input type="hidden" name="content" id="content" value="{{ old('content') }}">
@@ -98,42 +99,22 @@
                     </div>
                 </div>
 
-                <!-- Aide pour l'édition -->
+                <!-- Aide pour les images -->
                 <div class="bg-green-50 rounded-xl border border-green-200 p-4">
                     <h4 class="text-sm font-medium text-green-900 mb-2">
-                        <i class="fas fa-edit mr-1"></i> Outils d'édition disponibles
+                        <i class="fas fa-images mr-1"></i> Insertion d'images
                     </h4>
                     <p class="text-sm text-green-700 mb-3">
-                        Cliquez sur "+" dans l'éditeur pour accéder à tous les outils de mise en forme
+                        Dans l'éditeur, cliquez sur "+" puis sélectionnez "Image" pour insérer une image via URL
                     </p>
-                    <div class="grid grid-cols-2 gap-3 text-xs">
-                        <div class="bg-white p-3 rounded border">
-                            <div class="font-medium text-gray-800 mb-1"><i class="fas fa-heading mr-1 text-blue-600"></i> Titres</div>
-                            <div class="text-gray-600">H1, H2, H3 pour structurer votre contenu</div>
+                    <div class="text-xs text-green-600 space-y-1">
+                        <div><strong>Exemple d'URL :</strong></div>
+                        <div class="font-mono bg-white p-2 rounded border">
+                            http://localhost:8000/images/token/MX47snilphyQugrDGk6xwP2HYEU8RKLV
                         </div>
-                        <div class="bg-white p-3 rounded border">
-                            <div class="font-medium text-gray-800 mb-1"><i class="fas fa-list mr-1 text-blue-600"></i> Listes</div>
-                            <div class="text-gray-600">À puces ou numérotées</div>
+                        <div class="mt-2 text-green-700">
+                            💡 L'éditeur par blocs permet aussi d'ajouter des titres, listes, citations, code et bien plus !
                         </div>
-                        <div class="bg-white p-3 rounded border">
-                            <div class="font-medium text-gray-800 mb-1"><i class="fas fa-quote-right mr-1 text-blue-600"></i> Citations</div>
-                            <div class="text-gray-600">Citations avec auteur optionnel</div>
-                        </div>
-                        <div class="bg-white p-3 rounded border">
-                            <div class="font-medium text-gray-800 mb-1"><i class="fas fa-code mr-1 text-blue-600"></i> Code</div>
-                            <div class="text-gray-600">Blocs de code formatés</div>
-                        </div>
-                        <div class="bg-white p-3 rounded border">
-                            <div class="font-medium text-gray-800 mb-1"><i class="fas fa-table mr-1 text-blue-600"></i> Tableaux</div>
-                            <div class="text-gray-600">Tableaux formatés avec cellules</div>
-                        </div>
-                        <div class="bg-white p-3 rounded border">
-                            <div class="font-medium text-gray-800 mb-1"><i class="fas fa-images mr-1 text-blue-600"></i> Images</div>
-                            <div class="text-gray-600">Via URL (ex: http://localhost:8000/images/token/...)</div>
-                        </div>
-                    </div>
-                    <div class="mt-3 text-center text-xs text-green-700">
-                        <div>💡 Raccourci : <span class="bg-white px-2 py-1 rounded border">Ctrl+S</span> pour sauvegarder rapidement</div>
                     </div>
                 </div>
             </div>
@@ -263,286 +244,5 @@
     </form>
 </div>
 
-<!-- Inclure Editor.js et ses outils via CDN -->
-<script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
-<script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
-<script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
-<script src="https://cdn.jsdelivr.net/npm/@editorjs/quote@latest"></script>
-<script src="https://cdn.jsdelivr.net/npm/@editorjs/code@latest"></script>
-<script src="https://cdn.jsdelivr.net/npm/@editorjs/image@latest"></script>
-<script src="https://cdn.jsdelivr.net/npm/@editorjs/link@latest"></script>
-<script src="https://cdn.jsdelivr.net/npm/@editorjs/table@latest"></script>
-<script src="https://cdn.jsdelivr.net/npm/@editorjs/marker@latest"></script>
 
-<script>
-let editor;
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialiser Editor.js avec l'approche simplifiée
-    initEditor();
-    
-    // Gérer le changement de section pour charger les dossiers
-    const sectionSelect = document.getElementById('section_id');
-    if (sectionSelect) {
-        sectionSelect.addEventListener('change', loadFolders);
-    }
-    
-    // Gérer la soumission du formulaire
-    const pageForm = document.getElementById('page-form');
-    if (pageForm) {
-        pageForm.addEventListener('submit', handleFormSubmit);
-    }
-    
-    // Raccourci clavier pour sauvegarder
-    document.addEventListener('keydown', function(e) {
-        if (e.ctrlKey && e.key === 's') {
-            e.preventDefault();
-            handleFormSubmit(e);
-        }
-    });
-    
-    // Configuration du bouton de sauvegarde en brouillon
-    const saveDraftButton = document.getElementById('save-draft');
-    if (saveDraftButton) {
-        saveDraftButton.addEventListener('click', saveDraft);
-    }
-});
-
-function initEditor() {
-    try {
-        // Récupérer le contenu initial s'il existe
-        const contentField = document.getElementById('content');
-        let initialContent = contentField ? contentField.value : '';
-        let initialData = {
-            time: new Date().getTime(),
-            blocks: [
-                {
-                    type: "paragraph",
-                    data: {
-                        text: "Bienvenue dans <b>Editor.js</b> ! Commencez à écrire ici."
-                    }
-                }
-            ]
-        };
-        
-        // Si un contenu existe déjà, on l'utilise
-        if (initialContent && initialContent.trim() !== '') {
-            try {
-                initialData = JSON.parse(initialContent);
-            } catch (e) {
-                console.warn('Format non-JSON, création d\'un nouveau bloc');
-            }
-        }
-        
-        // Création de l'instance EditorJS avec des outils avancés
-        editor = new EditorJS({
-            /** ID de l'élément conteneur */
-            holder: 'editorjs',
-            
-            /** Données par défaut */
-            data: initialData,
-            
-            /** Configuration des outils disponibles */
-            tools: {
-                header: {
-                    class: Header,
-                    inlineToolbar: ['marker', 'link'],
-                    config: {
-                        placeholder: 'Entrez un titre',
-                        levels: [1, 2, 3],
-                        defaultLevel: 2
-                    }
-                },
-                list: {
-                    class: List,
-                    inlineToolbar: true,
-                    config: {
-                        defaultStyle: 'unordered'
-                    }
-                },
-                quote: {
-                    class: Quote,
-                    inlineToolbar: true,
-                    config: {
-                        quotePlaceholder: 'Entrez une citation',
-                        captionPlaceholder: 'Auteur de la citation'
-                    }
-                },
-                code: {
-                    class: CodeTool
-                },
-                image: {
-                    class: ImageTool,
-                    config: {
-                        endpoints: {
-                            byFile: null, // Désactivé pour le moment
-                            byUrl: '/loadImageFromUrl'
-                        },
-                        field: 'image',
-                        types: 'image/*'
-                    }
-                },
-                link: {
-                    class: LinkTool,
-                    config: {
-                        endpoint: '/fetchUrl'
-                    }
-                },
-                table: {
-                    class: Table,
-                    inlineToolbar: true
-                },
-                marker: {
-                    class: Marker,
-                    shortcut: 'CMD+M'
-                }
-            },
-            
-            /** Configuration de base */
-            onReady: () => {
-                console.log('Editor.js est prêt à l\'utilisation avec tous les outils');
-                document.getElementById('block-count').textContent = 
-                    editor.blocks.getBlocksCount() + ' blocs';
-            },
-            
-            onChange: async () => {
-                const content = await editor.save();
-                document.getElementById('content').value = JSON.stringify(content);
-                updateAutosaveIndicator('saved', 'Sauvegardé');
-                document.getElementById('block-count').textContent = 
-                    editor.blocks.getBlocksCount() + ' blocs';
-            }
-        });
-        
-    } catch (error) {
-        console.error('Erreur lors de l\'initialisation d\'Editor.js:', error);
-        
-        // Fallback vers un textarea simple en cas d'erreur
-        const contentField = document.getElementById('content');
-        const existingContent = contentField ? contentField.value : '';
-        
-        document.getElementById('editorjs').innerHTML = `
-            <div class="p-4 bg-red-50 border border-red-200 rounded-lg">
-                <p class="text-red-700 mb-3">
-                    <i class="fas fa-exclamation-triangle mr-2"></i>
-                    Erreur lors du chargement de l'éditeur avancé.
-                </p>
-                <textarea name="content_fallback" 
-                          id="content_fallback"
-                          class="w-full h-64 p-3 border border-gray-300 rounded-lg" 
-                          placeholder="Utilisez ce champ pour saisir votre contenu...">${existingContent}</textarea>
-            </div>
-        `;
-        
-        // Ajouter un gestionnaire pour synchroniser le contenu du fallback textarea avec le champ hidden
-        const fallbackTextarea = document.getElementById('content_fallback');
-        if (fallbackTextarea) {
-            fallbackTextarea.addEventListener('input', function() {
-                if (contentField) {
-                    contentField.value = this.value;
-                }
-            });
-        }
-    }
-}
-
-//Cette fonction n'est plus utilisée dans la version simplifiée
-
-async function handleFormSubmit(e) {
-    if (e) e.preventDefault();
-    
-    try {
-        // Sauvegarder le contenu de l'éditeur avant soumission
-        if (editor) {
-            const outputData = await editor.save();
-            document.getElementById('content').value = JSON.stringify(outputData);
-            console.log('Contenu sauvegardé avant soumission:', outputData);
-        }
-        
-        // Vérifier que le contenu n'est pas vide
-        const content = document.getElementById('content').value;
-        if (!content || content === '{}' || content === '{"blocks":[]}') {
-            alert('Veuillez saisir du contenu avant de sauvegarder.');
-            return;
-        }
-        
-        // Soumettre le formulaire
-        if (e && e.target) e.target.submit();
-    } catch (error) {
-        console.error('Erreur lors de la soumission du formulaire:', error);
-    }
-}
-
-function loadFolders() {
-    const sectionId = document.getElementById('section_id').value;
-    const folderSelect = document.getElementById('folder_id');
-    
-    // Vider les options actuelles
-    folderSelect.innerHTML = '<option value="">Racine de la section</option>';
-    
-    if (sectionId) {
-        fetch(`/personnels/pages/sections/${sectionId}/folders`)
-            .then(response => response.json())
-            .then(folders => {
-                folders.forEach(folder => {
-                    const option = document.createElement('option');
-                    option.value = folder.id;
-                    option.textContent = folder.name;
-                    folderSelect.appendChild(option);
-                });
-            })
-            .catch(error => console.error('Erreur lors du chargement des dossiers:', error));
-    }
-}
-
-// Fonction pour indiquer les sauvegardes
-function updateAutosaveIndicator(status, text) {
-    const indicator = document.getElementById('autosave-indicator');
-    const textElement = document.getElementById('autosave-text');
-    
-    if (!indicator || !textElement) return;
-    
-    textElement.textContent = text;
-    
-    const icon = indicator.querySelector('i');
-    if (icon) {
-        if (status === 'saving') {
-            icon.className = 'fas fa-circle text-yellow-500 mr-1';
-        } else if (status === 'saved') {
-            icon.className = 'fas fa-circle text-green-500 mr-1';
-        } else if (status === 'error') {
-            icon.className = 'fas fa-circle text-red-500 mr-1';
-        } else {
-            icon.className = 'fas fa-circle text-gray-400 mr-1';
-        }
-    }
-}
-
-async function saveDraft() {
-    try {
-        // Sauvegarder le contenu Editor.js d'abord
-        if (editor) {
-            const outputData = await editor.save();
-            document.getElementById('content').value = JSON.stringify(outputData);
-        }
-        
-        const publishCheckbox = document.querySelector('[name="is_published"]');
-        const wasChecked = publishCheckbox ? publishCheckbox.checked : false;
-        
-        if (publishCheckbox) {
-            publishCheckbox.checked = false;
-        }
-        
-        document.getElementById('page-form').submit();
-        
-        // Restaurer l'état original au cas où
-        if (publishCheckbox) {
-            publishCheckbox.checked = wasChecked;
-        }
-    } catch (error) {
-        console.error('Erreur lors de la sauvegarde en brouillon:', error);
-        alert('Erreur lors de la sauvegarde en brouillon');
-    }
-}
-</script>
 @endsection
