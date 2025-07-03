@@ -16,6 +16,10 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->text('description')->nullable();
+            $table->string('icon')->nullable(); // Font Awesome class (ex: fas fa-graduation-cap)
+            $table->string('color')->default('blue'); // Couleur Tailwind (blue, green, purple, etc.)
+            $table->string('image_url')->nullable(); // URL de l'image
+            $table->integer('display_order')->default(0); // Ordre d'affichage
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
