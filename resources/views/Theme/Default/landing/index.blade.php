@@ -179,128 +179,37 @@ $thumbnailUrl = $videoId ? "https://img.youtube.com/vi/{$videoId}/maxresdefault.
     <section class="relative py-24 bg-gray-50" id="agenda">
         <div class="relative max-w-6xl mx-auto px-6">
 
+            <!-- Menu déroulant vue calendrier -->
+          
+
             <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
                 <div class="flex items-center justify-between mb-6">
-
                     <div class="flex items-center gap-6">
-                        <h2 class="text-2xl">
-                            <span class="text-primary font-bold">Mai</span>
-                            <span class="text-gray-400 font-medium">2024</span>
+                        <h2 class="text-2xl" id="calendar-title">
+                            <!-- Mois/année dynamiques -->
                         </h2>
                         <div class="flex gap-2">
-                            <button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors" id="prev-month">
+                            <button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors" id="prev-period">
                                 <i class="fas fa-chevron-left text-gray-400"></i>
                             </button>
-                            <button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors" id="next-month">
+                            <button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors" id="next-period">
                                 <i class="fas fa-chevron-right text-gray-400"></i>
                             </button>
                         </div>
-                    </div>
-
-                   
-                    <div class="flex items-center gap-6">
-                        <div class="flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full bg-red-500"></span>
-                            <span class="text-sm text-gray-600">Live</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full bg-primary"></span>
-                            <span class="text-sm text-gray-600">Réunion</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-                            <span class="text-sm text-gray-600">Événement</span>
-                        </div>
+                    </div> 
+                    <div class="flex items-center justify-end mb-4">
+                        <label for="calendar-view" class="mr-4 text-blue-800 font-semibold">Vue :</label>
+                        <select id="calendar-view" class="min-w-[120px] border border-blue-200 rounded-lg px-3 py-2 text-blue-800 font-semibold bg-white shadow-sm focus:border-blue-400 focus:ring-2 focus:ring-blue-100">
+                            <option value="month">Mois</option>
+                            <option value="week">Semaine</option>
+                        </select>
                     </div>
                 </div>
-
                 <div class="overflow-hidden">
-                    <div class="grid grid-cols-7 mb-4">
-                        <div class="text-sm text-gray-600 font-medium py-2 text-center">Lundi</div>
-                        <div class="text-sm text-gray-600 font-medium py-2 text-center">Mardi</div>
-                        <div class="text-sm text-gray-600 font-medium py-2 text-center">Mercredi</div>
-                        <div class="text-sm text-gray-600 font-medium py-2 text-center">Jeudi</div>
-                        <div class="text-sm text-gray-600 font-medium py-2 text-center">Vendredi</div>
-                        <div class="text-sm text-primary font-medium py-2 text-center">Samedi</div>
-                        <div class="text-sm text-primary font-medium py-2 text-center">Dimanche</div>
-                    </div>
-
-                    <div class="grid grid-cols-7 gap-px bg-gray-200" id="calendar-grid">
-                        
-                    </div>
+                    <div id="calendar-header" class="grid grid-cols-7 mb-4"></div>
+                    <div id="calendar-grid" class="grid grid-cols-7 gap-px bg-gray-200"></div>
                 </div>
             </div>
-
-            <!-- Modal des détails d'événement -->
-            <div id="event-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
-                <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full mx-4 overflow-hidden">
-                    <!-- En-tête du modal -->
-                    <div class="relative p-6 pb-4 border-b">
-                        <button class="absolute right-6 top-6 text-gray-400 hover:text-gray-600 transition-colors" onclick="closeEventModal()">
-                            <i class="fas fa-times"></i>
-                        </button>
-                        <span id="event-tag" class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"></span>
-                        <h3 id="event-title" class="text-2xl font-display font-bold text-gray-900 mt-4"></h3>
-                        <div class="flex items-center gap-4 mt-2 text-sm text-gray-500">
-                            <div class="flex items-center">
-                                <i class="far fa-calendar mr-2"></i>
-                                <span id="event-date"></span>
-                            </div>
-                            <div class="flex items-center">
-                                <i class="far fa-clock mr-2"></i>
-                                <span id="event-time"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Corps du modal -->
-                    <div class="p-6">
-                        <p id="event-description" class="text-gray-600 mb-6"></p>
-                        
-                        <!-- Informations supplémentaires -->
-                        <div class="grid grid-cols-3 gap-6 mb-6">
-                            <div class="flex items-start gap-3">
-                                <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                                    <i class="fas fa-map-marker-alt text-blue-600"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-medium text-gray-900">Lieu</h4>
-                                    <p id="event-location" class="text-sm text-gray-500"></p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-3">
-                                <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
-                                    <i class="fas fa-users text-green-600"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-medium text-gray-900">Places</h4>
-                                    <p id="event-capacity" class="text-sm text-gray-500"></p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-3">
-                                <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
-                                    <i class="fas fa-clock text-purple-600"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-medium text-gray-900">Durée</h4>
-                                    <p id="event-duration" class="text-sm text-gray-500"></p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Actions -->
-                        <div class="flex gap-3">
-                            <button id="event-primary-action" class="flex-1 bg-primary text-white px-6 py-3 rounded-xl font-medium hover:bg-primary-dark transition-colors">
-                            </button>
-                            <button class="px-6 py-3 border border-gray-200 rounded-xl text-gray-600 font-medium hover:bg-gray-50 transition-colors">
-                                <i class="far fa-bell mr-2"></i>
-                                Me le rappeler
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </section>
 
     <!-- Transition ligne en dégradé bleu -->
@@ -1102,6 +1011,213 @@ $thumbnailUrl = $videoId ? "https://img.youtube.com/vi/{$videoId}/maxresdefault.
             iframeContainer.classList.remove('hidden');
             iframeContainer.appendChild(iframe);
         }
+    </script>
+
+    <script>
+        window.agendaEvents = @json($evenements_json);
+    </script>
+
+    <script>
+    // Utilitaires de date
+    function getMonday(d) {
+        d = new Date(d);
+        var day = d.getDay();
+        var diff = d.getDate() - (day === 0 ? 6 : day - 1);
+        return new Date(d.setDate(diff));
+    }
+    function formatDate(date) {
+        // Format YYYY-MM-DD en heure locale
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+    function getWeekDates(date) {
+        let monday = getMonday(date);
+        let days = [];
+        for (let i = 0; i < 7; i++) {
+            let d = new Date(monday);
+            d.setDate(monday.getDate() + i);
+            days.push(new Date(d));
+        }
+        return days;
+    }
+
+    const monthNames = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+
+    function updateCalendarTitle(viewMode, refDate) {
+        const title = document.getElementById('calendar-title');
+        if (viewMode === 'week') {
+            let weekDates = getWeekDates(refDate);
+            let first = weekDates[0];
+            let last = weekDates[6];
+            let mois = monthNames[first.getMonth()];
+            let annee = first.getFullYear();
+            let mois2 = monthNames[last.getMonth()];
+            let annee2 = last.getFullYear();
+            if (mois === mois2 && annee === annee2) {
+                title.innerHTML = `<span class='text-primary font-bold'>Semaine du ${first.getDate()} ${mois} ${annee}</span>`;
+            } else {
+                title.innerHTML = `<span class='text-primary font-bold'>Semaine du ${first.getDate()} ${mois} ${annee} au ${last.getDate()} ${mois2} ${annee2}</span>`;
+            }
+        } else {
+            let mois = monthNames[refDate.getMonth()];
+            let annee = refDate.getFullYear();
+            title.innerHTML = `<span class='text-primary font-bold'>${mois}</span> <span class='text-gray-400 font-medium'>${annee}</span>`;
+        }
+    }
+
+    function addMonths(date, n) {
+        let d = new Date(date);
+        d.setMonth(d.getMonth() + n);
+        return d;
+    }
+    function addWeeks(date, n) {
+        let d = new Date(date);
+        d.setDate(d.getDate() + n*7);
+        return d;
+    }
+
+    // Génération du calendrier
+    function renderCalendar(viewMode, refDate) {
+        updateCalendarTitle(viewMode, refDate);
+        const header = document.getElementById('calendar-header');
+        const grid = document.getElementById('calendar-grid');
+        header.innerHTML = '';
+        grid.innerHTML = '';
+        const daysOfWeek = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+        daysOfWeek.forEach((d, i) => {
+            header.innerHTML += `<div class="text-sm text-blue-700 font-semibold py-2 text-center">${d}</div>`;
+        });
+        let days = [];
+        if (viewMode === 'week') {
+            days = getWeekDates(refDate);
+        } else {
+            // Mois : on affiche toutes les cases du mois courant (avec décalage pour le 1er jour)
+            let year = refDate.getFullYear();
+            let month = refDate.getMonth();
+            let firstDay = new Date(year, month, 1);
+            let lastDay = new Date(year, month + 1, 0);
+            let start = getMonday(firstDay);
+            let end = new Date(lastDay);
+            // Aller au dimanche de la dernière semaine
+            let endDay = end.getDay();
+            if (endDay !== 0) {
+                end.setDate(end.getDate() + (7 - endDay));
+            }
+            let current = new Date(start);
+            while (current <= end) {
+                days.push(new Date(current));
+                current.setDate(current.getDate() + 1);
+            }
+        }
+        // Affichage des cases
+        days.forEach(day => {
+            let dateStr = formatDate(day);
+            let events = (window.agendaEvents || []).filter(ev => ev.date === dateStr);
+            let isCurrentMonth = day.getMonth() === refDate.getMonth();
+            let cellClass = isCurrentMonth ? 'bg-white' : 'bg-gray-50 text-gray-400';
+            let html = `<div class="min-h-[90px] p-2 ${cellClass} border border-gray-100 flex flex-col rounded-lg transition-all hover:shadow-lg cursor-pointer group">
+                <div class="text-xs font-bold mb-1 text-blue-900">${day.getDate()}</div>`;
+            events.forEach(ev => {
+                const couleur = ev.couleur || '#2563eb';
+                function pad2(n) { return n.toString().padStart(2, '0'); }
+                function formatHeure(h) {
+                    if (!h) return '';
+                    const parts = h.split(':');
+                    return pad2(parts[0]) + ':' + pad2(parts[1] || '00');
+                }
+                html += `<div class="rounded p-2 mb-1 flex flex-col shadow group-hover:opacity-90 transition-all cursor-pointer event-calendar-block" 
+                    style="background-color:${couleur}22;border-left:4px solid ${couleur};"
+                    data-titre="${ev.titre}"
+                    data-description="${ev.description || ''}"
+                    data-heure="${formatHeure(ev.heure_debut)} - ${formatHeure(ev.heure_fin)}\"
+                    data-lieu="${ev.lieu || ''}">
+                    <div class="font-semibold text-xs truncate" style="color:${couleur}">${ev.titre}</div>
+                    <div class="text-xs" style="color:${couleur}">${formatHeure(ev.heure_debut)} - ${formatHeure(ev.heure_fin)}</div>
+                </div>`;
+            });
+            html += `</div>`;
+            grid.innerHTML += html;
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        let viewMode = 'month';
+        let refDate = new Date();
+        const select = document.getElementById('calendar-view');
+        select.addEventListener('change', function() {
+            viewMode = this.value;
+            renderCalendar(viewMode, refDate);
+        });
+        document.getElementById('prev-period').addEventListener('click', function() {
+            if (viewMode === 'week') refDate = addWeeks(refDate, -1);
+            else refDate = addMonths(refDate, -1);
+            renderCalendar(viewMode, refDate);
+        });
+        document.getElementById('next-period').addEventListener('click', function() {
+            if (viewMode === 'week') refDate = addWeeks(refDate, 1);
+            else refDate = addMonths(refDate, 1);
+            renderCalendar(viewMode, refDate);
+        });
+        renderCalendar(viewMode, refDate);
+    });
+    </script>
+
+    <!-- Modale d'évènement -->
+    <div id="calendarEventModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden flex flex-col">
+            <div class="relative p-6 pb-4 border-b">
+                <button class="absolute right-6 top-6 text-gray-400 hover:text-gray-600 transition-colors close-calendar-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h3 id="calendar-modal-title" class="text-2xl font-display font-bold text-gray-900 mt-2 mb-2"></h3>
+                <div class="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                    <div class="flex items-center">
+                        <i class="far fa-clock mr-2"></i>
+                        <span id="calendar-modal-heure"></span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-map-marker-alt mr-2"></i>
+                        <span id="calendar-modal-lieu"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6">
+                <p id="calendar-modal-description" class="text-gray-600 mb-2"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function openCalendarModal(titre, description, heure, lieu) {
+        document.getElementById('calendar-modal-title').textContent = titre;
+        document.getElementById('calendar-modal-description').textContent = description;
+        document.getElementById('calendar-modal-heure').textContent = heure;
+        document.getElementById('calendar-modal-lieu').textContent = lieu;
+        document.getElementById('calendarEventModal').classList.remove('hidden');
+        document.getElementById('calendarEventModal').classList.add('flex');
+    }
+    function closeCalendarModal() {
+        document.getElementById('calendarEventModal').classList.add('hidden');
+        document.getElementById('calendarEventModal').classList.remove('flex');
+    }
+    document.getElementById('calendarEventModal').querySelector('.close-calendar-modal').addEventListener('click', closeCalendarModal);
+
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('event-calendar-block') || e.target.closest('.event-calendar-block')) {
+            const block = e.target.closest('.event-calendar-block');
+            openCalendarModal(
+                block.getAttribute('data-titre'),
+                block.getAttribute('data-description'),
+                block.getAttribute('data-heure'),
+                block.getAttribute('data-lieu')
+            );
+        }
+        if (e.target === document.getElementById('calendarEventModal')) {
+            closeCalendarModal();
+        }
+    });
     </script>
 
 @endsection
