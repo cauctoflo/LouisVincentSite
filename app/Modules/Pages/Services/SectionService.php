@@ -29,6 +29,10 @@ class SectionService
                 'name' => $data['name'],
                 'slug' => $data['slug'] ?? \Str::slug($data['name']),
                 'description' => $data['description'] ?? null,
+                'icon' => $data['icon'] ?? null,
+                'color' => $data['color'] ?? 'blue',
+                'image_url' => $data['image_url'] ?? null,
+                'display_order' => $data['display_order'] ?? 0,
                 'created_by' => Auth::id(),
                 'is_active' => $data['is_active'] ?? true,
             ]);
@@ -74,6 +78,10 @@ class SectionService
                 'name' => $data['name'] ?? $section->name,
                 'slug' => $data['slug'] ?? $section->slug,
                 'description' => $data['description'] ?? $section->description,
+                'icon' => $data['icon'] ?? $section->icon,
+                'color' => $data['color'] ?? $section->color,
+                'image_url' => $data['image_url'] ?? $section->image_url,
+                'display_order' => $data['display_order'] ?? $section->display_order,
                 'is_active' => $data['is_active'] ?? $section->is_active,
             ]);
 

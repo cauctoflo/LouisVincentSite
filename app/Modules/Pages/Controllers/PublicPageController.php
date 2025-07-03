@@ -16,9 +16,9 @@ class PublicPageController extends Controller
     public function index()
     {
         $sections = Section::active()
-                          ->with(['responsibles'])
+                          ->with(['responsibles', 'pages'])
                           ->withCount(['pages', 'folders'])
-                          ->orderBy('name')
+                          ->ordered() // Utilise le scope ordered du modèle
                           ->get();
 
         return view('Pages::public.index', compact('sections'));
@@ -133,6 +133,37 @@ class PublicPageController extends Controller
         $navigation = $this->buildNavigation($section);
 
         return view('Pages::public.pages.show', compact('section', 'folder', 'page', 'siblingPages', 'navigation'));
+    }
+
+    /**
+     * Afficher une page directement dans une section (sans dossier)
+     */
+    public function showPageInSection($sectionSlug, $pageSlug)
+    {
+        $section = Section::where('slug', $sectionSlug)
+                         ->active()
+                         ->firstOrFail();
+
+        $page = Page::where('slug', $pageSlug)
+                   ->where('section_id', $section->id)
+                   ->whereNull('folder_id') // Page directement dans la section (pas dans un dossier)
+                   ->published()
+                   ->with(['creator', 'updater'])
+                   ->firstOrFail();
+
+        // Pages voisines pour la navigation (autres pages directes de la section)
+        $siblingPages = Page::where('section_id', $section->id)
+                           ->whereNull('folder_id')
+                           ->where('id', '!=', $page->id)
+                           ->published()
+                           ->orderBy('order_index')
+                           ->orderBy('title')
+                           ->get(['id', 'title', 'slug']);
+
+        // Navigation dans la section
+        $navigation = $this->buildNavigation($section);
+
+        return view('Pages::public.page', compact('section', 'page', 'siblingPages', 'navigation'));
     }
 
     /**

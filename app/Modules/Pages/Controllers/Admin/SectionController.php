@@ -78,6 +78,10 @@ class SectionController extends Controller
             'name' => 'required|string|max:255|unique:sections,name',
             'slug' => 'nullable|string|max:255|unique:sections,slug',
             'description' => 'nullable|string|max:1000',
+            'icon' => 'nullable|string|max:100',
+            'color' => 'nullable|string|in:blue,green,purple,red,yellow,indigo,pink,gray,emerald,teal,cyan,sky,violet,fuchsia,rose,amber,lime,orange',
+            'image_url' => 'nullable|url|max:500',
+            'display_order' => 'nullable|integer|min:0',
             'responsibles' => 'nullable|array',
             'responsibles.*' => 'exists:users,id',
             'is_active' => 'boolean'
@@ -151,6 +155,10 @@ class SectionController extends Controller
             'name' => 'required|string|max:255|unique:sections,name,' . $section->id,
             'slug' => 'nullable|string|max:255|unique:sections,slug,' . $section->id,
             'description' => 'nullable|string|max:1000',
+            'icon' => 'nullable|string|max:100',
+            'color' => 'nullable|string|in:blue,green,purple,red,yellow,indigo,pink,gray,emerald,teal,cyan,sky,violet,fuchsia,rose,amber,lime,orange',
+            'image_url' => 'nullable|url|max:500',
+            'display_order' => 'nullable|integer|min:0',
             'responsibles' => 'nullable|array',
             'responsibles.*' => 'exists:users,id',
             'is_active' => 'boolean'

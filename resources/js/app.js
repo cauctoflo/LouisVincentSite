@@ -51,6 +51,11 @@ document.addEventListener('DOMContentLoaded', () => {
         autofocus: true,
         onReady: () => {
           console.log('Editor.js est prêt');
+          // Rendre l'éditeur accessible via window.editorInstance pour la compatibilité
+          window.editorInstance = window.editor;
+          
+          // Dispatcher un événement personnalisé pour indiquer que l'éditeur est prêt
+          window.dispatchEvent(new Event('editorReady'));
         },
         onChange: () => {
           console.log('Contenu modifié');

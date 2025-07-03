@@ -17,6 +17,7 @@ Route::get('/pages', [PublicPageController::class, 'index'])->name('pages.index'
 
 // Routes pour l'affichage des sections et pages
 Route::prefix('pages')->name('pages.')->group(function () {
+
     
     // Affichage d'une section avec ses dossiers et pages
     Route::get('/{section}', [PublicPageController::class, 'showSection'])->name('sections.show');

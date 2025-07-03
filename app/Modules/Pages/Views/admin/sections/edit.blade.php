@@ -90,38 +90,101 @@
                     <h3 class="text-lg font-semibold text-gray-900 mb-6">Paramètres d'affichage</h3>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Couleur -->
+                        <div>
+                            <label for="color" class="block text-sm font-medium text-gray-700 mb-2">
+                                Couleur du thème
+                            </label>
+                            <select name="color" 
+                                    id="color" 
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                                <option value="blue" {{ old('color', $section->color ?? 'blue') === 'blue' ? 'selected' : '' }}>Bleu</option>
+                                <option value="green" {{ old('color', $section->color) === 'green' ? 'selected' : '' }}>Vert</option>
+                                <option value="purple" {{ old('color', $section->color) === 'purple' ? 'selected' : '' }}>Violet</option>
+                                <option value="red" {{ old('color', $section->color) === 'red' ? 'selected' : '' }}>Rouge</option>
+                                <option value="yellow" {{ old('color', $section->color) === 'yellow' ? 'selected' : '' }}>Jaune</option>
+                                <option value="indigo" {{ old('color', $section->color) === 'indigo' ? 'selected' : '' }}>Indigo</option>
+                                <option value="pink" {{ old('color', $section->color) === 'pink' ? 'selected' : '' }}>Rose</option>
+                                <option value="emerald" {{ old('color', $section->color) === 'emerald' ? 'selected' : '' }}>Émeraude</option>
+                                <option value="teal" {{ old('color', $section->color) === 'teal' ? 'selected' : '' }}>Sarcelle</option>
+                                <option value="orange" {{ old('color', $section->color) === 'orange' ? 'selected' : '' }}>Orange</option>
+                            </select>
+                        </div>
+                        
                         <!-- Ordre d'affichage -->
                         <div>
-                            <label for="order_index" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="display_order" class="block text-sm font-medium text-gray-700 mb-2">
                                 Ordre d'affichage
                             </label>
                             <input type="number" 
-                                   id="order_index" 
-                                   name="order_index" 
-                                   value="{{ old('order_index', $section->order_index) }}"
+                                   id="display_order" 
+                                   name="display_order" 
+                                   value="{{ old('display_order', $section->display_order ?? 0) }}"
                                    min="0"
                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                             <p class="mt-1 text-sm text-gray-500">Plus le nombre est petit, plus la section apparaît en premier</p>
-                            @error('order_index')
+                            @error('display_order')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
-                        
-                        <!-- Icône -->
-                        <div>
-                            <label for="icon" class="block text-sm font-medium text-gray-700 mb-2">
-                                Icône FontAwesome (optionnel)
-                            </label>
-                            <input type="text" 
-                                   id="icon" 
-                                   name="icon" 
-                                   value="{{ old('icon', $section->icon) }}"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                                   placeholder="ex: fas fa-book">
-                            <p class="mt-1 text-sm text-gray-500">Classe CSS FontAwesome (ex: fas fa-book)</p>
-                            @error('icon')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                    </div>
+                    
+                    <!-- Icône -->
+                    <div class="mt-6">
+                        <label for="icon" class="block text-sm font-medium text-gray-700 mb-2">
+                            Icône Font Awesome <span class="text-gray-500">(optionnel)</span>
+                        </label>
+                        <input type="text" 
+                               id="icon" 
+                               name="icon" 
+                               value="{{ old('icon', $section->icon) }}"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                               placeholder="ex: fas fa-book">
+                        <p class="mt-1 text-sm text-gray-500">
+                            Exemples : fas fa-graduation-cap, fas fa-book, fas fa-users, fas fa-calendar
+                            <a href="https://fontawesome.com/icons" target="_blank" class="text-blue-600 hover:text-blue-500">Voir tous les icônes</a>
+                        </p>
+                        <div id="icon-preview" class="mt-2 {{ empty($section->icon) ? 'hidden' : '' }}">
+                            <span class="text-sm text-gray-600">Aperçu : </span>
+                            <i id="icon-display" class="{{ $section->icon ?? '' }} text-2xl text-gray-600"></i>
+                        </div>
+                        @error('icon')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Image -->
+                    <div class="mt-6">
+                        <label for="image_url" class="block text-sm font-medium text-gray-700 mb-2">
+                            URL de l'image <span class="text-gray-500">(optionnel)</span>
+                        </label>
+                        <input type="url" 
+                               name="image_url" 
+                               id="image_url" 
+                               value="{{ old('image_url', $section->image_url) }}" 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                               placeholder="http://localhost:8000/images/token/exemple">
+                        <p class="mt-1 text-sm text-gray-500">
+                            L'image sera affichée en priorité sur l'icône. Format recommandé : 64x64px minimum.
+                        </p>
+                        @if(!empty($section->image_url))
+                        <div class="mt-2">
+                            <span class="text-sm text-gray-600">Aperçu actuel : </span>
+                            <img src="{{ $section->image_url }}" alt="Image de la section" class="h-16 w-16 object-cover rounded-lg border border-gray-200 inline-block">
+                        </div>
+                        @endif
+                        @error('image_url')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Note sur la priorité -->
+                    <div class="mt-6 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                        <div class="flex items-start">
+                            <i class="fas fa-info-circle text-blue-500 mt-0.5 mr-2"></i>
+                            <div class="text-sm text-blue-700">
+                                <strong>Ordre de priorité :</strong> Si une image est définie, elle sera affichée. Sinon, l'icône sera utilisée. Si aucun des deux n'est défini, une icône par défaut sera affichée.
+                            </div>
                         </div>
                     </div>
                     
@@ -136,18 +199,6 @@
                                    class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
                             <label for="is_active" class="ml-3 text-sm font-medium text-gray-700">
                                 Section active (visible publiquement)
-                            </label>
-                        </div>
-                        
-                        <div class="flex items-center">
-                            <input type="checkbox" 
-                                   id="show_in_menu" 
-                                   name="show_in_menu" 
-                                   value="1"
-                                   {{ old('show_in_menu', $section->show_in_menu) ? 'checked' : '' }}
-                                   class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                            <label for="show_in_menu" class="ml-3 text-sm font-medium text-gray-700">
-                                Afficher dans le menu principal
                             </label>
                         </div>
                     </div>
@@ -303,10 +354,18 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Prévisualisation de l'icône
     const iconInput = document.getElementById('icon');
+    const iconPreview = document.getElementById('icon-preview');
+    const iconDisplay = document.getElementById('icon-display');
+    
     if (iconInput) {
         iconInput.addEventListener('input', function() {
-            // Ici, on pourrait ajouter une prévisualisation de l'icône
-            console.log('Icône sélectionnée:', this.value);
+            const iconClass = this.value.trim();
+            if (iconClass) {
+                iconDisplay.className = iconClass + ' text-2xl text-gray-600';
+                iconPreview.classList.remove('hidden');
+            } else {
+                iconPreview.classList.add('hidden');
+            }
         });
     }
 });

@@ -222,6 +222,11 @@ $liveId = $wtc->getLive();
                         <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 origin-left transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></span>
                     </a>
                     
+                    <a href="{{ route('pages.index') }}" class="relative flex items-center px-3 py-3 text-blue-700/80 hover:text-blue-600 transition-colors duration-200 group">
+                        <span>Pages</span>
+                        <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 origin-left transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></span>
+                    </a>
+                    
                     <a href="#actualites" class="relative flex items-center px-3 py-3 text-blue-700/80 hover:text-blue-600 transition-colors duration-200 group">
                         <span>Actualités</span>
                         <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 origin-left transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></span>
@@ -406,6 +411,11 @@ $liveId = $wtc->getLive();
                 <a href="#vie-lyceenne" @click="mobileMenuOpen = false" class="mobile-link">
                     <i class="fas fa-users w-8 opacity-60"></i>
                     <span>Vie lycéenne</span>
+                </a>
+                
+                <a href="{{ route('pages.index') }}" @click="mobileMenuOpen = false" class="mobile-link">
+                    <i class="fas fa-file-alt w-8 opacity-60"></i>
+                    <span>Pages</span>
                 </a>
                 
                 <a href="#international" @click="mobileMenuOpen = false" class="mobile-link">

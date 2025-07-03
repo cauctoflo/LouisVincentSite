@@ -51,28 +51,94 @@
                             @enderror
                         </div>
 
-                        <!-- Attribution des responsables -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-3">
-                                Responsables de la section
-                            </label>
-                            <div class="space-y-3 max-h-60 overflow-y-auto border border-gray-200 rounded-lg p-3">
-                                @foreach(\App\Models\User::orderBy('name')->get() as $user)
-                                    <div class="flex items-center">
-                                        <input type="checkbox" 
-                                               name="responsibles[]" 
-                                               id="user_{{ $user->id }}" 
-                                               value="{{ $user->id }}" 
-                                               class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                               {{ in_array($user->id, old('responsibles', [])) ? 'checked' : '' }}>
-                                        <label for="user_{{ $user->id }}" class="ml-3 text-sm text-gray-700">
-                                            {{ $user->name }}
-                                            <span class="text-gray-500">({{ $user->email }})</span>
-                                        </label>
-                                    </div>
-                                @endforeach
+                        <!-- Paramètres d'affichage -->
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Paramètres d'affichage</h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Couleur -->
+                                <div>
+                                    <label for="color" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Couleur du thème
+                                    </label>
+                                    <select name="color" 
+                                            id="color" 
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                                        <option value="blue" {{ old('color', 'blue') === 'blue' ? 'selected' : '' }}>Bleu</option>
+                                        <option value="green" {{ old('color') === 'green' ? 'selected' : '' }}>Vert</option>
+                                        <option value="purple" {{ old('color') === 'purple' ? 'selected' : '' }}>Violet</option>
+                                        <option value="red" {{ old('color') === 'red' ? 'selected' : '' }}>Rouge</option>
+                                        <option value="yellow" {{ old('color') === 'yellow' ? 'selected' : '' }}>Jaune</option>
+                                        <option value="indigo" {{ old('color') === 'indigo' ? 'selected' : '' }}>Indigo</option>
+                                        <option value="pink" {{ old('color') === 'pink' ? 'selected' : '' }}>Rose</option>
+                                        <option value="emerald" {{ old('color') === 'emerald' ? 'selected' : '' }}>Émeraude</option>
+                                        <option value="teal" {{ old('color') === 'teal' ? 'selected' : '' }}>Sarcelle</option>
+                                        <option value="orange" {{ old('color') === 'orange' ? 'selected' : '' }}>Orange</option>
+                                    </select>
+                                </div>
+
+                                <!-- Ordre d'affichage -->
+                                <div>
+                                    <label for="display_order" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Ordre d'affichage
+                                    </label>
+                                    <input type="number" 
+                                           name="display_order" 
+                                           id="display_order" 
+                                           value="{{ old('display_order', 0) }}" 
+                                           min="0"
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                                           placeholder="0">
+                                    <p class="mt-1 text-sm text-gray-500">Plus petit = affiché en premier</p>
+                                </div>
                             </div>
-                            <p class="mt-2 text-sm text-gray-500">Les responsables pourront gérer le contenu de cette section</p>
+
+                            <!-- Icône -->
+                            <div class="mt-4">
+                                <label for="icon" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Icône Font Awesome <span class="text-gray-500">(optionnel)</span>
+                                </label>
+                                <input type="text" 
+                                       name="icon" 
+                                       id="icon" 
+                                       value="{{ old('icon') }}" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                                       placeholder="Ex: fas fa-graduation-cap, fas fa-book, fas fa-users">
+                                <p class="mt-1 text-sm text-gray-500">
+                                    Exemples : fas fa-graduation-cap, fas fa-book, fas fa-users, fas fa-calendar
+                                    <a href="https://fontawesome.com/icons" target="_blank" class="text-indigo-600 hover:text-indigo-500">Voir tous les icônes</a>
+                                </p>
+                                <div id="icon-preview" class="mt-2 hidden">
+                                    <span class="text-sm text-gray-600">Aperçu : </span>
+                                    <i id="icon-display" class="text-2xl text-gray-600"></i>
+                                </div>
+                            </div>
+
+                            <!-- Image -->
+                            <div class="mt-4">
+                                <label for="image_url" class="block text-sm font-medium text-gray-700 mb-2">
+                                    URL de l'image <span class="text-gray-500">(optionnel)</span>
+                                </label>
+                                <input type="url" 
+                                       name="image_url" 
+                                       id="image_url" 
+                                       value="{{ old('image_url') }}" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                                       placeholder="http://localhost:8000/images/token/exemple">
+                                <p class="mt-1 text-sm text-gray-500">
+                                    L'image sera affichée en priorité sur l'icône. Format recommandé : 64x64px minimum.
+                                </p>
+                            </div>
+
+                            <!-- Note sur la priorité -->
+                            <div class="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                                <div class="flex items-start">
+                                    <i class="fas fa-info-circle text-blue-500 mt-0.5 mr-2"></i>
+                                    <div class="text-sm text-blue-700">
+                                        <strong>Ordre de priorité :</strong> Si une image est définie, elle sera affichée. Sinon, l'icône sera utilisée. Si aucun des deux n'est défini, une icône par défaut sera affichée.
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -157,6 +223,9 @@
 document.addEventListener('DOMContentLoaded', function() {
     const nameInput = document.getElementById('name');
     const slugPreview = document.getElementById('slug-preview');
+    const iconInput = document.getElementById('icon');
+    const iconPreview = document.getElementById('icon-preview');
+    const iconDisplay = document.getElementById('icon-display');
     
     nameInput.addEventListener('input', function() {
         const slug = this.value
@@ -167,6 +236,19 @@ document.addEventListener('DOMContentLoaded', function() {
         
         slugPreview.textContent = slug || 'nom-de-la-section';
     });
+
+    // Prévisualisation de l'icône
+    if (iconInput) {
+        iconInput.addEventListener('input', function() {
+            const iconClass = this.value.trim();
+            if (iconClass) {
+                iconDisplay.className = iconClass + ' text-2xl text-gray-600';
+                iconPreview.classList.remove('hidden');
+            } else {
+                iconPreview.classList.add('hidden');
+            }
+        });
+    }
 });
 </script>
 @endsection

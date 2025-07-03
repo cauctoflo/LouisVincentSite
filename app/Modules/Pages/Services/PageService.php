@@ -77,22 +77,58 @@ class PageService
         try {
             $oldData = $page->toArray();
             
-            $page->update([
+            // Log pour déboguer les données reçues
+            \Log::debug('PageService updatePage - Données reçues', [
+                'page_id' => $page->id,
+                'content_exists' => isset($data['content']),
+                'content_length' => isset($data['content']) ? strlen($data['content']) : 0,
+                'content_preview' => isset($data['content']) ? substr($data['content'], 0, 100) . '...' : null
+            ]);
+
+            // Créer un tableau pour les données à mettre à jour
+            $updateData = [
                 'title' => $data['title'] ?? $page->title,
                 'slug' => $data['slug'] ?? $page->slug,
-                'content' => $data['content'] ?? $page->content,
                 'excerpt' => $data['excerpt'] ?? $page->excerpt,
+                'section_id' => $data['section_id'] ?? $page->section_id,
                 'folder_id' => $data['folder_id'] ?? $page->folder_id,
                 'updated_by' => Auth::id(),
+                'is_published' => isset($data['is_published']) ? $data['is_published'] : $page->is_published,
                 'order_index' => $data['order_index'] ?? $page->order_index,
                 'meta_title' => $data['meta_title'] ?? $page->meta_title,
                 'meta_description' => $data['meta_description'] ?? $page->meta_description,
                 'tags' => $this->processTagsInput($data['tags'] ?? $page->tags),
+            ];
+            
+            // Traitement spécifique pour le contenu
+            if (isset($data['content'])) {
+                \Log::debug('Mise à jour du contenu', [
+                    'page_id' => $page->id,
+                    'content_before' => $page->content ? 'Présent ('.strlen($page->content).' octets)' : 'Vide'
+                ]);
+                
+                $updateData['content'] = $data['content'];
+            } else {
+                \Log::debug('Contenu non fourni dans les données de mise à jour', [
+                    'page_id' => $page->id
+                ]);
+            }
+            
+            $page->update($updateData);
+            
+            \Log::debug('Mise à jour de la page terminée', [
+                'page_id' => $page->id,
+                'content_after' => $page->content ? 'Présent ('.strlen($page->content).' octets)' : 'Vide'
             ]);
 
             // Créer une révision si le contenu a changé
             if ($oldData['content'] !== $page->content || $oldData['title'] !== $page->title) {
                 $page->createRevision();
+                \Log::debug('Révision créée pour la page', [
+                    'page_id' => $page->id,
+                    'content_changed' => $oldData['content'] !== $page->content,
+                    'title_changed' => $oldData['title'] !== $page->title
+                ]);
             }
 
             // Log la modification
@@ -106,6 +142,12 @@ class PageService
             return $page;
             
         } catch (\Exception $e) {
+            \Log::error('Erreur dans updatePage', [
+                'page_id' => $page->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
             DB::rollback();
             throw $e;
         }

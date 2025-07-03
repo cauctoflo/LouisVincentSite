@@ -12,9 +12,9 @@ Route::get('/user', function (Request $request) {
 // API pour les sections et dossiers
 Route::get('/sections/{section}/folders', function ($sectionId) {
     try {
-        // Récupérer tous les dossiers d'une section
-        $folders = Folder::where('section_id', $sectionId)
-                        ->where('is_active', 1) // Corrigé: status -> is_active
+        // Récupérer tous les dossiers d'une section en utilisant le scope 'active'
+        $folders = Folder::active()
+                        ->where('section_id', $sectionId)
                         ->orderBy('name')
                         ->get(['id', 'name']);
                         

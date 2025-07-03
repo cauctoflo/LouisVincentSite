@@ -1,25 +1,194 @@
 @extends('layouts.admin')
 
 @section('head')
-<!-- Editor.js CSS simplifié -->
+<!-- Editor.js CSS moderne et élégant -->
 <style>
 #editorjs {
-  padding: 1rem;
-  border: 1px solid #ccc;
+  padding: 2rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  background: #ffffff;
+  min-height: 400px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+#editorjs:focus-within {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles pour les blocs de l'éditeur */
+#editorjs .ce-block__content {
+  max-width: none;
+  margin: 0;
+}
+
+#editorjs .ce-paragraph {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #374151;
+}
+
+#editorjs .ce-header {
+  color: #111827;
+  font-weight: 700;
+  margin: 1.5rem 0 1rem 0;
+}
+
+#editorjs h1.ce-header {
+  font-size: 2rem;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 0.5rem;
+}
+
+#editorjs h2.ce-header {
+  font-size: 1.5rem;
+}
+
+#editorjs h3.ce-header {
+  font-size: 1.25rem;
+}
+
+#editorjs .ce-list {
+  color: #374151;
+}
+
+#editorjs .ce-list__item {
+  margin: 0.5rem 0;
+  line-height: 1.6;
+}
+
+#editorjs .ce-quote {
+  border-left: 4px solid #6366f1;
+  background: #f8fafc;
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 0 8px 8px 0;
+}
+
+#editorjs .ce-quote__text {
+  font-style: italic;
+  font-size: 1.1rem;
+  color: #4b5563;
+  margin-bottom: 0.5rem;
+}
+
+#editorjs .ce-quote__caption {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+#editorjs .ce-code {
+  background: #1f2937;
+  color: #f9fafb;
   border-radius: 8px;
-  background: #fff;
-  min-height: 300px;
+  padding: 1rem;
+  margin: 1rem 0;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+#editorjs .ce-toolbar__plus {
+  color: #6366f1 !important;
+  background: #ffffff !important;
+  border: 2px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.2s ease !important;
+}
+
+#editorjs .ce-toolbar__plus:hover {
+  background: #6366f1 !important;
+  color: #ffffff !important;
+  border-color: #6366f1 !important;
+  transform: scale(1.05);
+}
+
+#editorjs .ce-toolbar__settings-btn {
+  color: #6b7280 !important;
+  border-radius: 6px !important;
+  transition: all 0.2s ease !important;
+}
+
+#editorjs .ce-toolbar__settings-btn:hover {
+  background: #f3f4f6 !important;
+  color: #374151 !important;
+}
+
+#editorjs .ce-popover {
+  border-radius: 12px !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+#editorjs .ce-popover__item {
+  border-radius: 8px !important;
+  margin: 2px 4px !important;
+  transition: all 0.2s ease !important;
+}
+
+#editorjs .ce-popover__item:hover {
+  background: #6366f1 !important;
+  color: #ffffff !important;
+}
+
+#editorjs .ce-popover__item-icon {
+  border-radius: 6px !important;
+  margin-right: 8px !important;
+}
+
+/* Indicateur de sauvegarde plus moderne */
+.autosave-indicator {
+  background: #f3f4f6;
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  transition: all 0.3s ease;
 }
 
 .autosave-indicator.saved {
-    opacity: 0.7;
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.autosave-indicator.saved .fas {
+  color: #10b981;
+}
+
+/* Animation pour le placeholder vide */
+#editorjs .ce-block--empty::before {
+  color: #9ca3af !important;
+  font-style: italic;
+}
+
+/* Amélioration de la sélection de texte */
+#editorjs ::selection {
+  background: rgba(99, 102, 241, 0.2);
+}
+
+/* Responsive design pour l'éditeur */
+@media (max-width: 768px) {
+  #editorjs {
+    padding: 1rem;
+    font-size: 15px;
+  }
+  
+  #editorjs h1.ce-header {
+    font-size: 1.75rem;
+  }
+  
+  #editorjs h2.ce-header {
+    font-size: 1.375rem;
+  }
 }
 </style>
 @endsection
 
 @section('scripts')
 <!-- Scripts pour l'éditeur -->
-@vite(['resources/js/editor-form.js', 'resources/js/tags-handler.js'])
 
 <script>
 // Section-Folder handler script inline (until added to build process)
@@ -87,8 +256,155 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 @endsection
+{{-- @vite(['resources/js/editor-form.js', 'resources/js/tags-handler.js']) --}}
 
 @section('content')
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const pageForm = document.getElementById('page-form');
+        const contentInput = document.getElementById('content');
+        let isEditorReady = false;
+
+        // Écouter l'événement personnalisé indiquant que l'éditeur est prêt
+        window.addEventListener('editorReady', () => {
+            console.log('Éditeur prêt - événement reçu');
+            isEditorReady = true;
+            updateBlockCount();
+        });
+
+        const updateSaveIndicator = (status) => {
+            const indicator = document.getElementById('autosave-indicator');
+            const text = document.getElementById('autosave-text');
+            
+            if (!indicator || !text) return;
+            
+            if (status === 'saving') {
+                indicator.classList.remove('saved');
+                text.textContent = 'Enregistrement...';
+            } else if (status === 'saved') {
+                indicator.classList.add('saved');
+                text.textContent = 'Modifications enregistrées';
+            } else if (status === 'error') {
+                indicator.classList.remove('saved');
+                text.textContent = 'Erreur d\'enregistrement';
+            }
+        };
+
+        const updateBlockCount = () => {
+            const blockCountElement = document.getElementById('block-count');
+            const editor = window.editorInstance || window.editor;
+            if (!blockCountElement || !editor) return;
+            
+            const count = editor.blocks.getBlocksCount();
+            blockCountElement.textContent = `${count} bloc${count !== 1 ? 's' : ''}`;
+        };
+
+        const saveEditorContent = async () => {
+            updateSaveIndicator('saving');
+            console.log("Début de la sauvegarde du contenu de l'éditeur");
+            
+            if (!contentInput) {
+                console.error("Élément input#content non trouvé");
+                return false;
+            }
+            
+            try {
+                // Attendre que l'éditeur soit prêt (avec timeout)
+                let editorReady = false;
+                let attempts = 0;
+                const maxAttempts = 10;
+                
+                while (!editorReady && attempts < maxAttempts) {
+                    // Vérifier différentes références possibles à l'éditeur
+                    const editor = window.editorInstance || window.editor;
+                    
+                    if (editor && typeof editor.save === 'function') {
+                        editorReady = true;
+                        break;
+                    }
+                    
+                    console.log(`Attente de l'éditeur... tentative ${attempts + 1}/${maxAttempts}`);
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    attempts++;
+                }
+                
+                if (!editorReady) {
+                    console.warn("L'instance de l'éditeur n'est pas prête après attente");
+                    updateSaveIndicator('error');
+                    return false;
+                }
+                
+                const editor = window.editorInstance || window.editor;
+                const savedData = await editor.save();
+                console.log("Contenu récupéré depuis l'éditeur:", savedData);
+                
+                const jsonString = JSON.stringify(savedData);
+                console.log("Contenu JSON à sauvegarder:", jsonString);
+                
+                contentInput.value = jsonString;
+                console.log("Valeur du champ content après sauvegarde:", contentInput.value);
+                
+                updateBlockCount();
+                updateSaveIndicator('saved');
+                return true;
+            } catch (error) {
+                console.error('Erreur lors de la sauvegarde du contenu:', error);
+                updateSaveIndicator('error');
+                
+                // En cas d'erreur, essayer de sauvegarder un contenu minimal
+                try {
+                    const minimalContent = JSON.stringify({
+                        time: Date.now(),
+                        version: "2.28.0",
+                        blocks: []
+                    });
+                    contentInput.value = minimalContent;
+                    console.log("Sauvegarde minimale fallback:", minimalContent);
+                    return true; // On permet quand même la soumission avec un contenu vide
+                } catch(e) {
+                    console.error("Même la sauvegarde minimale a échoué:", e);
+                    return false;
+                }
+            }
+        };
+
+        // Intercepter la soumission du formulaire pour sauvegarder le contenu de l'éditeur
+        if (pageForm) {
+            pageForm.addEventListener('submit', async (event) => {
+                console.log("Formulaire soumis, sauvegarde du contenu avant envoi");
+                event.preventDefault();
+                
+                if (await saveEditorContent()) {
+                    console.log("Contenu sauvegardé avec succès, soumission du formulaire");
+                    console.log("Valeur finale du champ content:", contentInput.value);
+                    pageForm.submit();
+                } else {
+                    console.error("Échec de la sauvegarde du contenu, formulaire non soumis");
+                    alert('Erreur lors de la sauvegarde du contenu. Veuillez réessayer.');
+                }
+            });
+            
+            // Bouton de sauvegarde en brouillon
+            const saveDraftButton = document.getElementById('save-draft');
+            if (saveDraftButton) {
+                saveDraftButton.addEventListener('click', async () => {
+                    const isPublishedCheckbox = document.querySelector('input[name="is_published"]');
+                    if (isPublishedCheckbox) {
+                        isPublishedCheckbox.checked = false;
+                    }
+                    
+                    if (await saveEditorContent()) {
+                        pageForm.submit();
+                    } else {
+                        alert('Erreur lors de la sauvegarde du brouillon. Veuillez réessayer.');
+                    }
+                });
+            }
+        }
+    });
+</script>
+
 
 <script>
     // Initialisation immédiate des données pour l'éditeur - AVANT le chargement de app.js
@@ -232,37 +548,62 @@ document.addEventListener('DOMContentLoaded', () => {
                     
 
                     <div class="p-6">
-
-                        <div id="editorjs" class="p-4 border border-gray-300"></div>
-
-                            <!-- Le contenu sera mis à jour par le JavaScript avant la soumission -->
-                            <input type="hidden" name="content" id="content" value="">
+                        <div id="editorjs" class="editor-container"></div>
                         
-                    
-                        <div class="flex justify-between mt-3 text-xs text-gray-500">
-                            <span><i class="fas fa-keyboard mr-1"></i> Éditeur simple avec mise en forme par blocs</span>
-                            <span id="block-count">0 blocs</span>
-                        </div>
+                        <!-- Le contenu sera mis à jour par le JavaScript avant la soumission -->
+                        <input type="hidden" name="content" id="content" value="">
+                        
+                        <div class="flex justify-between items-center mt-4 pt-3 border-t border-gray-100 text-sm text-gray-600">
+                            <div class="flex items-center">
+                                <i class="fas fa-keyboard text-indigo-500 mr-2"></i>
+                                <span>Éditeur par blocs avec mise en forme avancée</span>
                             </div>
+                            <div class="flex items-center bg-gray-50 px-3 py-1 rounded-full">
+                                <i class="fas fa-cube text-gray-400 mr-1"></i>
+                                <span id="block-count" class="font-medium">0 blocs</span>
+                            </div>
+                        </div>
+                    </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Aide pour les images -->
-                <div class="bg-green-50 rounded-xl border border-green-200 p-4">
-                    <h4 class="text-sm font-medium text-green-900 mb-2">
-                        <i class="fas fa-images mr-1"></i> Insertion d'images
-                    </h4>
-                    <p class="text-sm text-green-700 mb-3">
-                        Dans l'éditeur, cliquez sur "+" puis sélectionnez "Image" pour insérer une image via URL
-                    </p>
-                    <div class="text-xs text-green-600 space-y-1">
-                        <div><strong>Exemple d'URL :</strong></div>
-                        <div class="font-mono bg-white p-2 rounded border">
-                            http://localhost:8000/images/token/MX47snilphyQugrDGk6xwP2HYEU8RKLV
+                <!-- Aide pour l'éditeur -->
+                <div class="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl border border-emerald-200 p-6">
+                    <div class="flex items-start space-x-3">
+                        <div class="flex-shrink-0">
+                            <div class="flex items-center justify-center w-8 h-8 bg-emerald-100 rounded-full">
+                                <i class="fas fa-lightbulb text-emerald-600"></i>
+                            </div>
                         </div>
-                        <div class="mt-2 text-green-700">
-                            💡 L'éditeur par blocs permet aussi d'ajouter des titres, listes, citations, code et bien plus !
+                        <div class="flex-1">
+                            <h4 class="text-sm font-semibold text-emerald-900 mb-3">
+                                Guide d'utilisation de l'éditeur
+                            </h4>
+                            
+                            <div class="space-y-3 text-sm text-emerald-800">
+                                <div class="flex items-start space-x-2">
+                                    <i class="fas fa-plus-circle text-emerald-600 mt-0.5 flex-shrink-0"></i>
+                                    <span>Cliquez sur <strong>"+"</strong> pour ajouter des blocs (texte, titres, listes, images, etc.)</span>
+                                </div>
+                                
+                                <div class="flex items-start space-x-2">
+                                    <i class="fas fa-images text-emerald-600 mt-0.5 flex-shrink-0"></i>
+                                    <span>Sélectionnez <strong>"Image"</strong> puis collez l'URL de votre image</span>
+                                </div>
+                                
+                                <div class="flex items-start space-x-2">
+                                    <i class="fas fa-heading text-emerald-600 mt-0.5 flex-shrink-0"></i>
+                                    <span>Utilisez les <strong>titres</strong> pour structurer votre contenu</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 p-3 bg-white rounded-lg border border-emerald-200">
+                                <div class="text-xs font-medium text-emerald-700 mb-1">Exemple d'URL d'image :</div>
+                                <div class="font-mono text-xs text-gray-600 break-all">
+                                    http://localhost:8000/images/token/MX47snilphyQugrDGk6xwP2HYEU8RKLV
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

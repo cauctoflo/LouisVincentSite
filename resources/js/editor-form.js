@@ -14,9 +14,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // S'assurer que les éléments nécessaires existent
     if (!pageForm || !contentInput) {
-        console.error('Éléments de formulaire manquants');
+        console.error('Éléments de formulaire manquants', {
+            pageForm: pageForm ? 'trouvé' : 'manquant',
+            contentInput: contentInput ? 'trouvé' : 'manquant'
+        });
         return;
     }
+
+    console.log('Formulaire trouvé:', pageForm.action);
+    console.log('Champ de contenu trouvé:', contentInput.id);
 
     // Accès à l'instance de l'éditeur
     // EditorJS est initialisé dans app.js et est disponible globalement
@@ -26,6 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error("L'instance de l'éditeur n'est pas disponible");
         return;
     }
+
+    console.log("Instance de l'éditeur trouvée");
 
     // Fonction pour mettre à jour le compteur de blocs
     const updateBlockCount = async () => {
@@ -40,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             const savedData = await editorInstance.save();
+            console.log("Données sauvegardées par l'éditeur:", savedData);
             const count = savedData.blocks ? savedData.blocks.length : 0;
             if (blockCountElement) {
                 blockCountElement.textContent = `${count} bloc${count !== 1 ? 's' : ''}`;
@@ -79,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fonction pour sauvegarder le contenu de l'éditeur dans le champ caché
     const saveEditorContent = async () => {
         updateSaveIndicator('saving');
+        console.log("Début de la sauvegarde du contenu de l'éditeur");
         
         try {
             // Vérifier que l'éditeur est bien initialisé et a la méthode save
@@ -89,7 +99,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             const savedData = await editorInstance.save();
-            contentInput.value = JSON.stringify(savedData);
+            console.log("Contenu récupéré depuis l'éditeur:", savedData);
+            
+            const jsonString = JSON.stringify(savedData);
+            console.log("Contenu JSON à sauvegarder:", jsonString);
+            
+            contentInput.value = jsonString;
+            console.log("Valeur du champ content après sauvegarde:", contentInput.value);
+            
             updateBlockCount();
             updateSaveIndicator('saved');
             return true;
@@ -99,13 +116,16 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // En cas d'erreur, essayer de sauvegarder un contenu minimal
             try {
-                contentInput.value = JSON.stringify({
+                const minimalContent = JSON.stringify({
                     time: Date.now(),
                     version: "2.28.0",
                     blocks: []
                 });
+                contentInput.value = minimalContent;
+                console.log("Sauvegarde minimale fallback:", minimalContent);
                 return true; // On permet quand même la soumission avec un contenu vide
             } catch(e) {
+                console.error("Même la sauvegarde minimale a échoué:", e);
                 return false;
             }
         }
@@ -113,11 +133,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Intercepter la soumission du formulaire pour sauvegarder le contenu de l'éditeur
     pageForm.addEventListener('submit', async (event) => {
+        console.log("Formulaire soumis, sauvegarde du contenu avant envoi");
         event.preventDefault();
         
         if (await saveEditorContent()) {
+            console.log("Contenu sauvegardé avec succès, soumission du formulaire");
+            console.log("Valeur finale du champ content:", contentInput.value);
             pageForm.submit();
         } else {
+            console.error("Échec de la sauvegarde du contenu, formulaire non soumis");
             alert('Erreur lors de la sauvegarde du contenu. Veuillez réessayer.');
         }
     });
@@ -125,14 +149,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // Gestion du bouton "Sauvegarder en brouillon"
     if (saveDraftButton) {
         saveDraftButton.addEventListener('click', async () => {
+            console.log("Bouton Sauvegarder en brouillon cliqué");
             // Désactiver la publication
             const publishCheckbox = document.querySelector('input[name="is_published"]');
             if (publishCheckbox) {
                 publishCheckbox.checked = false;
+                console.log("Checkbox de publication décochée");
             }
             
             // Sauvegarder et soumettre
             if (await saveEditorContent()) {
+                console.log("Contenu sauvegardé, soumission du formulaire (mode brouillon)");
                 pageForm.submit();
             }
         });
@@ -142,5 +169,14 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateBlockCount, 5000);
     
     // Initialiser le compteur de blocs
-    setTimeout(updateBlockCount, 1000);
+    setTimeout(() => {
+        console.log("Initialisation du compteur de blocs");
+        updateBlockCount();
+    }, 1000);
+    
+    // Sauvegarde manuelle immédiate (pour tester)
+    setTimeout(() => {
+        console.log("Test de sauvegarde manuelle initiale");
+        saveEditorContent();
+    }, 3000);
 });

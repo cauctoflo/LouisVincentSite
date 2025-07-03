@@ -9,6 +9,35 @@ export default {
         './vendor/laravel/jetstream/**/*.blade.php',
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
+        './app/Modules/**/Views/**/*.blade.php', // Ajouter les vues des modules
+    ],
+    
+    safelist: [
+        // Classes de couleur pour les sections dynamiques
+        {
+            pattern: /bg-(blue|green|purple|red|yellow|indigo|pink|emerald|teal|orange)-(50|100|500|600|700|800|900)/,
+        },
+        {
+            pattern: /text-(blue|green|purple|red|yellow|indigo|pink|emerald|teal|orange)-(800|900)/,
+        },
+        {
+            pattern: /border-(blue|green|purple|red|yellow|indigo|pink|emerald|teal|orange)-(200|500)/,
+        },
+        {
+            pattern: /from-(blue|green|purple|red|yellow|indigo|pink|emerald|teal|orange)-(50|500)/,
+        },
+        {
+            pattern: /to-(blue|green|purple|red|yellow|indigo|pink|emerald|teal|orange)-(100|600)/,
+        },
+        {
+            pattern: /hover:bg-(blue|green|purple|red|yellow|indigo|pink|emerald|teal|orange)-(700)/,
+        },
+        {
+            pattern: /hover:text-(blue|green|purple|red|yellow|indigo|pink|emerald|teal|orange)-(900)/,
+        },
+        {
+            pattern: /hover:border-(blue|green|purple|red|yellow|indigo|pink|emerald|teal|orange)-(200)/,
+        },
     ],
 
     theme: {

@@ -1,0 +1,71 @@
+/* 
+ * Styles pour les sections dynamiques
+ * Assure que toutes les classes Tailwind utilisées dynamiquement sont incluses
+ */
+
+/* Classes de couleurs pour les sections */
+.bg-blue-50, .bg-blue-100, .bg-blue-500, .bg-blue-600, .bg-blue-700, .bg-blue-800 { }
+.bg-green-50, .bg-green-100, .bg-green-500, .bg-green-600, .bg-green-700, .bg-green-800 { }
+.bg-purple-50, .bg-purple-100, .bg-purple-500, .bg-purple-600, .bg-purple-700, .bg-purple-800 { }
+.bg-red-50, .bg-red-100, .bg-red-500, .bg-red-600, .bg-red-700, .bg-red-800 { }
+.bg-yellow-50, .bg-yellow-100, .bg-yellow-500, .bg-yellow-600, .bg-yellow-700, .bg-yellow-800 { }
+.bg-indigo-50, .bg-indigo-100, .bg-indigo-500, .bg-indigo-600, .bg-indigo-700, .bg-indigo-800 { }
+.bg-pink-50, .bg-pink-100, .bg-pink-500, .bg-pink-600, .bg-pink-700, .bg-pink-800 { }
+.bg-emerald-50, .bg-emerald-100, .bg-emerald-500, .bg-emerald-600, .bg-emerald-700, .bg-emerald-800 { }
+.bg-teal-50, .bg-teal-100, .bg-teal-500, .bg-teal-600, .bg-teal-700, .bg-teal-800 { }
+.bg-orange-50, .bg-orange-100, .bg-orange-500, .bg-orange-600, .bg-orange-700, .bg-orange-800 { }
+
+/* Classes de bordures */
+.border-blue-200, .border-green-200, .border-purple-200, .border-red-200, .border-yellow-200 { }
+.border-indigo-200, .border-pink-200, .border-emerald-200, .border-teal-200, .border-orange-200 { }
+
+/* Classes de texte */
+.text-blue-800, .text-blue-900, .text-green-800, .text-green-900, .text-purple-800, .text-purple-900 { }
+.text-red-800, .text-red-900, .text-yellow-800, .text-yellow-900, .text-indigo-800, .text-indigo-900 { }
+.text-pink-800, .text-pink-900, .text-emerald-800, .text-emerald-900, .text-teal-800, .text-teal-900 { }
+.text-orange-800, .text-orange-900 { }
+
+/* Classes de gradients - from */
+.from-blue-50, .from-green-50, .from-purple-50, .from-red-50, .from-yellow-50 { }
+.from-indigo-50, .from-pink-50, .from-emerald-50, .from-teal-50, .from-orange-50 { }
+.from-blue-500, .from-green-500, .from-purple-500, .from-red-500, .from-yellow-500 { }
+.from-indigo-500, .from-pink-500, .from-emerald-500, .from-teal-500, .from-orange-500 { }
+
+/* Classes de gradients - to */
+.to-blue-100, .to-green-100, .to-purple-100, .to-red-100, .to-yellow-100 { }
+.to-indigo-100, .to-pink-100, .to-emerald-100, .to-teal-100, .to-orange-100 { }
+.to-blue-600, .to-green-600, .to-purple-600, .to-red-600, .to-yellow-600 { }
+.to-indigo-600, .to-pink-600, .to-emerald-600, .to-teal-600, .to-orange-600 { }
+
+/* Styles spécifiques pour les cartes de sections */
+.section-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.section-card:hover {
+    transform: translateY(-4px);
+}
+
+.section-icon {
+    transition: transform 0.3s ease;
+}
+
+.section-card:hover .section-icon {
+    transform: scale(1.1);
+}
+
+/* Animation de brillance */
+.shine-effect {
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transform: translateX(-100%);
+    transition: transform 0.7s ease;
+}
+
+.section-card:hover .shine-effect {
+    transform: translateX(100%);
+}

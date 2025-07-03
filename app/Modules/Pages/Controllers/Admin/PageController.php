@@ -132,11 +132,11 @@ class PageController extends Controller
 
             if ($request->is_published) {
                 return redirect()
-                    ->route('admin.pages.pages.show', $page)
+                    ->route('personnels.pages.pages.index')
                     ->with('success', "Page '{$page->title}' créée et publiée avec succès.");
             } else {
                 return redirect()
-                    ->route('admin.pages.pages.edit', $page)
+                    ->route('personnels.pages.pages.edit', $page)
                     ->with('success', "Page '{$page->title}' créée comme brouillon. Vous pouvez continuer à l'éditer.");
             }
 
@@ -189,12 +189,22 @@ class PageController extends Controller
             abort(403, 'Accès non autorisé');
         }
 
+        // Log pour déboguer les données reçues
+        \Log::debug('Mise à jour de page - Données reçues', [
+            'all_data' => $request->all(),
+            'content_exists' => $request->has('content'),
+            'content_length' => $request->has('content') ? strlen($request->input('content')) : 0,
+            'is_published' => $request->has('is_published') ? 'Oui ('.$request->input('is_published').')' : 'Non'
+        ]);
+
         $request->validate([
             'title' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255',
             'content' => 'nullable|string', // Accepte le JSON sous forme de chaîne
             'excerpt' => 'nullable|string|max:500',
+            'section_id' => 'required|exists:sections,id',
             'folder_id' => 'nullable|exists:folders,id',
+            'is_published' => 'nullable|in:0,1', // Accepte "0" ou "1" comme chaîne
             'order_index' => 'nullable|integer|min:0',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:300',
@@ -204,19 +214,47 @@ class PageController extends Controller
         // Vérifier que le dossier appartient à la section
         if ($request->filled('folder_id')) {
             $folder = Folder::find($request->folder_id);
-            if ($folder->section_id != $page->section_id) {
-                return back()->withErrors(['folder_id' => 'Le dossier doit appartenir à la section de la page.']);
+            $sectionId = $request->input('section_id', $page->section_id);
+            if ($folder->section_id != $sectionId) {
+                return back()->withErrors(['folder_id' => 'Le dossier doit appartenir à la section sélectionnée.']);
             }
         }
 
         try {
+            // Log avant la mise à jour
+            \Log::debug('Avant updatePage - Contenu actuel', [
+                'page_id' => $page->id,
+                'content_before' => $page->content
+            ]);
+            
             $this->pageService->updatePage($page, $request->all());
+            
+            // Log après la mise à jour
+            \Log::debug('Après updatePage - Nouveau contenu', [
+                'page_id' => $page->id,
+                'content_after' => $page->fresh()->content
+            ]);
 
-            return redirect()
-                ->route('admin.pages.pages.show', $page)
-                ->with('success', "Page '{$page->title}' mise à jour avec succès.");
+            // Rediriger en fonction du statut de publication
+            if (!$request->has('is_published') || $request->is_published) {
+                return redirect()
+                    ->route('personnels.pages.pages.index')
+                    ->with('success', "Page '{$page->title}' mise à jour avec succès.");
+            } else {
+                // Si c'est un brouillon, retourner à la page d'édition
+                return redirect()
+                    ->route('personnels.pages.pages.edit', $page)
+                    ->with('success', "Page '{$page->title}' sauvegardée en brouillon.");
+            }
 
         } catch (\Exception $e) {
+            // Log l'erreur
+            \Log::error('Erreur lors de la mise à jour de page', [
+                'page_id' => $page->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
             return back()
                 ->withInput()
                 ->withErrors(['error' => 'Erreur lors de la mise à jour : ' . $e->getMessage()]);
@@ -236,7 +274,7 @@ class PageController extends Controller
             $this->pageService->deletePage($page);
 
             return redirect()
-                ->route('admin.pages.pages.index')
+                ->route('personnels.pages.pages.index')
                 ->with('success', "Page '{$page->title}' supprimée avec succès.");
 
         } catch (\Exception $e) {
@@ -381,7 +419,7 @@ class PageController extends Controller
             $this->pageService->restoreRevision($page, $revision->id);
 
             return redirect()
-                ->route('admin.pages.pages.edit', $page)
+                ->route('personnels.pages.pages.edit', $page)
                 ->with('success', "Page restaurée à partir de la révision du {$revision->created_at->format('d/m/Y H:i')}.");
 
         } catch (\Exception $e) {
@@ -433,9 +471,13 @@ class PageController extends Controller
                     'folder' => $page->folder ? $page->folder->name : null,
                     'is_published' => $page->is_published,
                     'created_at' => $page->created_at->format('d/m/Y'),
-                    'url' => route('admin.pages.pages.show', $page)
+                    'url' => route('personnels.pages.pages.show', $page)
                 ];
             })
         ]);
     }
+
+    
+
+
 }

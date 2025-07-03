@@ -15,6 +15,10 @@ class Section extends Model
         'name',
         'slug',
         'description',
+        'icon',
+        'color',
+        'image_url',
+        'display_order',
         'created_by',
         'is_active'
     ];
@@ -32,6 +36,10 @@ class Section extends Model
         'name',
         'slug', 
         'description',
+        'icon',
+        'color',
+        'image_url',
+        'display_order',
         'is_active'
     ];
 
@@ -91,6 +99,39 @@ class Section extends Model
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
+    }
+
+    /**
+     * Scope pour ordonner par ordre d'affichage
+     */
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('display_order')->orderBy('name');
+    }
+
+    /**
+     * Récupère la couleur Tailwind valide
+     */
+    public function getValidColorAttribute()
+    {
+        $validColors = ['blue', 'green', 'purple', 'red', 'yellow', 'indigo', 'pink', 'gray', 'emerald', 'teal', 'cyan', 'sky', 'violet', 'fuchsia', 'rose', 'amber', 'lime', 'orange'];
+        return in_array($this->color, $validColors) ? $this->color : 'blue';
+    }
+
+    /**
+     * Vérifie si la section a une image
+     */
+    public function hasImage()
+    {
+        return !empty($this->image_url);
+    }
+
+    /**
+     * Vérifie si la section a une icône
+     */
+    public function hasIcon()
+    {
+        return !empty($this->icon);
     }
 
     /**
