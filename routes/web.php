@@ -37,3 +37,8 @@ Route::get('/liveshare', function () {
 
 require __DIR__.'/public/routes.php';
 require __DIR__.'/admin/routes.php';
+
+// Inclure les routes des modules
+if (file_exists(__DIR__ . '/../app/Modules/Pages/Routes/web.php')) {
+    require __DIR__ . '/../app/Modules/Pages/Routes/web.php';
+}

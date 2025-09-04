@@ -61,10 +61,12 @@
                     Vue d'ensemble
                 </a>
                 
-                <a href="{{ route('personnels.pages.pages.index') }}" class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
-                    <i class="fas fa-file-alt mr-3 text-gray-400 group-hover:text-gray-500"></i>
+                @permission('pages.view')
+                <a href="{{ route('personnels.pages.manager') }}" class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('personnels.pages.manager') ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50' }}">
+                    <i class="fas fa-tachometer-alt mr-3 text-{{ request()->routeIs('personnels.pages.manager') ? 'blue-500' : 'gray-400 group-hover:text-gray-500' }}"></i>
                     Gestionnaire de pages
                 </a>
+                @endpermission
             </nav>
         </div>
         
@@ -90,15 +92,21 @@
             <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">PERSONNELS</span>
             
             <nav class="mt-4 space-y-1.5">
+                @permission('users.view')
                 <a href="{{ route('personnels.personnels.index') }}" class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('personnels.personnels.index') ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50' }}">
                     <i class="fas fa-users mr-3 text-{{ request()->routeIs('personnels.personnels.index') ? 'blue-500' : 'gray-400 group-hover:text-gray-500' }}"></i>
                     Liste des utilisateurs
                 </a>
+                @endpermission
+                
+                @permission('users.create')
                 <a href="{{ route('personnels.personnels.create') }}" class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('personnels.personnels.create') ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50' }}">
                     <i class="fas fa-user-plus mr-3 text-{{ request()->routeIs('personnels.personnels.create') ? 'blue-500' : 'gray-400 group-hover:text-gray-500' }}"></i>
                     Ajouter un utilisateur
                 </a>
+                @endpermission
                 
+                @permission('roles.view')
                 <div class="submenu-container">
                     <button type="button" class="submenu-toggle group flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50" data-submenu="roles-permissions">
                         <div class="flex items-center">
@@ -108,20 +116,13 @@
                         <i class="fas fa-chevron-down text-xs text-gray-400 transform transition-transform duration-200 chevron-icon"></i>
                     </button>
                     <div id="roles-permissions-submenu" class="submenu ml-6 mt-1 space-y-1 hidden">
-                        <a href="{{ route('personnels.roles.index') }}" class="group flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-800 {{ request()->routeIs('personnels.roles.index') ? 'text-blue-600' : '' }}">
-                            <i class="fas fa-id-badge text-xs mr-2 text-gray-400"></i>
-                            Gestion des rôles
+                        <a href="{{ route('personnels.roles-permissions.index') }}" class="group flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-800 {{ request()->routeIs('personnels.roles-permissions.index') ? 'text-blue-600' : '' }}">
+                            <i class="fas fa-shield-alt text-xs mr-2 text-gray-400"></i>
+                            Gestion des rôles et permissions
                         </a>
-                        <a href="{{ route('personnels.permissions.index') }}" class="group flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-800 {{ request()->routeIs('personnels.permissions.index') ? 'text-blue-600' : '' }}">
-                            <i class="fas fa-key text-xs mr-2 text-gray-400"></i>
-                            Gestion des permissions
-                        </a>
-
                     </div>
                 </div>
-                
-
-                </a>
+                @endpermission
             </nav>
         </div>
 
@@ -142,6 +143,7 @@
             <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">CONTENU</span>
             
             <nav class="mt-4 space-y-1.5">
+                @permission('pages.view')
                 <div class="submenu-container">
                     <button type="button" class="submenu-toggle group flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50" data-submenu="pages">
                         <div class="flex items-center">
@@ -159,10 +161,12 @@
                             <i class="fas fa-list text-xs mr-2 text-gray-400"></i>
                             Toutes les pages
                         </a>
+                        @permission('pages.create')
                         <a href="{{ route('personnels.pages.pages.create') }}" class="group flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-800 {{ request()->routeIs('personnels.pages.pages.create') ? 'text-blue-600' : '' }}">
                             <i class="fas fa-plus text-xs mr-2 text-gray-400"></i>
                             Nouvelle page
                         </a>
+                        @endpermission
                         <a href="{{ route('personnels.pages.sections.index') }}" class="group flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-800 {{ request()->routeIs('personnels.pages.sections.*') ? 'text-blue-600' : '' }}">
                             <i class="fas fa-layer-group text-xs mr-2 text-gray-400"></i>
                             Sections
@@ -173,11 +177,14 @@
                         </a>
                     </div>
                 </div>
+                @endpermission
                 
-                <a href="{{ route('personnels.ImageAPI.index') }}" class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-50">
-                    <i class="fas fa-images mr-3 text-gray-400 group-hover:text-gray-500"></i>
+                @permission('images.view')
+                <a href="{{ route('personnels.ImageAPI.index') }}" class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('personnels.ImageAPI.index') ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50' }}">
+                    <i class="fas fa-images mr-3 text-{{ request()->routeIs('personnels.ImageAPI.index') ? 'blue-500' : 'gray-400 group-hover:text-gray-500' }}"></i>
                     Drive Images
                 </a>
+                @endpermission
             </nav>
         </div>
         

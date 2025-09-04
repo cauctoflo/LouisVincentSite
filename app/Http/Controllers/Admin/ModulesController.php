@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use App\Http\Controllers\Controller;
 use App\Modules\Log\Services\LogService;
+use App\Core\Module\ModuleRegistry;
 
 class ModulesController extends Controller
 {
@@ -16,16 +17,13 @@ class ModulesController extends Controller
         $this->logService = $logService;
     }
 
-    /**
-     * Affiche la liste des modules disponibles
-     */
     public function index()
     {
-        // Récupérer tous les modules disponibles
-        $modulesPath = app_path('Modules');
-        $modules = collect(File::directories($modulesPath))->map(function ($path) {
-            $name = basename($path);
-            $configPath = storage_path("app/modules/" . strtolower($name) . "/config.json");
+        // Récupérer tous les modules enregistrés
+        $registeredModules = ModuleRegistry::getAllModules();
+        
+        $modules = $registeredModules->map(function ($module) {
+            $configPath = storage_path("app/modules/" . strtolower($module->getName()) . "/config.json");
             $config = [];
             
             if (File::exists($configPath)) {
@@ -35,171 +33,172 @@ class ModulesController extends Controller
             $status = $config['status'] ?? 'inactive';
             
             return [
-                'name' => $name,
-                'path' => $path,
-                'config' => $config,
-                'status' => $status
+                'name' => $module->getName(),
+                'displayName' => $module->getDisplayName(),
+                'description' => $module->getDescription(),
+                'icon' => $module->getIcon(),
+                'version' => $module->getVersion(),
+                'order' => $module->getOrder(),
+                'permissions' => $module->getPermissions(),
+                'routes' => $module->getRoutes(),
+                'status' => $status,
+                'isActive' => $module->isActive(),
+                'category' => $this->getModuleCategory($module->getName())
             ];
-        });
+        })->sortBy('order');
 
         return view('Admin.modules.index', compact('modules'));
     }
 
-    /**
-     * Rediriger vers les paramètres spécifiques d'un module
-     */
-    public function settings($module)
+    public function active($moduleName)
     {
-        // Vérifier si le module existe
-        $modulePath = app_path("Modules/$module");
+        $module = ModuleRegistry::getModule($moduleName);
         
-        if (!File::exists($modulePath)) {
-            $this->logService->log('module_settings_failed', null, [
-                'module' => $module,
-                'reason' => 'Module does not exist'
+        if (!$module) {
+            $this->logService->log('module_activation_failed', null, [
+                'module' => $moduleName,
+                'reason' => 'Module not found in registry'
             ]);
             return redirect()->route('personnels.modules.index')
-                ->with('error', "Le module $module n'existe pas.");
+                ->with('error', "Le module $moduleName n'existe pas dans le registre.");
         }
 
-        $routeExists = false;
+        try {
+            $this->updateModuleStatus($moduleName, 'active');
+            
+            $this->logService->log('module_activated', null, [
+                'module' => $moduleName,
+                'display_name' => $module->getDisplayName()
+            ]);
+            
+            return redirect()->route('personnels.modules.index')
+                ->with('success', "Le module {$module->getDisplayName()} a été activé avec succès.");
+        } catch (\Exception $e) {
+            $this->logService->log('module_activation_failed', null, [
+                'module' => $moduleName,
+                'reason' => $e->getMessage()
+            ]);
+            return redirect()->route('personnels.modules.index')
+                ->with('error', "Impossible d'activer le module {$module->getDisplayName()}.");
+        }
+    }
+
+    public function inactive($moduleName)
+    {
+        $module = ModuleRegistry::getModule($moduleName);
         
-        switch ($module) {
-            case 'WebTv':
-                return redirect()->route('WebTv.personnels.settings');
-            case 'Log':
-                return redirect()->route('WebTv.personnels.settings');
-            case 'Internat':
-                return redirect()->route('WebTv.personnels.settings');
-            default:
-                $this->logService->log('module_settings_failed', null, [
-                    'module' => $module,
-                    'reason' => 'No settings page exists'
+        if (!$module) {
+            $this->logService->log('module_deactivation_failed', null, [
+                'module' => $moduleName,
+                'reason' => 'Module not found in registry'
+            ]);
+            return redirect()->route('personnels.modules.index')
+                ->with('error', "Le module $moduleName n'existe pas dans le registre.");
+        }
+
+        // Empêcher la désactivation des modules core
+        if (in_array($moduleName, ['Core', 'Personnels', 'Settings'])) {
+            return redirect()->route('personnels.modules.index')
+                ->with('error', "Le module {$module->getDisplayName()} est essentiel et ne peut pas être désactivé.");
+        }
+
+        try {
+            $this->updateModuleStatus($moduleName, 'inactive');
+            
+            $this->logService->log('module_deactivated', null, [
+                'module' => $moduleName,
+                'display_name' => $module->getDisplayName()
+            ]);
+            
+            return redirect()->route('personnels.modules.index')
+                ->with('success', "Le module {$module->getDisplayName()} a été désactivé avec succès.");
+        } catch (\Exception $e) {
+            $this->logService->log('module_deactivation_failed', null, [
+                'module' => $moduleName,
+                'reason' => $e->getMessage()
+            ]);
+            return redirect()->route('personnels.modules.index')
+                ->with('error', "Impossible de désactiver le module {$module->getDisplayName()}.");
+        }
+    }
+
+    public function toggleStatus($moduleName)
+    {
+        $module = ModuleRegistry::getModule($moduleName);
+        
+        if (!$module) {
+            return response()->json(['success' => false, 'message' => 'Module non trouvé']);
+        }
+
+        try {
+            $currentStatus = $module->isActive() ? 'active' : 'inactive';
+            $newStatus = $currentStatus === 'active' ? 'inactive' : 'active';
+            
+            // Empêcher la désactivation des modules core
+            if ($newStatus === 'inactive' && in_array($moduleName, ['Core', 'Personnels', 'Settings'])) {
+                return response()->json([
+                    'success' => false, 
+                    'message' => 'Ce module est essentiel et ne peut pas être désactivé'
                 ]);
-                return redirect()->route('personnels.modules.index')
-                    ->with('error', "Le module $module n'a pas de page de paramètres.");
-        }
-    }
-
-    public function create_json($module)
-    {
-        if (!$this->moduleExists($module)) {
-            $this->logService->log('module_create_json_failed', null, [
-                'module' => $module,
-                'reason' => 'Module does not exist'
+            }
+            
+            $this->updateModuleStatus($moduleName, $newStatus);
+            
+            $this->logService->log('module_status_changed', null, [
+                'module' => $moduleName,
+                'display_name' => $module->getDisplayName(),
+                'old_status' => $currentStatus,
+                'new_status' => $newStatus
             ]);
-            return $this->moduleNotFoundResponse($module);
-        }
-
-        try {
-            $this->ensureConfigExists($module);
-            return redirect()->route('personnels.modules.index')
-                ->with('success', "Le fichier de configuration pour le module $module a été créé avec succès.");
+            
+            return response()->json([
+                'success' => true, 
+                'status' => $newStatus,
+                'message' => $newStatus === 'active' ? 'Module activé' : 'Module désactivé'
+            ]);
         } catch (\Exception $e) {
-            $this->logService->log('module_create_json_failed', null, [
-                'module' => $module,
-                'reason' => $e->getMessage()
-            ]);
-            return redirect()->route('personnels.modules.index')
-                ->with('error', "Impossible de créer le fichier de configuration pour le module $module.");
+            return response()->json(['success' => false, 'message' => 'Erreur lors du changement de statut']);
         }
     }
 
-    /**
-     * Activate a module
-     */
-    public function active($module)
+    public function getModuleInfo($moduleName)
     {
-        if (!$this->moduleExists($module)) {
-            $this->logService->log('module_activation_failed', null, [
-                'module' => $module,
-                'reason' => 'Module does not exist'
-            ]);
-            return $this->moduleNotFoundResponse($module);
-        }
-
-        try {
-            $this->updateModuleStatus($module, 'active');
-            return redirect()->route('personnels.modules.index')
-                ->with('success', "Le module $module a été activé avec succès.");
-        } catch (\Exception $e) {
-            $this->logService->log('module_activation_failed', null, [
-                'module' => $module,
-                'reason' => $e->getMessage()
-            ]);
-            return redirect()->route('personnels.modules.index')
-                ->with('error', "Impossible d'activer le module $module.");
-        }
-    }
-
-    /**
-     * Deactivate a module
-     */
-    public function inactive($module)
-    {
-        if (!$this->moduleExists($module)) {
-            $this->logService->log('module_deactivation_failed', null, [
-                'module' => $module,
-                'reason' => 'Module does not exist'
-            ]);
-            return $this->moduleNotFoundResponse($module);
-        }
-
-        try {
-            $this->updateModuleStatus($module, 'inactive');
-            return redirect()->route('personnels.modules.index')
-                ->with('success', "Le module $module a été désactivé avec succès.");
-        } catch (\Exception $e) {
-            $this->logService->log('module_deactivation_failed', null, [
-                'module' => $module,
-                'reason' => $e->getMessage()
-            ]);
-            return redirect()->route('personnels.modules.index')
-                ->with('error', "Impossible de désactiver le module $module.");
-        }
-    }
-
-    /**
-     * Check if a module exists
-     */
-    private function moduleExists($module)
-    {
-        $directories = File::directories(app_path('Modules'));
-        $modulePath = app_path("Modules/$module");
-        return in_array($modulePath, $directories);
-    }
-
-    /**
-     * Get the response for a non-existent module
-     */
-    private function moduleNotFoundResponse($module)
-    {
-        return redirect()->route('personnels.modules.index')
-            ->with('error', "Le module $module n'existe pas.");
-    }
-
-    /**
-     * Get the configuration path for a module
-     */
-    private function getConfigPath($module)
-    {
-        return storage_path("app/modules/" . strtolower($module) . "/config.json");
-    }
-
-    /**
-     * Ensure the configuration directory and file exist
-     */
-    private function ensureConfigExists($module)
-    {
-        $configPath = $this->getConfigPath($module);
+        $module = ModuleRegistry::getModule($moduleName);
         
-        // Create directory if it doesn't exist
+        if (!$module) {
+            return response()->json(['success' => false, 'message' => 'Module non trouvé']);
+        }
+
+        return response()->json([
+            'success' => true,
+            'module' => [
+                'name' => $module->getName(),
+                'displayName' => $module->getDisplayName(),
+                'description' => $module->getDescription(),
+                'version' => $module->getVersion(),
+                'permissions' => $module->getPermissions(),
+                'routes' => $module->getRoutes(),
+                'isActive' => $module->isActive(),
+                'category' => $this->getModuleCategory($module->getName())
+            ]
+        ]);
+    }
+
+    private function getConfigPath($moduleName)
+    {
+        return storage_path("app/modules/" . strtolower($moduleName) . "/config.json");
+    }
+
+    private function ensureConfigExists($moduleName)
+    {
+        $configPath = $this->getConfigPath($moduleName);
+        
         if (!File::exists(dirname($configPath))) {
             try {
                 File::makeDirectory(dirname($configPath), 0755, true);
             } catch (\Exception $e) {
                 $this->logService->log('module_dir_creation_failed', null, [
-                    'module' => $module,
+                    'module' => $moduleName,
                     'path' => dirname($configPath),
                     'reason' => $e->getMessage()
                 ]);
@@ -207,13 +206,12 @@ class ModulesController extends Controller
             }
         }
         
-        // Create config file if it doesn't exist
         if (!File::exists($configPath)) {
             try {
                 File::put($configPath, json_encode(['status' => 'inactive'], JSON_PRETTY_PRINT));
             } catch (\Exception $e) {
                 $this->logService->log('module_config_creation_failed', null, [
-                    'module' => $module,
+                    'module' => $moduleName,
                     'path' => $configPath,
                     'reason' => $e->getMessage()
                 ]);
@@ -224,35 +222,46 @@ class ModulesController extends Controller
         return $configPath;
     }
 
-    /**
-     * Get the current configuration for a module
-     */
-    private function getModuleConfig($module)
+    private function getModuleConfig($moduleName)
     {
-        $configPath = $this->ensureConfigExists($module);
+        $configPath = $this->ensureConfigExists($moduleName);
         
         return File::exists($configPath) 
             ? (json_decode(File::get($configPath), true) ?? []) 
             : [];
     }
 
-    /**
-     * Update the module status
-     */
-    private function updateModuleStatus($module, $status)
+    private function updateModuleStatus($moduleName, $status)
     {
         try {
-            $config = $this->getModuleConfig($module);
+            $config = $this->getModuleConfig($moduleName);
             $config['status'] = $status;
+            $config['updated_at'] = now()->toDateTimeString();
             
-            File::put($this->getConfigPath($module), json_encode($config, JSON_PRETTY_PRINT));
+            File::put($this->getConfigPath($moduleName), json_encode($config, JSON_PRETTY_PRINT));
         } catch (\Exception $e) {
             $this->logService->log('module_status_update_failed', null, [
-                'module' => $module,
+                'module' => $moduleName,
                 'status' => $status,
                 'reason' => $e->getMessage()
             ]);
             throw $e;
         }
     }
-} 
+
+    private function getModuleCategory($moduleName)
+    {
+        $categories = [
+            'Core' => 'Système',
+            'Personnels' => 'Gestion',
+            'Settings' => 'Administration',
+            'Pages' => 'Contenu',
+            'ImageAPI' => 'Médias',
+            'Log' => 'Système',
+            'Agenda' => 'Organisation',
+            'Internat' => 'Gestion'
+        ];
+
+        return $categories[$moduleName] ?? 'Autre';
+    }
+}

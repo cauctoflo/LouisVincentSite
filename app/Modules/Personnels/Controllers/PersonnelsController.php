@@ -5,6 +5,7 @@ namespace App\Modules\Personnels\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Modules\Personnels\Models\Role;
+use App\Modules\Personnels\Models\Permission;
 use App\Modules\Personnels\Services\UserLogService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -35,7 +36,7 @@ class PersonnelsController extends Controller
     {
         $users = User::all();
         
-        return view('Personnels::personnels.index', compact('users'));
+        return view('personnels.personnels.index', compact('users'));
     }
     
     /**
@@ -44,9 +45,9 @@ class PersonnelsController extends Controller
     public function create()
     {
         $roles = Role::all();
-        $permissions = app(PermissionController::class)->getAvailablePermissions();
+        $permissions = Permission::all()->groupBy('module');
         
-        return view('Personnels::personnels.create', compact('roles', 'permissions'));
+        return view('personnels.personnels.create', compact('roles', 'permissions'));
     }
     
     /**
@@ -63,7 +64,7 @@ class PersonnelsController extends Controller
             'roles' => 'nullable|array',
             'roles.*' => 'exists:roles,id',
             'permissions' => 'nullable|array',
-            'permissions.*' => 'string',
+            'permissions.*' => 'exists:permissions,id',
         ]);
         
         $userData = [
@@ -72,7 +73,6 @@ class PersonnelsController extends Controller
             'password' => Hash::make($request->password),
             'is_admin' => $request->has('is_admin'),
             'description' => $request->description,
-            'permissions' => $request->permissions,
         ];
         
         $user = User::create($userData);
@@ -80,6 +80,11 @@ class PersonnelsController extends Controller
         // Attribuer les rôles sélectionnés
         if ($request->has('roles')) {
             $user->roles()->attach($request->roles);
+        }
+        
+        // Attribuer les permissions directes
+        if ($request->has('permissions')) {
+            $user->permissions()->attach($request->permissions);
         }
         
         // Journaliser la création de l'utilisateur
@@ -102,7 +107,7 @@ class PersonnelsController extends Controller
                         ->get();
         // dd($logs);
                         
-        return view('Personnels::personnels.show', compact('personnel', 'logs'));
+        return view('personnels.personnels.show', compact('personnel', 'logs'));
     }
     
     /**
@@ -111,9 +116,9 @@ class PersonnelsController extends Controller
     public function edit(User $personnel)
     {
         $roles = Role::all();
-        $permissions = app(PermissionController::class)->getAvailablePermissions();
-        $userRoleIds = $personnel->roles->pluck('id')->toArray();
-        
+        $permissions = Permission::all()->groupBy('module');
+        $userRoleIds = $personnel->getRoleIds();
+        $userPermissionIds = $personnel->getPermissionIds();
         
         // Récupérer les logs récents de l'utilisateur via la relation logs()
         $logs = $personnel->logs()
@@ -121,9 +126,7 @@ class PersonnelsController extends Controller
                         ->limit(5)
                         ->get();
         
-        // dd($roles, $personnel, $permissions, $userRoleIds);
-        
-        return view('Personnels::personnels.edit', compact('personnel', 'roles', 'permissions', 'userRoleIds', 'logs'));
+        return view('personnels.personnels.edit', compact('personnel', 'roles', 'permissions', 'userRoleIds', 'userPermissionIds', 'logs'));
     }
     
     /**
@@ -140,7 +143,7 @@ class PersonnelsController extends Controller
             'roles' => 'nullable|array',
             'roles.*' => 'exists:roles,id',
             'permissions' => 'nullable|array',
-            'permissions.*' => 'string',
+            'permissions.*' => 'exists:permissions,id',
         ]);
         
         // Sauvegarder les anciennes valeurs avant la mise à jour
@@ -153,15 +156,18 @@ class PersonnelsController extends Controller
             'email' => $request->email,
             'is_admin' => $request->has('is_admin'),
             'description' => $request->description,
-            'permissions' => $request->permissions,
         ];
         
         // Mettre à jour l'utilisateur
         $personnel->name = $request->name;
         $personnel->email = $request->email;
-        $personnel->is_admin = $request->has('is_admin');
+        
+        // Empêcher la modification du statut admin par soi-même
+        if (auth()->id() !== $personnel->id) {
+            $personnel->is_admin = $request->has('is_admin');
+        }
+        
         $personnel->description = $request->description;
-        $personnel->permissions = $request->permissions;
         
         if ($request->filled('password')) {
             $personnel->password = Hash::make($request->password);
@@ -170,11 +176,22 @@ class PersonnelsController extends Controller
         
         $personnel->save();
         
-        // Gérer les rôles
-        if ($request->has('roles')) {
-            $personnel->roles()->sync($request->roles);
-        } else {
-            $personnel->roles()->detach();
+        // Gérer les rôles (sauf si l'utilisateur modifie ses propres rôles ou si c'est un admin)
+        if (auth()->id() !== $personnel->id) {
+            if ($request->has('roles')) {
+                $personnel->roles()->sync($request->roles);
+            } else {
+                $personnel->roles()->detach();
+            }
+            
+            // Gérer les permissions directes (sauf si l'utilisateur modifie ses propres permissions ou si c'est un admin)
+            if (!$personnel->is_admin) {
+                if ($request->has('permissions')) {
+                    $personnel->permissions()->sync($request->permissions);
+                } else {
+                    $personnel->permissions()->detach();
+                }
+            }
         }
         
         // Journaliser la mise à jour de l'utilisateur

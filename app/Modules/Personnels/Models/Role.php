@@ -5,6 +5,7 @@ namespace App\Modules\Personnels\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
+use App\Modules\Personnels\Models\Permission;
 
 class Role extends Model
 {
@@ -18,7 +19,7 @@ class Role extends Model
     protected $fillable = [
         'name',
         'description',
-        'permissions',
+        'is_default',
     ];
     
     /**
@@ -27,7 +28,7 @@ class Role extends Model
      * @var array
      */
     protected $casts = [
-        'permissions' => 'json',
+        'is_default' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime'
     ];
@@ -37,7 +38,12 @@ class Role extends Model
      */
     public function users()
     {
-        return $this->belongsToMany(User::class, 'role_user');
+        return $this->belongsToMany(User::class, 'user_roles');
+    }
+    
+    public function permissions()
+    {
+        return $this->belongsToMany(Permission::class, 'role_permissions');
     }
     
     /**
@@ -45,24 +51,32 @@ class Role extends Model
      */
     public function hasPermission($permission)
     {
-        if (is_null($this->permissions)) {
-            return false;
+        if (is_string($permission)) {
+            return $this->permissions()->where('slug', $permission)->exists();
         }
         
-        return in_array($permission, $this->permissions);
+        if ($permission instanceof Permission) {
+            return $this->permissions()->where('id', $permission->id)->exists();
+        }
+        
+        return false;
     }
+    
     
     /**
      * Attribution d'une permission au rôle
      */
     public function givePermission($permission)
     {
-        $permissions = $this->permissions ?? [];
-        
-        if (!in_array($permission, $permissions)) {
-            $permissions[] = $permission;
-            $this->permissions = $permissions;
-            $this->save();
+        if (is_string($permission)) {
+            $permissionModel = Permission::where('slug', $permission)->first();
+            if ($permissionModel && !$this->hasPermission($permissionModel)) {
+                $this->permissions()->attach($permissionModel->id);
+            }
+        } elseif ($permission instanceof Permission) {
+            if (!$this->hasPermission($permission)) {
+                $this->permissions()->attach($permission->id);
+            }
         }
         
         return $this;
@@ -73,17 +87,38 @@ class Role extends Model
      */
     public function removePermission($permission)
     {
-        if (is_null($this->permissions)) {
-            return $this;
+        if (is_string($permission)) {
+            $permissionModel = Permission::where('slug', $permission)->first();
+            if ($permissionModel) {
+                $this->permissions()->detach($permissionModel->id);
+            }
+        } elseif ($permission instanceof Permission) {
+            $this->permissions()->detach($permission->id);
         }
         
-        $permissions = array_filter($this->permissions, function($p) use ($permission) {
-            return $p !== $permission;
-        });
-        
-        $this->permissions = $permissions;
-        $this->save();
+        return $this;
+    }
+    
+    public function syncPermissions($permissions)
+    {
+        if (is_array($permissions)) {
+            $permissionIds = Permission::whereIn('slug', $permissions)->pluck('id');
+            $this->permissions()->sync($permissionIds);
+        }
         
         return $this;
+    }
+    
+    public function getAllPermissions()
+    {
+        if (!$this->relationLoaded('permissions')) {
+            $this->load('permissions');
+        }
+        return $this->permissions ?? collect();
+    }
+    
+    public function getPermissionIds()
+    {
+        return $this->getAllPermissions()->pluck('id')->toArray();
     }
 } 
