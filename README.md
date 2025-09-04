@@ -1,152 +1,108 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🌐 Site du Lycée Louis Vincent
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![Bannière du Lycée Louis Vincent](https://www.lycee-louis-vincent.fr/images/bannerfans_11654068.png)
 
-## About Laravel
+Projet officiel de refonte du site internet du **Lycée Louis Vincent**.  
+Développé par des élèves de Terminale NSI, ce site vise à moderniser l'expérience utilisateur, centraliser les informations et offrir un espace numérique clair et accessible.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 👨‍💻 Équipe de développement
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Florentin Fouligny** – Dev 1 / Lead Developer  
+- **Gabin Decaillot** – Developer  
+- **Erwan Trevien** – Developer  
+- (ajouter les autres membres si besoin)
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 📈 Statistiques du dépôt
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- **Commits récents** : Ajout du module *Agenda* et refonte de la gestion des pages  
+- **Activité** : Développement actif depuis juillet 2025  
+- **Langages principaux** : PHP (Laravel), Blade, TailwindCSS, MySQL  
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Exemple de contribution :  
+```bash
+git shortlog -s -n
+  25  cauctoflo   # Florentin Fouligny
+  10  Trevien-Erwan
+   5  Gabin Decaillot
+```
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 📅 Roadmap & Phases du projet
 
-### Premium Partners
+- [x] **Phase 1 : Conceptions des maquettes**  
+- [x] **Phase 2 : Validation**  
+- [x] **Phase 3 : Cahier des charges**  
+- [x] **Phase 4 : Installation des dépendances**  
+- [🚧] **Phase 5 : Développement concret (en cours)**  
+- [ ] **Phase 6 : Tests & validation**  
+- [ ] **Phase 7 : Déploiement**
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+---
 
-## Contributing
+## ⚙️ Technologies utilisées
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- **Backend** : Laravel (PHP 8)  
+- **Frontend** : HTML5 + TailwindCSS  
+- **Base de données** : MySQL  
+- **Versionning** : Git & GitHub  
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 🚀 Installation locale
 
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-
-# Log Module Documentation
-
-## Overview
-
-The Log module provides comprehensive logging capabilities for tracking user activities, system events, and debugging information in the application. It includes features for viewing, filtering, exporting, and managing logs through an intuitive user interface.
-
-## Features
-
-- **User Activity Tracking**: Record user actions such as creation, updates, deletions, logins, and logouts
-- **Model Change Logging**: Track changes to any model in the system
-- **Configurable Logging**: Customize what actions and models are tracked
-- **Log File Management**: View and manage system log files
-- **Export Capabilities**: Export logs to Excel format
-- **Filtering**: Filter logs by various criteria including user, action type, date range, and more
-
-## Installation
-
-1. The module is already integrated into the application.
-2. Ensure that the database migration has been run to create the logs table:
+1. **Cloner le projet**
+   ```bash
+   git clone https://github.com/cauctoflo/LouisVincentSite.git
+   cd LouisVincentSite
    ```
+
+2. **Installer les dépendances Laravel**
+   ```bash
+   composer install
+   cp .env.example .env
+   php artisan key:generate
+   ```
+
+3. **Configurer la base de données**  
+   Modifier `.env` avec vos identifiants MySQL puis exécuter :
+   ```bash
    php artisan migrate
    ```
-3. Publish the configuration file (optional):
+
+4. **Installer et compiler le front**
+   ```bash
+   npm install
+   npm run dev
    ```
-   php artisan vendor:publish --tag=log-config
+
+5. **Lancer le serveur**
+   ```bash
+   php artisan serve
    ```
 
-## Usage
+Le site est alors accessible sur **http://127.0.0.1:8000**
 
-### Tracking Model Changes
+---
 
-To enable logging for a model, add the `Loggable` trait:
+## 🤝 Contribution
 
-```php
-use App\Modules\Log\Traits\Loggable;
+1. Forkez le dépôt  
+2. Créez une branche (`feature/ma-fonctionnalite`)  
+3. Faites vos commits (`git commit -m 'Ajout de X'`)  
+4. Push (`git push origin feature/ma-fonctionnalite`)  
+5. Ouvrez une **Pull Request**
 
-class User extends Authenticatable
-{
-    use Loggable;
-    
-    // Rest of your model
-}
-```
+---
 
-### Custom Logging
+## 📌 Suivi & contacts
 
-You can log custom actions for any model:
+- Site officiel : [lycee-louis-vincent.fr](https://www.lycee-louis-vincent.fr/)  
+- Dépôt GitHub : [LouisVincentSite](https://github.com/cauctoflo/LouisVincentSite)  
+- Contact : équipe de développement NSI  
 
-```php
-$user->logCustomAction('password_reset', [
-    'reset_by' => Auth::id(),
-    'ip_address' => Request::ip()
-]);
-```
-
-### Accessing the Logs
-
-The logs can be accessed at `/personnels/log` by users with appropriate permissions.
-
-### Configuration
-
-Log settings can be configured through the web interface at `/personnels/log/settings` or by editing the `config/log.php` file.
-
-## Routes
-
-The module provides the following routes:
-
-- **GET /personnels/log**: View all logs
-- **GET /personnels/log/settings**: Access log configuration
-- **GET /personnels/log/{log}**: View log details
-- **GET /personnels/log/user/{user}**: View logs for a specific user
-- **POST /personnels/log/clear**: Clear logs
-- **DELETE /personnels/log/{log}**: Delete a specific log
-- **GET /personnels/log/export**: Export logs to Excel
-
-## Configuration Options
-
-The following options can be configured:
-
-- **User Actions Tracking**: Enable/disable tracking of user actions
-- **Actions to Log**: Specify which types of actions should be logged
-- **Tracked Models**: List of models to track changes for
-- **Excluded Columns**: Columns to exclude from change tracking
-- **Log Files**: Configure retention period and cleanup options
-- **Log Levels**: Select which severity levels to log
+---
