@@ -19,7 +19,7 @@
         @livewireStyles
     </head>
     <body class="font-sans text-gray-800 bg-gray-50" style="min-height: calc(100vh + 100px);">
-        <x-admin-sidebar>
+        <x-modular-sidebar>
             @hasSection('content')
                 @yield('content')
             @else
@@ -27,7 +27,7 @@
                     {{ $slot }}
                 @endisset
             @endif
-        </x-admin-sidebar>
+        </x-modular-sidebar>
 
         @stack('modals')
 
