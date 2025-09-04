@@ -10,6 +10,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use App\Modules\Personnels\Models\Role;
+use App\Modules\Personnels\Models\Permission;
 use App\Modules\Log\Traits\Loggable;
 
 class User extends Authenticatable
@@ -33,7 +34,6 @@ class User extends Authenticatable
         'email',
         'password',
         'is_admin',
-        'permissions',
         'description',
     ];
 
@@ -68,7 +68,6 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'permissions' => 'json',
             'is_admin' => 'boolean',
         ];
     }
@@ -82,11 +81,15 @@ class User extends Authenticatable
             return true;
         }
         
-        if (is_null($this->permissions)) {
-            return false;
+        if (is_string($permission)) {
+            return $this->permissions()->where('slug', $permission)->exists();
         }
         
-        return in_array($permission, $this->permissions);
+        if ($permission instanceof Permission) {
+            return $this->permissions()->where('id', $permission->id)->exists();
+        }
+        
+        return false;
     }
     
     /**
@@ -94,12 +97,15 @@ class User extends Authenticatable
      */
     public function givePermission($permission)
     {
-        $permissions = $this->permissions ?? [];
-        
-        if (!in_array($permission, $permissions)) {
-            $permissions[] = $permission;
-            $this->permissions = $permissions;
-            $this->save();
+        if (is_string($permission)) {
+            $permissionModel = Permission::where('slug', $permission)->first();
+            if ($permissionModel && !$this->hasPermission($permissionModel)) {
+                $this->permissions()->attach($permissionModel->id);
+            }
+        } elseif ($permission instanceof Permission) {
+            if (!$this->hasPermission($permission)) {
+                $this->permissions()->attach($permission->id);
+            }
         }
         
         return $this;
@@ -110,16 +116,14 @@ class User extends Authenticatable
      */
     public function removePermission($permission)
     {
-        if (is_null($this->permissions)) {
-            return $this;
+        if (is_string($permission)) {
+            $permissionModel = Permission::where('slug', $permission)->first();
+            if ($permissionModel) {
+                $this->permissions()->detach($permissionModel->id);
+            }
+        } elseif ($permission instanceof Permission) {
+            $this->permissions()->detach($permission->id);
         }
-        
-        $permissions = array_filter($this->permissions, function($p) use ($permission) {
-            return $p !== $permission;
-        });
-        
-        $this->permissions = $permissions;
-        $this->save();
         
         return $this;
     }
@@ -129,7 +133,12 @@ class User extends Authenticatable
      */
     public function roles()
     {
-        return $this->belongsToMany(Role::class, 'role_user');
+        return $this->belongsToMany(Role::class, 'user_roles');
+    }
+    
+    public function permissions()
+    {
+        return $this->belongsToMany(Permission::class, 'user_permissions');
     }
     
     /**
@@ -145,6 +154,10 @@ class User extends Authenticatable
      */
     public function hasAccess($permission)
     {
+        if ($this->is_admin) {
+            return true;
+        }
+        
         if ($this->hasPermission($permission)) {
             return true;
         }
@@ -156,5 +169,68 @@ class User extends Authenticatable
         }
         
         return false;
+    }
+    
+    public function giveRole($role)
+    {
+        if (is_string($role)) {
+            $roleModel = Role::where('name', $role)->first();
+            if ($roleModel && !$this->hasRole($roleModel->name)) {
+                $this->roles()->attach($roleModel->id);
+            }
+        } elseif ($role instanceof Role) {
+            if (!$this->hasRole($role->name)) {
+                $this->roles()->attach($role->id);
+            }
+        }
+        
+        return $this;
+    }
+    
+    public function removeRole($role)
+    {
+        if (is_string($role)) {
+            $roleModel = Role::where('name', $role)->first();
+            if ($roleModel) {
+                $this->roles()->detach($roleModel->id);
+            }
+        } elseif ($role instanceof Role) {
+            $this->roles()->detach($role->id);
+        }
+        
+        return $this;
+    }
+    
+    public function getAllPermissions()
+    {
+        if (!$this->relationLoaded('permissions')) {
+            $this->load('permissions');
+        }
+        if (!$this->relationLoaded('roles')) {
+            $this->load('roles.permissions');
+        }
+        
+        $directPermissions = $this->permissions ?? collect();
+        $rolePermissions = $this->roles->flatMap(function($role) {
+            return $role->getAllPermissions();
+        });
+        
+        return $directPermissions->merge($rolePermissions)->unique('id');
+    }
+    
+    public function getRoleIds()
+    {
+        if (!$this->relationLoaded('roles')) {
+            $this->load('roles');
+        }
+        return $this->roles ? $this->roles->pluck('id')->toArray() : [];
+    }
+    
+    public function getPermissionIds()
+    {
+        if (!$this->relationLoaded('permissions')) {
+            $this->load('permissions');
+        }
+        return $this->permissions ? $this->permissions->pluck('id')->toArray() : [];
     }
 }
