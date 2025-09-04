@@ -9,27 +9,17 @@ Développé par des élèves de Terminale NSI, ce site vise à moderniser l'exp�
 
 ## 👨‍💻 Équipe de développement
 
-- **Florentin Fouligny** – Dev 1 / Lead Developer  
+- **Florentin Fouligny** – Developer 
 - **Gabin Decaillot** – Developer  
 - **Erwan Trevien** – Developer  
-- (ajouter les autres membres si besoin)
 
 ---
 
 ## 📈 Statistiques du dépôt
 
 - **Commits récents** : Ajout du module *Agenda* et refonte de la gestion des pages  
-- **Activité** : Développement actif depuis juillet 2025  
+- **Activité** : Développement actif depuis juin 2025  
 - **Langages principaux** : PHP (Laravel), Blade, TailwindCSS, MySQL  
-
-Exemple de contribution :  
-```bash
-git shortlog -s -n
-  25  cauctoflo   # Florentin Fouligny
-  10  Trevien-Erwan
-   5  Gabin Decaillot
-```
-
 ---
 
 ## 📅 Roadmap & Phases du projet
@@ -47,7 +37,7 @@ git shortlog -s -n
 ## ⚙️ Technologies utilisées
 
 - **Backend** : Laravel (PHP 8)  
-- **Frontend** : HTML5 + TailwindCSS  
+- **Frontend** : HTML5 + TailwindCSS + POSTCSS + VITE
 - **Base de données** : MySQL  
 - **Versionning** : Git & GitHub  
 
@@ -102,7 +92,6 @@ Le site est alors accessible sur **http://127.0.0.1:8000**
 ## 📌 Suivi & contacts
 
 - Site officiel : [lycee-louis-vincent.fr](https://www.lycee-louis-vincent.fr/)  
-- Dépôt GitHub : [LouisVincentSite](https://github.com/cauctoflo/LouisVincentSite)  
-- Contact : équipe de développement NSI  
+- Dépôt GitHub : [LouisVincentSite](https://github.com/cauctoflo/LouisVincentSite)   
 
 ---
